@@ -1,0 +1,566 @@
+@import 'tailwindcss';
+
+/* Override Tailwind v4 default media query dark mode to use class strategy */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+   PostHog-Inspired Design System
+   ============================================================ */
+
+@layer base {
+
+  *,
+  ::before,
+  ::after {
+    transition-property: color, background-color, border-color, fill, stroke, text-decoration-color;
+    transition-timing-function: linear;
+    transition-duration: 400ms;
+  }
+}
+
+:root {
+  /* Canvas & Surfaces - Light Mode */
+  --background: #FAF6F1;
+  --surface-soft: #F5EBE0;
+  --surface-card: #ffffff;
+  --surface-doc: #fcfcfa;
+  --surface-dark: #23251d;
+
+  /* Brand & Accent - Gold Accent */
+  --primary: #B8860B;
+  /* Gold Accent */
+  --primary-pressed: #9A6F08;
+  /* Gold Pressed */
+  --primary-active: #7A5506;
+  /* Gold Active */
+  --on-primary: #ffffff;
+
+  /* Text - Light Mode */
+  --foreground: #4A4A4A;
+  --body: #4A4A4A;
+  --charcoal: #333333;
+  --mute: #8B7355;
+  --ash: #9b9c92;
+  --stone: #b6b7af;
+
+  /* Borders & Dividers - Light Mode */
+  --hairline: #e5cdb3;
+  --hairline-soft: #f0e1d0;
+  --border: var(--hairline);
+  /* Alias for generic border */
+
+  /* Semantic Accents - Light Mode */
+  --link-blue: #1d4ed8;
+  --link-teal: #1078a3;
+  --accent-blue: #2c84e0;
+  --accent-blue-soft: #dceaf6;
+  --accent-red: #cd4239;
+  --accent-red-soft: #f7d6d3;
+  --accent-green: #2c8c66;
+  --accent-green-soft: #d9eddf;
+  --accent-purple: #7c44a6;
+  --accent-purple-soft: #e7d8ee;
+
+  /* Legacy Accent (for backward compatibility) */
+  --accent: #B8860B;
+  /* Maps to primary gold */
+
+  /* Radii Scale */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+
+  /* Typography Fallbacks */
+  --font-plex: var(--font-ibm-plex), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ============================================================
+   Dark Mode Color Overrides
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* Canvas & Surfaces - Dark Mode */
+    --background: #1F1F1F;
+    --surface-soft: #2A2A2A;
+    --surface-card: #242424;
+    --surface-doc: #1f1f1d;
+    --surface-dark: #0f0f0d;
+
+    /* Brand & Accent - Gold Accent (same as light) */
+    --primary: #D4AF37;
+    /* Gold Accent */
+    --primary-pressed: #be950e;
+    /* Gold Pressed */
+    --primary-active: #7A5506;
+    /* Gold Active */
+    --on-primary: #1F1F1F;
+
+    /* Text - Dark Mode */
+    --foreground: #F5F5F5;
+    --body: #F5F5F5;
+    --charcoal: #c0c0bc;
+    --mute: #B0B0B0;
+    --ash: #6a6a66;
+    --stone: #5a5a56;
+
+    /* Borders & Dividers - Dark Mode */
+    --hairline: #3a3a3a;
+    --hairline-soft: #2a2a2a;
+    --border: var(--hairline);
+    /* Alias for generic border */
+
+    /* Semantic Accents - Dark Mode */
+    --link-blue: #5ba3ff;
+    --link-teal: #4db8d8;
+    --accent-blue: #5ba3ff;
+    --accent-blue-soft: #1a3a52;
+    --accent-red: #ff6b5b;
+    --accent-red-soft: #4a2a28;
+    --accent-green: #5bcc8a;
+    --accent-green-soft: #2a4a38;
+    --accent-purple: #b88aff;
+    --accent-purple-soft: #4a3a5a;
+  }
+}
+
+/* Dark mode class strategy for explicit theme switching */
+.dark {
+  /* Canvas & Surfaces - Dark Mode */
+  --background: #1F1F1F;
+  --surface-soft: #2A2A2A;
+  --surface-card: #242424;
+  --surface-doc: #1f1f1d;
+  --surface-dark: #0f0f0d;
+
+  /* Brand & Accent - Gold Accent (same as light) */
+  --primary: #D4AF37;
+  /* Gold Accent */
+  --primary-pressed: #be950e;
+  /* Gold Pressed */
+  --primary-active: #7A5506;
+  /* Gold Active */
+  --on-primary: #1F1F1F;
+
+  /* Text - Dark Mode */
+  --foreground: #F5F5F5;
+  --body: #F5F5F5;
+  --charcoal: #c0c0bc;
+  --mute: #B0B0B0;
+  --ash: #6a6a66;
+  --stone: #5a5a56;
+
+  /* Borders & Dividers - Dark Mode */
+  --hairline: #3a3a3a;
+  --hairline-soft: #2a2a2a;
+  --border: var(--hairline);
+  /* Alias for generic border */
+
+  /* Semantic Accents - Dark Mode */
+  --link-blue: #5ba3ff;
+  --link-teal: #4db8d8;
+  --accent-blue: #5ba3ff;
+  --accent-blue-soft: #1a3a52;
+  --accent-red: #ff6b5b;
+  --accent-red-soft: #4a2a28;
+  --accent-green: #5bcc8a;
+  --accent-green-soft: #2a4a38;
+  --accent-purple: #b88aff;
+  --accent-purple-soft: #4a3a5a;
+}
+
+@theme inline {
+  /* Colors - Canvas & Surfaces */
+  --color-background: var(--background);
+  --color-surface-soft: var(--surface-soft);
+  --color-surface-card: var(--surface-card);
+  --color-surface-doc: var(--surface-doc);
+  --color-surface-dark: var(--surface-dark);
+
+  /* Colors - Primary (Gold Accent) */
+  --color-primary: var(--primary);
+  --color-primary-pressed: var(--primary-pressed);
+  --color-primary-active: var(--primary-active);
+  --color-on-primary: var(--on-primary);
+
+  /* Colors - Text */
+  --color-foreground: var(--foreground);
+  --color-body: var(--body);
+  --color-charcoal: var(--charcoal);
+  --color-mute: var(--mute);
+  --color-ash: var(--ash);
+  --color-stone: var(--stone);
+
+  /* Colors - Borders */
+  --color-hairline: var(--hairline);
+  --color-hairline-soft: var(--hairline-soft);
+  --color-border: var(--border);
+
+  /* Colors - Semantic Accents */
+  --color-link-blue: var(--link-blue);
+  --color-link-teal: var(--link-teal);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-blue-soft: var(--accent-blue-soft);
+  --color-accent-red: var(--accent-red);
+  --color-accent-red-soft: var(--accent-red-soft);
+  --color-accent-green: var(--accent-green);
+  --color-accent-green-soft: var(--accent-green-soft);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-purple-soft: var(--accent-purple-soft);
+
+  /* Legacy Accent Color */
+  --color-accent: var(--accent);
+
+  /* Typography */
+  --font-plex: var(--font-plex);
+  --font-mono: var(--font-source-code, ui-monospace, monospace);
+
+  /* Border Radius */
+  --radius-none: var(--radius-none);
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-full: var(--radius-full);
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.text-gradient {
+  background: linear-gradient(to right, var(--color-primary), #CD853F, #e27420);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--body);
+  font-family: var(--font-plex);
+  font-weight: 400;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Hierarchy */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--foreground);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Display XL: 36px, weight 700, line-height 1.5 */
+.display-xl {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* Display LG: 24px, weight 800, line-height 1.33, letter-spacing -0.6px */
+.display-lg {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.33;
+  letter-spacing: -0.6px;
+}
+
+/* Heading LG: 21px, weight 700, line-height 1.4, letter-spacing -0.5px */
+.heading-lg {
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.5px;
+}
+
+/* Heading MD: 20px, weight 700, line-height 1.4 */
+.heading-md {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Heading SM: 18px, weight 700, line-height 1.5 */
+.heading-sm {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* Body MD: 16px, weight 400, line-height 1.5 */
+.body-md {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Body Strong: 16px, weight 600, line-height 1.5 */
+.body-strong {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* Body SM: 15px, weight 400, line-height 1.71 */
+.body-sm {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.71;
+}
+
+/* Body XS: 14px, weight 500, line-height 1.43 */
+.body-xs {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.43;
+}
+
+/* Button MD: 14px, weight 700, line-height 1.5 */
+.button-md {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* Code: 14px, weight 400, line-height 1.43 */
+.code {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+  font-family: var(--font-mono);
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.33;
+  letter-spacing: -0.6px;
+}
+
+h3 {
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.5px;
+}
+
+/* Eyebrow Labels */
+.eyebrow {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--mute);
+  letter-spacing: 0;
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   Component Utilities
+   ============================================================ */
+
+/* PostHog Cards */
+.card-posthog {
+  background-color: var(--surface-card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  transition: background-color 250ms ease-in-out, border-color 250ms ease-in-out;
+}
+
+/* PostHog Buttons */
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--on-primary);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 8px 16px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-pressed);
+}
+
+.btn-primary:active {
+  background-color: var(--primary-active);
+}
+
+.btn-primary:disabled {
+  background-color: var(--surface-soft);
+  color: var(--ash);
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--surface-soft);
+  color: var(--foreground);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 8px 16px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(229, 231, 224, 0.8);
+}
+
+.btn-secondary:disabled {
+  background-color: var(--surface-soft);
+  color: var(--ash);
+  cursor: not-allowed;
+}
+
+.btn-tertiary {
+  background-color: transparent;
+  color: var(--foreground);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 8px 16px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-tertiary:hover {
+  background-color: rgba(229, 231, 224, 0.5);
+}
+
+/* PostHog Inputs */
+.input-posthog {
+  background-color: var(--surface-card);
+  color: var(--foreground);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  height: 36px;
+  width: 100%;
+  font-size: 16px;
+  font-family: var(--font-plex);
+  transition: background-color 250ms ease-in-out, color 250ms ease-in-out, border-color 250ms ease-in-out;
+}
+
+.input-posthog::placeholder {
+  color: var(--mute);
+}
+
+.input-posthog:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(44, 132, 224, 0.2);
+}
+
+/* ============================================================
+   Scrollbar Styling
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--hairline);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--stone);
+}
+
+/* ============================================================
+   Marquee / Infinite Scroll Animation
+   ============================================================ */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  /* Override the global theme transition so it doesn't interfere */
+  transition-property: none !important;
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ============================================================
+   Ambient Blob Animation
+   ============================================================ */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
