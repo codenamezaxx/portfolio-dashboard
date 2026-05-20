@@ -32,11 +32,7 @@ export {
 // Data Table Component
 export {
   DataTable,
-  type DataTableColumn,
-  type DataTableRowAction,
-  type DataTablePagination,
-  type DataTableSort,
-  type DataTableFilter,
+  type Column as DataTableColumn,
   type DataTableProps,
 } from './DataTable';
 
@@ -64,12 +60,10 @@ export {
 export {
   LoadingState,
   type LoadingStateProps,
-  type LoadingIndicatorType,
 } from './LoadingState';
 export {
   ErrorState,
   type ErrorStateProps,
-  type ErrorMessageType,
 } from './ErrorState';
 export {
   ErrorAlert,

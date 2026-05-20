@@ -19,6 +19,7 @@ import { FileText, Upload, X, CheckCircle, AlertCircle, Loader2 } from 'lucide-r
 export interface PDFUploadProps {
   onUpload?: (result: { url: string; filename: string }) => void;
   onError?: (error: Error) => void;
+  bucket?: string;
   folder?: string;
   maxSize?: number; // In bytes
   disabled?: boolean;
@@ -29,6 +30,7 @@ export interface PDFUploadProps {
 export function PDFUpload({
   onUpload,
   onError,
+  bucket = 'portfolio',
   folder = 'documents',
   maxSize = 10 * 1024 * 1024, // 10MB default
   disabled = false,
@@ -70,6 +72,7 @@ export function PDFUpload({
 
       try {
         const result = await uploadPDF(selectedFile, {
+          bucket,
           folder,
           onProgress: (p) => setProgress(p),
         });
