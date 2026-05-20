@@ -47,6 +47,7 @@
   --hairline: #e5cdb3;
   --hairline-soft: #f0e1d0;
   --border: var(--hairline);
+  --card: var(--surface-card);
   /* Alias for generic border */
 
   /* Semantic Accents - Light Mode */

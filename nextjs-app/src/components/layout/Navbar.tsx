@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 text-[var(--foreground)] font-bold text-xl hover:text-[var(--primary)] transition-colors">
           <Terminal className="w-6 h-6 text-[var(--primary)]" />
-          <span>codenamezaxx</span>
+          <span className='font-mono'>codenamezaxx</span>
         </Link>
 
         {/* Desktop Menu */}

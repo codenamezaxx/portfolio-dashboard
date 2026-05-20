@@ -537,7 +537,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
 
       {/* Version History */}
       {showVersionHistory && versionHistory.length > 0 && (
-        <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-6">
+        <div className="bg-[var(--surface-card)] border border-[var(--border)] rounded-lg p-6">
           <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">Version History</h3>
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {versionHistory.map((version, index) => (

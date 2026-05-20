@@ -117,7 +117,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         <div
           className={`
             fixed inset-0 z-40
-            bg-black/30 backdrop-blur-sm
+            bg-black/40 backdrop-blur-sm
             transition-all duration-300
             ${overlayClassName}
           `}
@@ -125,7 +125,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
           aria-hidden="true"
         />
 
-        {/* Modal */}
+        {/* Modal container */}
         <div
           ref={ref || modalRef}
           role="dialog"
@@ -140,6 +140,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
           `}
           tabIndex={-1}
         >
+          {/* Modal content */}
           <div
             className={`
               bg-[var(--surface-card)]
@@ -147,14 +148,15 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
               w-full ${sizeStyles[size]}
               max-h-[90vh] overflow-y-auto
               border border-[var(--hairline)]
+              flex flex-col
               ${contentClassName}
             `}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-[var(--hairline)]">
+            <div className="flex items-center justify-between p-6 border-b border-[var(--hairline)] bg-[var(--surface-card)] sticky top-0 z-10">
               <h2
                 id="modal-title"
-                className="text-lg font-bold text-[var(--ink)]"
+                className="text-lg font-bold text-[var(--foreground)]"
               >
                 {title}
               </h2>
@@ -164,7 +166,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
                   onClick={onClose}
                   className="
                     text-[var(--mute)]
-                    hover:text-[var(--ink)]
+                    hover:text-[var(--foreground)]
                     focus:outline-none focus:ring-2 focus:ring-[var(--primary)]
                     rounded-md p-1
                     transition-colors duration-200
@@ -189,8 +191,8 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
               )}
             </div>
 
-            {/* Content */}
-            <div className="p-6">
+            {/* Content body */}
+            <div className="p-6 flex-1 bg-[var(--surface-card)]">
               {message && (
                 <p
                   id="modal-description"
@@ -200,12 +202,12 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 </p>
               )}
 
-              {children && <div className="mb-4">{children}</div>}
+              {children}
             </div>
 
             {/* Footer with Actions */}
             {actions.length > 0 && (
-              <div className="flex items-center justify-end gap-3 p-6 border-t border-[var(--hairline)]">
+              <div className="flex items-center justify-end gap-3 p-6 border-t border-[var(--hairline)] bg-[var(--surface-card)] sticky bottom-0 z-10">
                 {actions.map((action, index) => (
                   <Button
                     key={index}
@@ -230,7 +232,6 @@ Modal.displayName = 'Modal';
 
 /**
  * Confirmation Dialog Component
- * A specialized modal for confirmation dialogs with predefined actions
  */
 export interface ConfirmationDialogProps
   extends Omit<ModalProps, 'actions' | 'children'> {
@@ -297,7 +298,6 @@ ConfirmationDialog.displayName = 'ConfirmationDialog';
 
 /**
  * Delete Confirmation Dialog Component
- * A specialized confirmation dialog for delete operations
  */
 export interface DeleteConfirmationDialogProps
   extends Omit<ConfirmationDialogProps, 'confirmVariant' | 'title'> {
@@ -352,7 +352,6 @@ DeleteConfirmationDialog.displayName = 'DeleteConfirmationDialog';
 
 /**
  * Alert Dialog Component
- * A specialized modal for displaying alerts with a single action button
  */
 export interface AlertDialogProps
   extends Omit<ModalProps, 'actions' | 'children'> {
@@ -380,13 +379,6 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
     const handleAction = () => {
       onAction?.();
       onClose();
-    };
-
-    const variantStyles = {
-      info: 'text-blue-600 dark:text-blue-400',
-      success: 'text-green-600 dark:text-green-400',
-      warning: 'text-yellow-600 dark:text-yellow-400',
-      error: 'text-red-600 dark:text-red-400',
     };
 
     const actions: ModalAction[] = [

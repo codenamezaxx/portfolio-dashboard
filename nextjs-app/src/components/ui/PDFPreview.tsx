@@ -17,7 +17,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 
 // Set up PDF.js worker locally from public directory
 if (typeof window !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
 }
 
 export interface PDFPreviewProps {
@@ -144,14 +144,14 @@ export function PDFPreview({
     <div className={`flex flex-col gap-4 ${className}`}>
       {/* PDF Canvas */}
       <div
-        className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-auto bg-gray-50 dark:bg-gray-900 flex justify-center"
+        className="border border-[var(--hairline)] rounded-lg overflow-auto bg-[var(--surface-soft)] flex justify-center"
         style={{ maxHeight }}
       >
         {loading ? (
           <div className="flex items-center justify-center w-full h-96">
             <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mb-2" />
-              <p className="text-sm text-gray-600 dark:text-gray-400">Loading PDF...</p>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)] mb-2" />
+              <p className="text-sm text-[var(--mute)]">Loading PDF...</p>
             </div>
           </div>
         ) : (
@@ -170,14 +170,14 @@ export function PDFPreview({
           <button
             onClick={handlePreviousPage}
             disabled={currentPage <= 1 || loading}
-            className="px-3 py-2 bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg text-sm font-medium transition-colors"
+            className="px-3 py-2 bg-[var(--surface-soft)] hover:bg-[var(--surface-card)] disabled:opacity-50 disabled:cursor-not-allowed border border-[var(--hairline)] rounded-lg text-sm font-medium transition-colors text-[var(--foreground)]"
             aria-label="Previous page"
           >
             ← Previous
           </button>
 
           {showPageInfo && (
-            <span className="text-sm text-gray-600 dark:text-gray-400 min-w-fit">
+            <span className="text-sm text-[var(--mute)] min-w-fit">
               Page {currentPage} of {totalPages}
             </span>
           )}
@@ -185,7 +185,7 @@ export function PDFPreview({
           <button
             onClick={handleNextPage}
             disabled={currentPage >= totalPages || loading}
-            className="px-3 py-2 bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg text-sm font-medium transition-colors"
+            className="px-3 py-2 bg-[var(--surface-soft)] hover:bg-[var(--surface-card)] disabled:opacity-50 disabled:cursor-not-allowed border border-[var(--hairline)] rounded-lg text-sm font-medium transition-colors text-[var(--foreground)]"
             aria-label="Next page"
           >
             Next →
@@ -197,7 +197,7 @@ export function PDFPreview({
           <button
             onClick={handleDownload}
             disabled={loading}
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-[var(--primary)] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--on-primary)] rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
             aria-label={`Download ${filename}`}
           >
             <svg
@@ -220,7 +220,7 @@ export function PDFPreview({
       </div>
 
       {/* File Info */}
-      <div className="text-xs text-gray-600 dark:text-gray-400">
+      <div className="text-xs text-[var(--mute)]">
         <p className="truncate">File: {filename}</p>
       </div>
     </div>

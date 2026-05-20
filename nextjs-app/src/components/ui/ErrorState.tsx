@@ -1,224 +1,119 @@
-import React from 'react';
-import { Button, type ButtonProps } from './Button';
+/**
+ * ErrorState Component
+ * 
+ * Provides a standardized way to display error messages across the application.
+ * Features:
+ * - Title and message display
+ * - Optional retry action
+ * - Variant support (inline, full-page, overlay)
+ * - Accessibility support (ARIA roles)
+ */
 
-export type ErrorMessageType = 'validation' | 'network' | 'server' | 'auth' | 'generic';
+'use client';
+
+import React from 'react';
+import { AlertTriangle, RefreshCcw } from 'lucide-react';
+import { Button } from './Button';
 
 export interface ErrorStateProps {
-  /**
-   * Whether the component is in an error state
-   */
-  isError: boolean;
-
-  /**
-   * Error message to display
-   */
-  message?: string;
-
-  /**
-   * Type of error for styling and context
-   * @default 'generic'
-   */
-  errorType?: ErrorMessageType;
-
-  /**
-   * Detailed error description (shown below main message)
-   */
-  description?: string;
-
-  /**
-   * Whether to display the error in full screen overlay
-   * @default false
-   */
-  isFullScreen?: boolean;
-
-  /**
-   * Callback function for retry button
-   */
+  /** The error title */
+  title?: string;
+  /** The error message or description */
+  message: string;
+  /** Optional callback for retry action */
   onRetry?: () => void;
-
-  /**
-   * Callback function for dismiss button
-   */
-  onDismiss?: () => void;
-
-  /**
-   * Whether to show retry button
-   * @default true
-   */
-  showRetry?: boolean;
-
-  /**
-   * Whether to show dismiss button
-   * @default true
-   */
-  showDismiss?: boolean;
-
-  /**
-   * Custom retry button text
-   * @default 'Try Again'
-   */
-  retryButtonText?: string;
-
-  /**
-   * Custom dismiss button text
-   * @default 'Dismiss'
-   */
-  dismissButtonText?: string;
-
-  /**
-   * Additional CSS classes
-   */
+  /** Optional label for retry button (defaults to 'Retry') */
+  retryLabel?: string;
+  /** Visual variant */
+  variant?: 'inline' | 'page' | 'overlay';
+  /** Optional CSS class for container */
   className?: string;
-
-  /**
-   * ARIA label for accessibility
-   * @default 'Error'
-   */
-  ariaLabel?: string;
-
-  /**
-   * Children to display when not in error state
-   */
-  children?: React.ReactNode;
+  /** Optional error object for debugging (not shown to user) */
+  error?: Error | unknown;
 }
 
 /**
  * ErrorState Component
- * A flexible error state component that displays error messages with retry and dismiss options
- * Supports different error types with appropriate styling
- * Includes accessibility features with ARIA labels
+ * Standardized error display with retry capability
  */
 export const ErrorState: React.FC<ErrorStateProps> = ({
-  isError,
+  title = 'Something went wrong',
   message,
-  errorType = 'generic',
-  description,
-  isFullScreen = false,
   onRetry,
-  onDismiss,
-  showRetry = true,
-  showDismiss = true,
-  retryButtonText = 'Try Again',
-  dismissButtonText = 'Dismiss',
+  retryLabel = 'Retry',
+  variant = 'inline',
   className = '',
-  ariaLabel = 'Error',
-  children,
+  error,
 }) => {
-  if (!isError) {
-    return <>{children}</>;
+  // Log detailed error to console if provided
+  if (error) {
+    console.error('[ErrorState]', error);
   }
 
-  const errorTypeStyles = {
-    validation: {
-      bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-      border: 'border-yellow-200 dark:border-yellow-800',
-      text: 'text-yellow-700 dark:text-yellow-400',
-      icon: '⚠️',
-    },
-    network: {
-      bg: 'bg-orange-50 dark:bg-orange-900/20',
-      border: 'border-orange-200 dark:border-orange-800',
-      text: 'text-orange-700 dark:text-orange-400',
-      icon: '🌐',
-    },
-    server: {
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      border: 'border-red-200 dark:border-red-800',
-      text: 'text-red-700 dark:text-red-400',
-      icon: '❌',
-    },
-    auth: {
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      border: 'border-red-200 dark:border-red-800',
-      text: 'text-red-700 dark:text-red-400',
-      icon: '🔒',
-    },
-    generic: {
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      border: 'border-red-200 dark:border-red-800',
-      text: 'text-red-700 dark:text-red-400',
-      icon: '❌',
-    },
+  const containerStyles = {
+    inline: `
+      flex flex-col items-center justify-center p-6 text-center
+      bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg
+    `,
+    page: `
+      flex flex-col items-center justify-center min-h-[400px] p-12 text-center
+      bg-canvas dark:bg-canvas
+    `,
+    overlay: `
+      absolute inset-0 z-50 flex items-center justify-center p-6 text-center
+      bg-white/80 dark:bg-[var(--surface-card)]/80 backdrop-blur-sm
+    `,
   };
 
-  const styles = errorTypeStyles[errorType];
+  const iconStyles = {
+    inline: 'w-8 h-8 text-red-500 mb-3',
+    page: 'w-16 h-16 text-red-500 mb-6',
+    overlay: 'w-12 h-12 text-red-500 mb-4',
+  };
 
-  const errorContent = (
+  const titleStyles = {
+    inline: 'text-base font-bold text-red-700 dark:text-red-400 mb-1',
+    page: 'text-2xl font-bold text-[var(--foreground)] mb-2',
+    overlay: 'text-xl font-bold text-[var(--foreground)] mb-2',
+  };
+
+  const messageStyles = {
+    inline: 'text-sm text-red-600 dark:text-red-300',
+    page: 'text-lg text-[var(--mute)] max-w-md',
+    overlay: 'text-base text-[var(--mute)] max-w-sm',
+  };
+
+  return (
     <div
-      className={`
-        ${styles.bg}
-        border ${styles.border}
-        rounded-lg p-4
-        ${className}
-      `}
+      className={`${containerStyles[variant]} ${className}`}
       role="alert"
-      aria-label={ariaLabel}
       aria-live="assertive"
+      aria-labelledby="error-title"
     >
-      <div className="flex gap-3">
-        <div className="flex-shrink-0 text-xl">
-          {styles.icon}
-        </div>
-        <div className="flex-1">
-          {message && (
-            <h3 className={`font-semibold ${styles.text} mb-1`}>
-              {message}
-            </h3>
-          )}
-          {description && (
-            <p className={`text-sm ${styles.text} mb-3`}>
-              {description}
-            </p>
-          )}
-          {(showRetry || showDismiss) && (
-            <div className="flex gap-2 mt-3">
-              {showRetry && onRetry && (
-                <Button
-                  onClick={onRetry}
-                  variant="secondary"
-                  size="sm"
-                  className={`${styles.text} hover:opacity-80`}
-                >
-                  {retryButtonText}
-                </Button>
-              )}
-              {showDismiss && onDismiss && (
-                <Button
-                  onClick={onDismiss}
-                  variant="ghost"
-                  size="sm"
-                  className={`${styles.text} hover:opacity-80`}
-                >
-                  {dismissButtonText}
-                </Button>
-              )}
-            </div>
-          )}
-        </div>
+      <div className="flex flex-col items-center animate-in fade-in zoom-in duration-300">
+        <AlertTriangle className={iconStyles[variant]} aria-hidden="true" />
+        
+        <h2 id="error-title" className={titleStyles[variant]}>
+          {title}
+        </h2>
+        
+        <p className={messageStyles[variant]}>
+          {message}
+        </p>
+
+        {onRetry && (
+          <div className="mt-6">
+            <Button
+              variant={variant === 'inline' ? 'secondary' : 'primary'}
+              onClick={onRetry}
+              className="flex items-center gap-2"
+            >
+              <RefreshCcw className="w-4 h-4" />
+              {retryLabel}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
-
-  if (isFullScreen) {
-    return (
-      <div
-        className={`
-          fixed inset-0
-          bg-white/80 dark:bg-gray-900/80
-          backdrop-blur-sm
-          flex items-center justify-center
-          z-50
-          p-4
-        `}
-      >
-        <div className="max-w-md w-full">
-          {errorContent}
-        </div>
-      </div>
-    );
-  }
-
-  return errorContent;
 };
-
-ErrorState.displayName = 'ErrorState';

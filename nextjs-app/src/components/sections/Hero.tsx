@@ -134,18 +134,18 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
 
             <motion.p
               variants={fadeInUp}
-              className="text-3xl md:text-4xl lg:text-6xl font-bold tracking-tight mb-4 leading-tight"
+              className="text-5xl md:text-6xl lg:text-6xl font-bold tracking-tight mb-4 leading-tight"
             >
               Hi, I'm <span className="text-gradient">{profileData.name}</span>
             </motion.p>
 
-            <motion.h2
+            <motion.p
               variants={fadeInUp}
-              className="text-lg md:text-2xl font-medium mb-6 leading-snug"
+              className="text-xl md:text-2xl font-medium font-mono mb-6 leading-snug"
               style={{ color: 'var(--color-mute)' }}
             >
               {profileData.role}
-            </motion.h2>
+            </motion.p>
 
             {/* Tagline */}
             <motion.p

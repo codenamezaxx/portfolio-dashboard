@@ -134,6 +134,8 @@ export function getSessionCookieOptions() {
  */
 export function formatSessionCookie(token: string): string {
   const { name, options } = getSessionCookieOptions();
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'preview' || process.env.VERCEL_ENV === 'production';
+  
   const cookieParts = [
     `${name}=${token}`,
     `Path=${options.path}`,
@@ -142,10 +144,11 @@ export function formatSessionCookie(token: string): string {
     'HttpOnly',
   ];
 
-  // In development, use Lax instead of Strict for better compatibility
-  if (process.env.NODE_ENV === 'production') {
-    cookieParts.push('SameSite=Strict');
+  if (isProduction) {
     cookieParts.push('Secure');
+    // Using Lax for production/preview to ensure better reliability across redirects if needed, 
+    // but Strict is generally safer for CSRF. Vercel previews sometimes struggle with Strict.
+    cookieParts.push('SameSite=Lax');
   } else {
     cookieParts.push('SameSite=Lax');
   }
@@ -159,6 +162,8 @@ export function formatSessionCookie(token: string): string {
  */
 export function formatClearSessionCookie(): string {
   const { name, options } = getSessionCookieOptions();
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'preview' || process.env.VERCEL_ENV === 'production';
+  
   const cookieParts = [
     `${name}=`,
     `Path=${options.path}`,
@@ -167,10 +172,9 @@ export function formatClearSessionCookie(): string {
     'HttpOnly',
   ];
 
-  // In development, use Lax instead of Strict for better compatibility
-  if (process.env.NODE_ENV === 'production') {
-    cookieParts.push('SameSite=Strict');
+  if (isProduction) {
     cookieParts.push('Secure');
+    cookieParts.push('SameSite=Lax');
   } else {
     cookieParts.push('SameSite=Lax');
   }

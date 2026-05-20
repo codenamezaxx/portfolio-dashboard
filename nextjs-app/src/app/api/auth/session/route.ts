@@ -19,10 +19,14 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
-    // Get session from headers
-    const headers = Object.fromEntries(request.headers.entries());
-    console.log('🔍 Session check - Cookie header:', headers.cookie);
-    const session = getSessionFromHeaders(headers);
+    // Get session from headers or request cookies
+    const cookieHeader = request.headers.get('cookie');
+    const token = request.cookies.get('session_token')?.value || (cookieHeader ? getSessionFromHeaders({ cookie: cookieHeader }) : null);
+    
+    console.log('🔍 Session check - Cookie found:', !!token);
+    
+    const session = typeof token === 'string' ? getSessionFromHeaders({ cookie: `session_token=${token}` }) : getSessionFromHeaders(Object.fromEntries(request.headers.entries()));
+    
     console.log('🔍 Session check - Parsed session:', session ? 'Valid' : 'Invalid');
 
     if (!session) {

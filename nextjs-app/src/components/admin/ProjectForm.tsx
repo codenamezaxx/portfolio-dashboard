@@ -1,8 +1,7 @@
 /**
  * ProjectForm Component
  * 
- * Example form component for managing project data.
- * Demonstrates validation of multiple fields including arrays.
+ * Allows admins to manage portfolio projects with validation and image upload.
  */
 
 'use client';
@@ -10,9 +9,8 @@
 import { useState } from 'react';
 import { useFormValidation } from '@/lib/useFormValidation';
 import { projectSchema, type ProjectInput } from '@/lib/validation';
-import { FormField, TextAreaField, SelectField, Button, FormGroup } from '@/components/ui';
+import { FormField, TextAreaField, SelectField, Button, FormGroup, ImageUpload } from '@/components/ui';
 import { FormError, FormSuccess } from '@/components/ui';
-import { uploadImageApi } from '@/lib/upload-utils';
 
 interface ProjectFormProps {
   initialData?: ProjectInput;
@@ -48,35 +46,6 @@ export function ProjectForm({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [techInput, setTechInput] = useState('');
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Validate size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setSubmitError('File size exceeds maximum of 5MB');
-      return;
-    }
-
-    // Validate format
-    if (!['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'].includes(file.type)) {
-      setSubmitError('Only JPG, PNG, WebP, and SVG images are allowed');
-      return;
-    }
-
-    setIsUploadingImage(true);
-    setSubmitError(null);
-    try {
-      const result = await uploadImageApi(file, { folder: 'projects' });
-      form.setFieldValue('imageUrl', result.url);
-    } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : 'Upload failed');
-    } finally {
-      setIsUploadingImage(false);
-    }
-  };
 
   const form = useFormValidation({
     initialValues: initialData,
@@ -165,60 +134,17 @@ export function ProjectForm({
           disabled={isLoading || form.isSubmitting}
         />
 
-        {/* Project Preview Image Upload */}
-        <div className="flex flex-col gap-2">
+        {/* Project Preview Image Upload - Integrated Component */}
+        <div className="space-y-2">
           <label className="text-sm font-medium text-[var(--foreground)]">
-            Gambar Preview Proyek
+            Gambar Preview Proyek <span className="text-red-500">*</span>
           </label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              readOnly
-              placeholder={isUploadingImage ? "Mengunggah gambar..." : "Belum ada gambar terpilih"}
-              value={form.values.imageUrl || ''}
-              className="flex-1 px-3 py-2 bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] rounded-lg focus:outline-none text-sm cursor-not-allowed opacity-80"
-            />
-            <input
-              type="file"
-              id="project-image-upload"
-              accept="image/*"
-              className="hidden"
-              onChange={handleFileChange}
-              disabled={isLoading || form.isSubmitting || isUploadingImage}
-            />
-            <button
-              type="button"
-              onClick={() => document.getElementById('project-image-upload')?.click()}
-              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors flex-shrink-0 disabled:opacity-50"
-              disabled={isLoading || form.isSubmitting || isUploadingImage}
-            >
-              {isUploadingImage ? 'Mengunggah...' : 'Pilih Gambar'}
-            </button>
-          </div>
-          
-          {form.values.imageUrl && (
-            <div className="flex items-center gap-3 mt-2 p-2 border border-[var(--border)] rounded-lg">
-              <div className="relative w-12 h-12 rounded overflow-hidden border border-[var(--border)] flex-shrink-0 bg-gray-100 dark:bg-gray-800">
-                <img
-                  src={form.values.imageUrl}
-                  alt="Preview"
-                  className="object-cover w-full h-full"
-                />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-[var(--muted)] truncate">{form.values.imageUrl}</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => form.setFieldValue('imageUrl', '')}
-                className="text-xs text-red-500 hover:text-red-400 font-semibold px-2 py-1"
-                disabled={isLoading || form.isSubmitting || isUploadingImage}
-              >
-                Hapus
-              </button>
-            </div>
-          )}
-          
+          <ImageUpload
+            value={form.values.imageUrl}
+            onChange={(url) => form.setFieldValue('imageUrl', url)}
+            folder="projects"
+            disabled={isLoading || form.isSubmitting}
+          />
           {form.errors.imageUrl && form.touched.imageUrl && (
             <p className="text-sm text-red-400">{form.errors.imageUrl}</p>
           )}
@@ -241,7 +167,7 @@ export function ProjectForm({
                 }
               }}
               placeholder="Add technology (e.g., React)"
-              className="flex-1 px-3 py-2 bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] rounded-lg focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20"
+              className="flex-1 px-3 py-2 bg-[var(--surface)] border border-hairline text-[var(--foreground)] rounded-lg focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20"
               disabled={isLoading || form.isSubmitting}
             />
             <button

@@ -221,7 +221,7 @@ export function AchievementManager() {
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="bg-[var(--surface)] p-4 border border-[var(--border)] rounded-lg flex flex-col md:flex-row gap-4">
+      <div className="bg-surface-card p-4 border border-[var(--border)] rounded-lg flex flex-col md:flex-row gap-4">
         <div className="flex-1">
           <TextInput 
             placeholder="Search by title or issuer..." 
@@ -243,12 +243,12 @@ export function AchievementManager() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filteredAchievements.length === 0 ? (
-          <p className="col-span-full p-8 text-center text-[var(--muted)] bg-[var(--surface)] border border-[var(--border)] rounded-lg">
+          <p className="col-span-full p-8 text-center text-[var(--muted)] bg-surface-card border border-[var(--border)] rounded-lg">
             No achievements found matching your criteria.
           </p>
         ) : (
           filteredAchievements.map((item) => (
-            <div key={item.id} className={`bg-[var(--surface)] border border-[var(--border)] rounded-lg p-5 flex flex-col gap-4 transition-all ${selectedIds.has(item.id) ? 'ring-2 ring-blue-500/50' : 'hover:border-blue-500/30'}`}>
+            <div key={item.id} className={`bg-surface-card border border-[var(--border)] rounded-lg p-5 flex flex-col gap-4 transition-all ${selectedIds.has(item.id) ? 'ring-2 ring-blue-500/50' : 'hover:border-blue-500/30'}`}>
               <div className="flex justify-between items-start">
                 <div className="flex gap-3 items-start">
                   <input 

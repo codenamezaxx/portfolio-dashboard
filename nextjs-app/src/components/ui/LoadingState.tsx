@@ -1,135 +1,77 @@
-import React from 'react';
-import { LoadingSpinner, type LoadingSpinnerProps } from './LoadingSpinner';
-import { SkeletonLoader, type SkeletonLoaderProps } from './SkeletonLoader';
+/**
+ * LoadingState Component
+ * 
+ * Standardized loading indicator for different context (inline, page, overlay).
+ * Features:
+ * - Different visual variants
+ * - Customizable message
+ * - ARIA accessibility support
+ * - Smooth animations
+ */
 
-export type LoadingIndicatorType = 'spinner' | 'skeleton';
+'use client';
+
+import React from 'react';
+import { LoadingSpinner } from './LoadingSpinner';
 
 export interface LoadingStateProps {
-  /**
-   * Whether the component is in a loading state
-   */
-  isLoading: boolean;
-
-  /**
-   * Type of loading indicator to display
-   * @default 'spinner'
-   */
-  indicatorType?: LoadingIndicatorType;
-
-  /**
-   * Props to pass to the LoadingSpinner component
-   */
-  spinnerProps?: Omit<LoadingSpinnerProps, 'ariaLabel'>;
-
-  /**
-   * Props to pass to the SkeletonLoader component
-   */
-  skeletonProps?: Omit<SkeletonLoaderProps, 'ariaLabel'>;
-
-  /**
-   * Optional message to display during loading
-   */
+  /** Optional message to display */
   message?: string;
-
-  /**
-   * Whether to display the loading indicator in full screen overlay
-   * @default false
-   */
-  isFullScreen?: boolean;
-
-  /**
-   * Additional CSS classes
-   */
+  /** Visual variant */
+  variant?: 'inline' | 'page' | 'overlay';
+  /** Size of the spinner */
+  size?: 'sm' | 'md' | 'lg';
+  /** Optional CSS class */
   className?: string;
-
-  /**
-   * ARIA label for accessibility
-   * @default 'Loading'
-   */
-  ariaLabel?: string;
-
-  /**
-   * Children to display when not loading
-   */
-  children?: React.ReactNode;
 }
 
 /**
  * LoadingState Component
- * A flexible loading state component that supports different loading indicators
- * Can display spinner, skeleton, or custom loading UI
- * Supports full-screen overlay mode for async operations
+ * Standardized loading state for the application
  */
 export const LoadingState: React.FC<LoadingStateProps> = ({
-  isLoading,
-  indicatorType = 'spinner',
-  spinnerProps,
-  skeletonProps,
-  message,
-  isFullScreen = false,
+  message = 'Loading...',
+  variant = 'inline',
+  size = 'md',
   className = '',
-  ariaLabel = 'Loading',
-  children,
 }) => {
-  if (!isLoading) {
-    return <>{children}</>;
-  }
+  const containerStyles = {
+    inline: `
+      flex flex-col items-center justify-center p-6 text-center
+      bg-[var(--surface-soft)]/50 rounded-lg
+    `,
+    page: `
+      flex flex-col items-center justify-center min-h-[400px] p-12 text-center
+      bg-canvas dark:bg-canvas
+    `,
+    overlay: `
+      absolute inset-0 z-50 flex flex-col items-center justify-center p-6 text-center
+      bg-white/80 dark:bg-[var(--surface-card)]/80 backdrop-blur-sm
+    `,
+  };
 
-  const loadingContent = (
+  const messageStyles = {
+    sm: 'text-xs mt-2',
+    md: 'text-sm mt-3',
+    lg: 'text-base mt-4',
+  };
+
+  return (
     <div
-      className={`
-        flex flex-col items-center justify-center gap-4
-        ${className}
-      `}
+      className={`${containerStyles[variant]} ${className}`}
+      role="status"
+      aria-live="polite"
+      aria-label={message}
     >
-      {indicatorType === 'spinner' ? (
-        <div
-          role="status"
-          aria-label={ariaLabel}
-          aria-live="polite"
-          className="flex flex-col items-center justify-center gap-2"
-        >
-          <LoadingSpinner
-            {...spinnerProps}
-          />
-        </div>
-      ) : (
-        <div
-          role="status"
-          aria-label={ariaLabel}
-          aria-live="polite"
-        >
-          <SkeletonLoader
-            {...skeletonProps}
-            ariaLabel={undefined}
-          />
-        </div>
-      )}
-      {message && (
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          {message}
-        </p>
-      )}
+      <div className="flex flex-col items-center animate-in fade-in duration-300">
+        <LoadingSpinner size={size} />
+        
+        {message && (
+          <p className={`${messageStyles[size]} font-medium text-[var(--mute)]`}>
+            {message}
+          </p>
+        )}
+      </div>
     </div>
   );
-
-  if (isFullScreen) {
-    return (
-      <div
-        className={`
-          fixed inset-0
-          bg-white/80 dark:bg-gray-900/80
-          backdrop-blur-sm
-          flex items-center justify-center
-          z-50
-        `}
-      >
-        {loadingContent}
-      </div>
-    );
-  }
-
-  return loadingContent;
 };
-
-LoadingState.displayName = 'LoadingState';

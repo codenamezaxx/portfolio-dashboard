@@ -32,6 +32,8 @@ export interface ImageUploadProps {
   disabled?: boolean;
   className?: string;
   showFileSize?: boolean;
+  value?: string;
+  onChange?: (url: string) => void;
 }
 
 export function ImageUpload({
@@ -47,10 +49,12 @@ export function ImageUpload({
   disabled = false,
   className = '',
   showFileSize = true,
+  value,
+  onChange,
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(value || null);
   const [error, setError] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
@@ -82,7 +86,7 @@ export function ImageUpload({
         return;
       }
 
-      // Show preview
+      // Show local preview
       const reader = new FileReader();
       reader.onload = (e) => {
         setPreview(e.target?.result as string);
@@ -107,7 +111,7 @@ export function ImageUpload({
         });
 
         onUpload?.(result);
-        setPreview(null);
+        onChange?.(result.url);
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
@@ -125,7 +129,7 @@ export function ImageUpload({
         abortControllerRef.current = null;
       }
     },
-    [bucket, folder, compress, quality, maxSize, acceptedFormats, onUpload, onError]
+    [bucket, folder, compress, quality, maxSize, acceptedFormats, onUpload, onError, onChange]
   );
 
   const handleCancelUpload = useCallback(() => {
@@ -135,12 +139,21 @@ export function ImageUpload({
     setUploading(false);
     setProgress(0);
     setCurrentFile(null);
-    setPreview(null);
+    setPreview(value || null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
     onCancel?.();
-  }, [onCancel]);
+  }, [onCancel, value]);
+
+  const handleRemoveImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setPreview(null);
+    onChange?.('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -186,8 +199,8 @@ export function ImageUpload({
         onClick={handleClick}
         className={`
           relative border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
-          transition-colors duration-200
-          ${dragActive ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500'}
+          transition-colors duration-200 bg-[var(--surface-card)]
+          ${dragActive ? 'border-[var(--primary)] bg-[var(--surface-soft)]' : 'border-[var(--hairline)] hover:border-[var(--stone)]'}
           ${disabled || uploading ? 'opacity-50 cursor-not-allowed' : ''}
         `}
         role="button"
@@ -211,26 +224,34 @@ export function ImageUpload({
 
         {preview && !uploading ? (
           <div className="space-y-4">
-            <div className="relative w-32 h-32 mx-auto">
-              <Image
+            <div className="relative w-full aspect-video max-h-48 mx-auto overflow-hidden rounded-md border border-[var(--hairline)]">
+              <img
                 src={preview}
                 alt="Preview"
-                fill
-                className="object-contain"
+                className="object-cover w-full h-full"
               />
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Click to change image</p>
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-sm text-[var(--mute)]">Click or drag to change image</p>
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                className="text-xs text-red-500 hover:text-red-400 font-semibold"
+              >
+                Hapus Gambar
+              </button>
+            </div>
           </div>
         ) : uploading ? (
           <div className="space-y-4">
-            <div className="text-lg font-semibold text-gray-900 dark:text-white">
-              Uploading...
+            <div className="text-lg font-semibold text-[var(--foreground)]">
+              Mengunggah...
             </div>
             
             {/* Progress Bar */}
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+            <div className="w-full bg-[var(--surface-soft)] rounded-full h-2 overflow-hidden">
               <div
-                className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                className="bg-[var(--primary)] h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
                 role="progressbar"
                 aria-valuenow={Math.round(progress)}
@@ -242,11 +263,11 @@ export function ImageUpload({
 
             {/* Progress Information */}
             <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {Math.round(progress)}% Complete
+              <p className="text-sm font-medium text-[var(--foreground)]">
+                {Math.round(progress)}% Selesai
               </p>
               {showFileSize && currentFile && (
-                <p className="text-xs text-gray-600 dark:text-gray-400">
+                <p className="text-xs text-[var(--mute)]">
                   {currentFile.name} • {(currentFile.size / 1024 / 1024).toFixed(2)}MB
                 </p>
               )}
@@ -261,13 +282,13 @@ export function ImageUpload({
               className="mt-4 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium transition-colors"
               aria-label="Cancel upload"
             >
-              Cancel Upload
+              Batalkan Unggahan
             </button>
           </div>
         ) : (
           <div className="space-y-2">
             <svg
-              className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
+              className="mx-auto h-12 w-12 text-[var(--mute)]"
               stroke="currentColor"
               fill="none"
               viewBox="0 0 48 48"
@@ -280,14 +301,14 @@ export function ImageUpload({
                 strokeLinejoin="round"
               />
             </svg>
-            <p className="text-lg font-semibold text-gray-900 dark:text-white">
-              Drag and drop your image here
+            <p className="text-lg font-semibold text-[var(--foreground)]">
+              Tarik dan lepas gambar di sini
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              or click to select a file
+            <p className="text-sm text-[var(--mute)]">
+              atau klik untuk memilih file
             </p>
-            <p className="text-xs text-gray-500 dark:text-gray-500">
-              Supported formats: JPG, PNG, WebP, SVG (Max {(maxSize / 1024 / 1024).toFixed(0)}MB)
+            <p className="text-xs text-[var(--ash)]">
+              Format: JPG, PNG, WebP, SVG (Maks. {(maxSize / 1024 / 1024).toFixed(0)}MB)
             </p>
           </div>
         )}

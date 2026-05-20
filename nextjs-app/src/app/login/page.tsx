@@ -91,7 +91,11 @@ export default function LoginPage() {
       // Successful login - use window.location for full page reload
       // This ensures the session cookie is properly available before the admin page loads
       console.log('✅ Login successful, redirecting to /admin...');
-      window.location.href = '/admin';
+      
+      // Small delay to ensure cookie is persisted in some environments
+      setTimeout(() => {
+        window.location.href = '/admin';
+      }, 100);
     } catch (err) {
       console.error('Login error:', err);
       setError('An unexpected error occurred. Please try again.');

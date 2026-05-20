@@ -10,7 +10,7 @@
 import { useState } from 'react';
 import { useFormValidation } from '@/lib/useFormValidation';
 import { profileSchema, type ProfileInput } from '@/lib/validation';
-import { FormField, TextAreaField, Button, FormGroup } from '@/components/ui';
+import { FormField, TextAreaField, Button, FormGroup, ImageUpload } from '@/components/ui';
 import { FormError, FormSuccess } from '@/components/ui';
 
 interface ProfileFormProps {
@@ -110,20 +110,24 @@ export function ProfileForm({
           disabled={isLoading || form.isSubmitting}
         />
 
-        <FormField
-          label="Hero Image URL"
-          name="heroImageUrl"
-          type="url"
-          placeholder="https://example.com/image.jpg"
-          value={form.values.heroImageUrl || ''}
-          onChange={form.handleChange}
-          onBlur={form.handleBlur}
-          error={form.errors.heroImageUrl}
-          touched={form.touched.heroImageUrl}
-          variant="admin"
-          disabled={isLoading || form.isSubmitting}
-          helperText="Optional: URL to your hero section image"
-        />
+        {/* Hero Image Upload - Integrated Component */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-[var(--foreground)]">
+            Hero Image <span className="text-red-500">*</span>
+          </label>
+          <ImageUpload
+            value={form.values.heroImageUrl}
+            onChange={(url) => form.setFieldValue('heroImageUrl', url)}
+            folder="profile"
+            disabled={isLoading || form.isSubmitting}
+          />
+          {form.errors.heroImageUrl && form.touched.heroImageUrl && (
+            <p className="text-sm text-red-400">{form.errors.heroImageUrl}</p>
+          )}
+          <p className="text-xs text-[var(--muted)]">
+            Optional: Upload a hero section image
+          </p>
+        </div>
       </FormGroup>
 
       {/* Submit Button */}
