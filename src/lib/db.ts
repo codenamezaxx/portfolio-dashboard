@@ -36,32 +36,59 @@ export const supabase = createClient(
  * @returns Admin user with password hash if found, null otherwise
  */
 export async function findAdminUserByEmail(email: string): Promise<(AdminUser & { passwordHash: string }) | null> {
-  const { data, error } = await supabase
-    .from('admin_users')
-    .select('id, email, password_hash, is_active, last_login, created_at, updated_at')
-    .eq('email', email)
-    .eq('is_active', true)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('admin_users')
+      .select('id, email, password_hash, is_active, last_login, created_at, updated_at, avatar_url')
+      .eq('email', email)
+      .eq('is_active', true)
+      .single();
 
-  if (error) {
-    if (error.code === 'PGRST116') {
-      // No rows found
-      return null;
-    }
-    throw new Error(`Database error: ${error.message}`);
-  }
-
-  return data
-    ? {
-        id: data.id,
-        email: data.email,
-        isActive: data.is_active,
-        lastLogin: data.last_login ? new Date(data.last_login) : undefined,
-        createdAt: new Date(data.created_at),
-        updatedAt: new Date(data.updated_at),
-        passwordHash: data.password_hash,
+    if (error) {
+      if (error.code === 'PGRST116') return null;
+      
+      // Fallback query if avatar_url column is missing
+      if (error.message?.includes('avatar_url')) {
+        const { data: fallbackData, error: fallbackError } = await supabase
+          .from('admin_users')
+          .select('id, email, password_hash, is_active, last_login, created_at, updated_at')
+          .eq('email', email)
+          .eq('is_active', true)
+          .single();
+        
+        if (fallbackError) {
+          if (fallbackError.code === 'PGRST116') return null;
+          throw new Error(`Database error: ${fallbackError.message}`);
+        }
+        
+        return {
+          id: fallbackData.id,
+          email: fallbackData.email,
+          isActive: fallbackData.is_active,
+          lastLogin: fallbackData.last_login ? new Date(fallbackData.last_login) : undefined,
+          createdAt: new Date(fallbackData.created_at),
+          updatedAt: new Date(fallbackData.updated_at),
+          passwordHash: fallbackData.password_hash,
+        };
       }
-    : null;
+      
+      throw new Error(`Database error: ${error.message}`);
+    }
+
+    return {
+      id: data.id,
+      email: data.email,
+      avatarUrl: data.avatar_url || undefined,
+      isActive: data.is_active,
+      lastLogin: data.last_login ? new Date(data.last_login) : undefined,
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at),
+      passwordHash: data.password_hash,
+    };
+  } catch (error) {
+    console.error('Error in findAdminUserByEmail:', error);
+    return null;
+  }
 }
 
 /**
@@ -70,30 +97,55 @@ export async function findAdminUserByEmail(email: string): Promise<(AdminUser & 
  * @returns Admin user if found, null otherwise
  */
 export async function findAdminUserById(userId: string): Promise<AdminUser | null> {
-  const { data, error } = await supabase
-    .from('admin_users')
-    .select('id, email, is_active, last_login, created_at, updated_at')
-    .eq('id', userId)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('admin_users')
+      .select('id, email, is_active, last_login, created_at, updated_at, avatar_url')
+      .eq('id', userId)
+      .single();
 
-  if (error) {
-    if (error.code === 'PGRST116') {
-      // No rows found
-      return null;
-    }
-    throw new Error(`Database error: ${error.message}`);
-  }
+    if (error) {
+      if (error.code === 'PGRST116') return null;
 
-  return data
-    ? {
-        id: data.id,
-        email: data.email,
-        isActive: data.is_active,
-        lastLogin: data.last_login ? new Date(data.last_login) : undefined,
-        createdAt: new Date(data.created_at),
-        updatedAt: new Date(data.updated_at),
+      // Fallback query if avatar_url column is missing
+      if (error.message?.includes('avatar_url')) {
+        const { data: fallbackData, error: fallbackError } = await supabase
+          .from('admin_users')
+          .select('id, email, is_active, last_login, created_at, updated_at')
+          .eq('id', userId)
+          .single();
+        
+        if (fallbackError) {
+          if (fallbackError.code === 'PGRST116') return null;
+          throw new Error(`Database error: ${fallbackError.message}`);
+        }
+        
+        return {
+          id: fallbackData.id,
+          email: fallbackData.email,
+          isActive: fallbackData.is_active,
+          lastLogin: fallbackData.last_login ? new Date(fallbackData.last_login) : undefined,
+          createdAt: new Date(fallbackData.created_at),
+          updatedAt: new Date(fallbackData.updated_at),
+        };
       }
-    : null;
+
+      throw new Error(`Database error: ${error.message}`);
+    }
+
+    return {
+      id: data.id,
+      email: data.email,
+      avatarUrl: data.avatar_url || undefined,
+      isActive: data.is_active,
+      lastLogin: data.last_login ? new Date(data.last_login) : undefined,
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at),
+    };
+  } catch (error) {
+    console.error('Error in findAdminUserById:', error);
+    return null;
+  }
 }
 
 /**
@@ -102,25 +154,62 @@ export async function findAdminUserById(userId: string): Promise<AdminUser | nul
  * @returns Updated admin user
  */
 export async function updateAdminUserLastLogin(userId: string): Promise<AdminUser> {
-  const { data, error } = await supabase
-    .from('admin_users')
-    .update({ last_login: new Date().toISOString() })
-    .eq('id', userId)
-    .select('id, email, is_active, last_login, created_at, updated_at')
-    .single();
+  return updateAdminUser(userId, { last_login: new Date().toISOString() });
+}
 
-  if (error) {
-    throw new Error(`Database error: ${error.message}`);
+/**
+ * Update admin user data.
+ * @param userId - Admin user ID
+ * @param updates - Object containing fields to update
+ * @returns Updated admin user
+ */
+export async function updateAdminUser(userId: string, updates: Record<string, any>): Promise<AdminUser> {
+  try {
+    const { data, error } = await supabase
+      .from('admin_users')
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('id', userId)
+      .select('id, email, is_active, last_login, created_at, updated_at, avatar_url')
+      .single();
+
+    if (error) {
+      // Fallback if avatar_url column is missing
+      if (error.message?.includes('avatar_url')) {
+        const { avatar_url, ...otherUpdates } = updates;
+        const { data: fallbackData, error: fallbackError } = await supabase
+          .from('admin_users')
+          .update({ ...otherUpdates, updated_at: new Date().toISOString() })
+          .eq('id', userId)
+          .select('id, email, is_active, last_login, created_at, updated_at')
+          .single();
+        
+        if (fallbackError) throw new Error(`Database error: ${fallbackError.message}`);
+        
+        return {
+          id: fallbackData.id,
+          email: fallbackData.email,
+          isActive: fallbackData.is_active,
+          lastLogin: fallbackData.last_login ? new Date(fallbackData.last_login) : undefined,
+          createdAt: new Date(fallbackData.createdAt),
+          updatedAt: new Date(fallbackData.updatedAt),
+        };
+      }
+      throw new Error(`Database error: ${error.message}`);
+    }
+
+    return {
+      id: data.id,
+      email: data.email,
+      avatarUrl: data.avatar_url,
+      isActive: data.is_active,
+      lastLogin: data.last_login ? new Date(data.last_login) : undefined,
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at),
+    };
+  } catch (error) {
+    console.error('Error in updateAdminUser:', error);
+    throw error;
   }
-
-  return {
-    id: data.id,
-    email: data.email,
-    isActive: data.is_active,
-    lastLogin: data.last_login ? new Date(data.last_login) : undefined,
-    createdAt: new Date(data.created_at),
-    updatedAt: new Date(data.updated_at),
-  };
 }
 
 // ============================================================

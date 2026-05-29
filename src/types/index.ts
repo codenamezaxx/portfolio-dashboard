@@ -114,6 +114,7 @@ export interface ContactInfoVersionHistory {
 export interface AdminUser {
   id: string;
   email: string;
+  avatarUrl?: string;
   isActive: boolean;
   lastLogin?: Date;
   createdAt: Date;

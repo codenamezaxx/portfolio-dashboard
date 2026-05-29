@@ -39,25 +39,25 @@ export default function UserProfilePage() {
 
   return (
     <main className="flex flex-1 flex-col min-h-screen bg-canvas dark:bg-canvas">
-      <div className="max-w-4xl mx-auto w-full px-6 py-8">
+      <div className="max-w-6xl mx-auto w-full px-4 md:px-8 py-8 md:py-12">
         {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-ink dark:text-ink mb-2">User Profile</h1>
-          <p className="text-body dark:text-body">
-            View and manage your account information
+        <div className="mb-10">
+          <h1 className="text-4xl font-black text-ink dark:text-ink mb-3">User Profile</h1>
+          <p className="text-lg text-mute dark:text-mute font-medium">
+            Manage your administrator account, security settings, and professional resume.
           </p>
         </div>
 
         {/* Profile Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Main Profile Card & CV Preview */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-8 space-y-8">
             <UserProfileCard user={user} />
             <CVPreviewSection />
           </div>
 
           {/* Settings Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-4">
             <ProfileSettings user={user} />
           </div>
         </div>

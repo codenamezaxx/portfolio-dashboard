@@ -6,15 +6,6 @@
  * - Role
  * - Tagline
  * - Hero image upload
- * 
- * Features:
- * - Form validation with Zod
- * - Image upload with preview
- * - Save/Cancel functionality
- * - Last updated timestamp display
- * - Error handling and user feedback
- * - Accessibility features (ARIA labels, semantic HTML)
- * - Dark mode support via ThemeContext
  */
 
 'use client';
@@ -32,6 +23,16 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Breadcrumb } from '@/components/admin/Breadcrumb';
 import type { Profile } from '@/types';
 import { z } from 'zod';
+import { 
+  Rocket, 
+  Sparkles, 
+  Clock, 
+  Monitor, 
+  Save, 
+  X, 
+  Eye,
+  Info
+} from 'lucide-react';
 
 // Validation schema for hero content
 const HeroSchema = z.object({
@@ -110,7 +111,6 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
       [field]: value,
     }));
     setHasChanges(true);
-    // Clear error for this field when user starts typing
     if (errors[field]) {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -187,13 +187,11 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
       setSuccessMessage('Hero section updated successfully!');
       setHasChanges(false);
 
-      // Trigger ISR revalidation so public page reflects changes immediately
       await fetch('/api/revalidate', {
         method: 'POST',
         credentials: 'include',
-      }).catch(() => {}); // Non-blocking — don't fail save if revalidate fails
+      }).catch(() => {});
 
-      // Redirect after success
       setTimeout(() => {
         router.push('/admin');
       }, 2000);
@@ -217,182 +215,230 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
 
   if (isFetching) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-[60vh]">
         <LoadingSpinner />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Breadcrumb Navigation */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-8 pb-20">
+      {/* Breadcrumb Navigation & Last Updated */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <Breadcrumb />
-        <span className="text-xs text-mute dark:text-mute">
-          {lastUpdated && `Last updated: ${lastUpdated.toLocaleDateString()} ${lastUpdated.toLocaleTimeString()}`}
-        </span>
+        {lastUpdated && (
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-soft dark:bg-surface-soft border border-hairline rounded-full">
+            <Clock className="w-3.5 h-3.5 text-mute" />
+            <span className="text-[10px] font-black text-mute uppercase tracking-widest">
+              Last Updated: {lastUpdated.toLocaleDateString()} {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Page Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-ink dark:text-ink">Hero Section Editor</h1>
-        <p className="text-body dark:text-body mt-2">
-          Edit your profile information that appears on the hero section of your portfolio
-        </p>
+      <div className="flex items-center gap-4">
+        <div className="p-3 bg-primary/10 rounded-2xl">
+          <Rocket className="w-8 h-8 text-primary" />
+        </div>
+        <div>
+          <h1 className="text-3xl md:text-4xl font-black text-ink dark:text-ink tracking-tight">Hero Section Editor</h1>
+          <p className="text-body dark:text-body font-medium mt-1">
+            Refine your digital identity and professional introduction
+          </p>
+        </div>
       </div>
 
-      {/* Success Message */}
-      {successMessage && (
-        <FormSuccess message={successMessage} />
-      )}
+      {/* Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        
+        {/* Left Column: Form Card */}
+        <div className="order-2 lg:order-1 space-y-6">
+          {successMessage && <FormSuccess message={successMessage} />}
+          {errorMessage && <FormError message={errorMessage} />}
 
-      {/* Error Message */}
-      {errorMessage && (
-        <FormError message={errorMessage} />
-      )}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="bg-primary/5 dark:bg-white/5 backdrop-blur-md border border-primary/10 dark:border-white/10 rounded-2xl p-6 md:p-8 shadow-md space-y-6">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                <h3 className="text-xs font-black text-mute uppercase tracking-[0.2em]">Profile Content</h3>
+              </div>
 
-      {/* Form Container */}
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-surface-card dark:bg-surface-card border border-hairline dark:border-hairline rounded-md p-6 space-y-6">
-          {/* Name Field */}
-          <div>
-            <TextInput
-              label="Full Name"
-              placeholder="Enter your full name"
-              value={formData.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-              error={errors.name}
-              disabled={isLoading}
-              required
-              aria-label="Full name"
-              aria-describedby={errors.name ? 'name-error' : undefined}
-            />
-            {errors.name && (
-              <p id="name-error" className="text-sm text-red-400 mt-1">
-                {errors.name}
-              </p>
-            )}
-          </div>
+              <TextInput
+                label="Full Name"
+                placeholder="Enter your full name"
+                value={formData.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                error={errors.name}
+                disabled={isLoading}
+                required
+                className="h-11 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+              />
 
-          {/* Role Field */}
-          <div>
-            <TextInput
-              label="Professional Role"
-              placeholder="e.g., Front-End Web Developer"
-              value={formData.role}
-              onChange={(e) => handleInputChange('role', e.target.value)}
-              error={errors.role}
-              disabled={isLoading}
-              required
-              aria-label="Professional role"
-              aria-describedby={errors.role ? 'role-error' : undefined}
-            />
-            {errors.role && (
-              <p id="role-error" className="text-sm text-red-400 mt-1">
-                {errors.role}
-              </p>
-            )}
-          </div>
+              <TextInput
+                label="Professional Role"
+                placeholder="e.g., Senior Full-Stack Developer"
+                value={formData.role}
+                onChange={(e) => handleInputChange('role', e.target.value)}
+                error={errors.role}
+                disabled={isLoading}
+                required
+                className="h-11 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+              />
 
-          {/* Tagline Field */}
-          <div>
-            <TextArea
-              label="Tagline"
-              placeholder="Enter a brief tagline or description about yourself"
-              value={formData.tagline}
-              onChange={(e) => handleInputChange('tagline', e.target.value)}
-              error={errors.tagline}
-              disabled={isLoading}
-              required
-              rows={3}
-              aria-label="Tagline"
-              aria-describedby={errors.tagline ? 'tagline-error' : undefined}
-            />
-            {errors.tagline && (
-              <p id="tagline-error" className="text-sm text-red-400 mt-1">
-                {errors.tagline}
-              </p>
-            )}
-          </div>
+              <TextArea
+                label="Tagline / Introduction"
+                placeholder="Briefly describe your expertise and professional mission..."
+                value={formData.tagline}
+                onChange={(e) => handleInputChange('tagline', e.target.value)}
+                error={errors.tagline}
+                disabled={isLoading}
+                required
+                rows={4}
+                className="focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all min-h-[120px]"
+              />
 
-          {/* Image Upload Section */}
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-3">
-                Hero Image
-              </label>
-              <p className="text-xs text-[var(--muted)] mb-4">
-                Upload a profile or hero image (JPG, PNG, WebP, SVG - Max 5MB)
-              </p>
+              {/* Image Upload */}
+              <div className="space-y-4 pt-4 border-t border-hairline/30">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-mute uppercase tracking-wider">
+                    Hero Presentation Image
+                  </label>
+                  <span className="text-[10px] text-stone">Max 5MB • JPG, PNG, WebP</span>
+                </div>
+
+                <ImageUpload
+                  onUpload={handleImageUpload}
+                  onError={handleImageError}
+                  maxSize={5 * 1024 * 1024}
+                  acceptedFormats={['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']}
+                  disabled={isLoading}
+                  folder="hero"
+                />
+              </div>
             </div>
 
-            {/* Image Preview */}
-            {imagePreview && (
-              <div className="relative w-full h-64 bg-[var(--card)] border border-[var(--border)] rounded-lg overflow-hidden">
-                <Image
-                  src={imagePreview}
-                  alt="Hero image preview"
-                  fill
-                  className="object-cover"
-                  sizes="100vw"
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setImagePreview(null);
-                    setFormData((prev) => ({
-                      ...prev,
-                      heroImageUrl: null,
-                    }));
-                    setHasChanges(true);
-                  }}
-                  disabled={isLoading}
-                  className="absolute top-2 right-2 p-2 bg-red-500/80 hover:bg-red-600 text-white rounded-lg transition-colors disabled:opacity-50"
-                  aria-label="Remove image"
-                >
-                  ✕
-                </button>
-              </div>
-            )}
+            {/* Form Actions */}
+            <div className="flex items-center justify-end gap-4 pt-2">
+              <Button
+                type="button"
+                onClick={handleCancel}
+                disabled={isLoading}
+                variant="ghost"
+                className="px-6 hover:bg-surface-soft"
+              >
+                <X className="w-4 h-4 mr-2" /> Discard
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading || !hasChanges}
+                className="px-8 shadow-lg shadow-primary/20 transition-all duration-300 active:scale-95 disabled:shadow-none"
+              >
+                {isLoading ? (
+                  <>Saving Changes...</>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" /> Save Hero Section
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
 
-            {/* Image Upload Component */}
-            <ImageUpload
-              onUpload={handleImageUpload}
-              onError={handleImageError}
-              maxSize={5 * 1024 * 1024}
-              acceptedFormats={['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']}
-              disabled={isLoading}
-              folder="hero"
-            />
+          {/* Tip Box */}
+          <div className="p-5 rounded-2xl bg-accent-blue-soft/20 border border-accent-blue/10 flex gap-4">
+            <Info className="w-6 h-6 text-accent-blue flex-shrink-0" />
+            <p className="text-xs text-body leading-relaxed">
+              <span className="font-black text-accent-blue uppercase tracking-wider block mb-1">UI/UX Tip</span>
+              The hero section is the digital face of your portfolio. Use a high-quality professional image and a tagline that highlights your unique value proposition.
+            </p>
           </div>
         </div>
 
-        {/* Form Actions */}
-        <div className="flex gap-3 justify-end">
-          <Button
-            type="button"
-            onClick={handleCancel}
-            disabled={isLoading}
-            variant="secondary"
-            aria-label="Cancel editing"
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            disabled={isLoading || !hasChanges}
-            aria-label="Save hero section changes"
-          >
-            {isLoading ? 'Saving...' : 'Save Changes'}
-          </Button>
-        </div>
-      </form>
+        {/* Right Column: Live Preview Card */}
+        <div className="order-1 lg:order-2 lg:sticky lg:top-6">
+          <div className="flex items-center gap-2 mb-4 px-2">
+            <Eye className="w-4 h-4 text-primary" />
+            <h3 className="text-xs font-black text-mute uppercase tracking-[0.2em]">Live Mockup</h3>
+          </div>
 
-      {/* Info Box */}
-      <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4">
-        <p className="text-xs text-[var(--muted)] leading-relaxed">
-          <span className="font-semibold text-blue-400">💡 Tip:</span> The hero section is the first thing visitors see on your portfolio. Make sure your name, role, and tagline clearly represent your professional identity.
-        </p>
+          <div className="relative group rounded-3xl border border-hairline overflow-hidden shadow-2xl bg-canvas dark:bg-surface-dark">
+            {/* Browser Header Mockup */}
+            <div className="bg-surface-soft dark:bg-surface-card px-4 py-3 border-b border-hairline flex items-center gap-2">
+              <div className="flex gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+              </div>
+              <div className="flex-1 max-w-[200px] mx-auto h-5 bg-white/50 dark:bg-white/5 rounded-md border border-hairline flex items-center px-2">
+                <div className="w-2 h-2 rounded-full bg-mute/30 mr-2" />
+                <div className="w-full h-1 bg-mute/20 rounded-full" />
+              </div>
+            </div>
+
+            {/* Hero Mockup Content */}
+            <div className="relative p-8 md:p-12 min-h-[400px] flex flex-col justify-center overflow-hidden">
+              {/* Background Ambient Glow */}
+              <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-primary/10 rounded-full blur-[80px]" />
+              <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-48 h-48 bg-accent-blue/10 rounded-full blur-[60px]" />
+
+              <div className="relative z-10 space-y-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
+                  <Monitor className="w-3 h-3 text-primary" />
+                  <span className="text-[10px] font-black text-primary uppercase tracking-widest">Live Preview</span>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="text-4xl md:text-5xl font-black text-ink dark:text-ink tracking-tight break-words">
+                    {formData.name || 'Your Name'}
+                  </h4>
+                  <p className="text-xl md:text-2xl font-bold text-primary italic">
+                    {formData.role || 'Your Professional Role'}
+                  </p>
+                </div>
+
+                <p className="text-base text-body dark:text-body/80 max-w-md leading-relaxed font-medium">
+                  {formData.tagline || 'Your compelling tagline will appear here to introduce you to your visitors...'}
+                </p>
+
+                {/* Hero Image Mockup */}
+                {imagePreview && (
+                  <div className="mt-8 relative w-full aspect-video rounded-2xl overflow-hidden border border-white/20 shadow-xl group-hover:scale-[1.02] transition-transform duration-500">
+                    <Image
+                      src={imagePreview}
+                      alt="Mockup hero"
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Stats / Info Badges */}
+          <div className="grid grid-cols-2 gap-4 mt-6">
+             <div className="p-4 rounded-2xl bg-surface-card dark:bg-surface-card border border-hairline shadow-sm flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                </div>
+                <div>
+                   <p className="text-[10px] font-black text-mute uppercase tracking-widest">Visibility</p>
+                   <p className="text-xs font-bold text-ink dark:text-ink">Live on Portfolio</p>
+                </div>
+             </div>
+             <div className="p-4 rounded-2xl bg-surface-card dark:bg-surface-card border border-hairline shadow-sm flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                   <Save className="w-5 h-5" />
+                </div>
+                <div>
+                   <p className="text-[10px] font-black text-mute uppercase tracking-widest">Changes</p>
+                   <p className="text-xs font-bold text-ink dark:text-ink">{hasChanges ? 'Unsaved Edits' : 'Up to date'}</p>
+                </div>
+             </div>
+          </div>
+        </div>
       </div>
     </div>
   );

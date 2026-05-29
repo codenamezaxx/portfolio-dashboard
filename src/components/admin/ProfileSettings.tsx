@@ -1,11 +1,10 @@
 /**
  * Profile Settings Component
  * 
- * Provides quick access to profile management options including:
+ * Provides quick access to profile management options with modern UI.
  * - Change password
  * - Security settings
  * - Session management
- * - Account preferences
  * - Resume/CV upload
  * - Logout
  */
@@ -18,6 +17,15 @@ import { useRouter } from 'next/navigation';
 import { useLogout } from '@/lib/useLogout';
 import Swal from 'sweetalert2';
 import { Modal, Button } from '@/components/ui';
+import { 
+  KeyRound, 
+  FileText, 
+  ShieldCheck, 
+  History, 
+  LogOut, 
+  ChevronRight,
+  Info
+} from 'lucide-react';
 import type { AdminUser } from '@/types';
 
 interface ProfileSettingsProps {
@@ -42,26 +50,12 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
     e.preventDefault();
 
     // Validation
-    if (!passwordForm.currentPassword) {
+    if (!passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
       await Swal.fire({
         icon: 'warning',
         title: 'Oops!',
-        text: 'Current password is required',
+        text: 'Semua field password wajib diisi',
         confirmButtonColor: '#B8860B',
-        background: 'var(--background)',
-        color: 'var(--foreground)',
-      });
-      return;
-    }
-
-    if (!passwordForm.newPassword) {
-      await Swal.fire({
-        icon: 'warning',
-        title: 'Oops!',
-        text: 'New password is required',
-        confirmButtonColor: '#B8860B',
-        background: 'var(--background)',
-        color: 'var(--foreground)',
       });
       return;
     }
@@ -69,11 +63,9 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
     if (passwordForm.newPassword.length < 8) {
       await Swal.fire({
         icon: 'warning',
-        title: 'Password Terlalu Pendek',
-        text: 'New password must be at least 8 characters',
+        title: 'Terlalu Pendek',
+        text: 'Password baru minimal 8 karakter',
         confirmButtonColor: '#B8860B',
-        background: 'var(--background)',
-        color: 'var(--foreground)',
       });
       return;
     }
@@ -81,52 +73,31 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       await Swal.fire({
         icon: 'error',
-        title: 'Password Tidak Cocok',
-        text: 'Passwords do not match',
+        title: 'Tidak Cocok',
+        text: 'Konfirmasi password tidak sesuai',
         confirmButtonColor: '#B8860B',
-        background: 'var(--background)',
-        color: 'var(--foreground)',
       });
       return;
     }
 
-    if (passwordForm.currentPassword === passwordForm.newPassword) {
-      await Swal.fire({
-        icon: 'warning',
-        title: 'Password Sama',
-        text: 'New password must be different from current password',
-        confirmButtonColor: '#B8860B',
-        background: 'var(--background)',
-        color: 'var(--foreground)',
-      });
-      return;
-    }
-
-    // Show confirmation dialog
     const result = await Swal.fire({
       icon: 'question',
       title: 'Ubah Password?',
-      text: 'Apakah Anda yakin ingin mengubah password?',
+      text: 'Anda akan diminta login kembali setelah password diubah.',
       showCancelButton: true,
       confirmButtonColor: '#B8860B',
       cancelButtonColor: '#8B7355',
       confirmButtonText: 'Ya, Ubah',
       cancelButtonText: 'Batal',
-      background: 'var(--background)',
-      color: 'var(--foreground)',
     });
 
     if (!result.isConfirmed) return;
 
     setIsSubmitting(true);
-
     try {
       const response = await fetch('/api/auth/change-password', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           currentPassword: passwordForm.currentPassword,
           newPassword: passwordForm.newPassword,
@@ -137,508 +108,230 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
         await Swal.fire({
           icon: 'success',
           title: 'Berhasil!',
-          text: 'Password berhasil diubah',
+          text: 'Password berhasil diubah. Silakan login kembali.',
           confirmButtonColor: '#B8860B',
-          background: 'var(--background)',
-          color: 'var(--foreground)',
         });
-        setPasswordForm({
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: '',
-        });
-        setShowChangePassword(false);
+        logout();
       } else {
         const data = await response.json();
-        await Swal.fire({
-          icon: 'error',
-          title: 'Gagal!',
-          text: data.error || 'Failed to change password',
-          confirmButtonColor: '#B8860B',
-          background: 'var(--background)',
-          color: 'var(--foreground)',
-        });
+        throw new Error(data.error || 'Gagal mengubah password');
       }
-    } catch (error) {
+    } catch (error: any) {
       await Swal.fire({
         icon: 'error',
-        title: 'Error!',
-        text: 'An error occurred while changing password',
+        title: 'Error',
+        text: error.message,
         confirmButtonColor: '#B8860B',
-        background: 'var(--background)',
-        color: 'var(--foreground)',
       });
-      console.error('Password change error:', error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleLogout = async () => {
-    const result = await Swal.fire({
-      title: 'Konfirmasi Keluar',
-      text: 'Sesi admin Anda akan diakhiri.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#cd4239',
-      cancelButtonColor: '#8B7355',
-      confirmButtonText: 'Ya, Keluar',
-      cancelButtonText: 'Batal',
-      background: 'var(--background)',
-      color: 'var(--foreground)',
-    });
-
-    if (result.isConfirmed) {
-      logout();
-    }
-  };
-
   const handleResumeUpload = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log('Resume upload started', { resumeFile });
-
-    if (!resumeFile) {
-      await Swal.fire({
-        icon: 'warning',
-        title: 'File Tidak Dipilih',
-        text: 'Please select a PDF file',
-        confirmButtonColor: '#B8860B',
-        background: 'var(--background)',
-        color: 'var(--foreground)',
-      });
-      return;
-    }
-
-    if (resumeFile.type !== 'application/pdf') {
-      await Swal.fire({
-        icon: 'error',
-        title: 'Format Salah',
-        text: 'Only PDF files are allowed',
-        confirmButtonColor: '#B8860B',
-        background: 'var(--background)',
-        color: 'var(--foreground)',
-      });
-      return;
-    }
-
-    if (resumeFile.size > 5 * 1024 * 1024) {
-      await Swal.fire({
-        icon: 'error',
-        title: 'File Terlalu Besar',
-        text: 'File size must be less than 5MB',
-        confirmButtonColor: '#B8860B',
-        background: 'var(--background)',
-        color: 'var(--foreground)',
-      });
-      return;
-    }
-
-    // Show confirmation dialog
-    const result = await Swal.fire({
-      icon: 'question',
-      title: 'Upload Resume?',
-      text: `Apakah Anda yakin ingin upload file "${resumeFile.name}"?`,
-      showCancelButton: true,
-      confirmButtonColor: '#B8860B',
-      cancelButtonColor: '#8B7355',
-      confirmButtonText: 'Ya, Upload',
-      cancelButtonText: 'Batal',
-      background: 'var(--background)',
-      color: 'var(--foreground)',
-    });
-
-    if (!result.isConfirmed) return;
+    if (!resumeFile) return;
 
     setIsUploadingResume(true);
-
-    // Show loading dialog
     Swal.fire({
       title: 'Uploading...',
-      html: 'Mohon tunggu, file sedang diupload',
+      text: 'Mohon tunggu sebentar',
       allowOutsideClick: false,
-      allowEscapeKey: false,
-      background: 'var(--background)',
-      color: 'var(--foreground)',
-      didOpen: async () => {
-        Swal.showLoading();
-
-        try {
-          console.log('Creating FormData and uploading to /api/upload/pdf');
-          const formData = new FormData();
-          formData.append('file', resumeFile);
-          formData.append('folder', 'resumes');
-
-          const uploadResponse = await fetch('/api/upload/pdf', {
-            method: 'POST',
-            credentials: 'include',
-            body: formData,
-          });
-
-          console.log('Upload response status:', uploadResponse.status);
-
-          if (!uploadResponse.ok) {
-            const data = await uploadResponse.json();
-            console.error('Upload failed:', data);
-            Swal.hideLoading();
-            await Swal.fire({
-              icon: 'error',
-              title: 'Upload Gagal',
-              text: data.error || `Upload failed with status ${uploadResponse.status}`,
-              confirmButtonColor: '#B8860B',
-              background: 'var(--background)',
-              color: 'var(--foreground)',
-            });
-            setIsUploadingResume(false);
-            return;
-          }
-
-          const uploadData = await uploadResponse.json();
-          console.log('Upload successful, got URL:', uploadData.url);
-          const resumeUrl = uploadData.url;
-
-          // Update profile with resume URL
-          console.log('Updating profile with resume URL');
-          const updateResponse = await fetch('/api/content/profile-resume', {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({ resume_url: resumeUrl }),
-          });
-
-          console.log('Update response status:', updateResponse.status);
-
-          if (updateResponse.ok) {
-            console.log('Resume update successful');
-            // Trigger refresh event for CV preview component
-            if (typeof window !== 'undefined') {
-              window.dispatchEvent(new CustomEvent('cv-uploaded'));
-            }
-            Swal.hideLoading();
-            await Swal.fire({
-              icon: 'success',
-              title: 'Berhasil!',
-              text: 'Resume berhasil diupload',
-              confirmButtonColor: '#B8860B',
-              background: 'var(--background)',
-              color: 'var(--foreground)',
-            });
-            setResumeFile(null);
-            setShowResumeUpload(false);
-            router.refresh();
-          } else {
-            const data = await updateResponse.json();
-            console.error('Update failed:', data);
-            Swal.hideLoading();
-            await Swal.fire({
-              icon: 'error',
-              title: 'Gagal Menyimpan',
-              text: data.error || `Update failed with status ${updateResponse.status}`,
-              confirmButtonColor: '#B8860B',
-              background: 'var(--background)',
-              color: 'var(--foreground)',
-            });
-          }
-        } catch (error) {
-          console.error('Resume upload error:', error);
-          Swal.hideLoading();
-          await Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'An error occurred while uploading resume',
-            confirmButtonColor: '#B8860B',
-            background: 'var(--background)',
-            color: 'var(--foreground)',
-          });
-        } finally {
-          setIsUploadingResume(false);
-        }
-      },
+      didOpen: () => Swal.showLoading(),
     });
+
+    try {
+      const formData = new FormData();
+      formData.append('file', resumeFile);
+      formData.append('folder', 'resumes');
+
+      const uploadRes = await fetch('/api/upload/pdf', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadRes.ok) throw new Error('Upload gagal');
+      const { url: resumeUrl } = await uploadRes.json();
+
+      const updateRes = await fetch('/api/content/profile-resume', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resume_url: resumeUrl }),
+      });
+
+      if (!updateRes.ok) throw new Error('Gagal update database');
+
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('cv-uploaded'));
+      }
+
+      await Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: 'Resume berhasil diperbarui',
+        confirmButtonColor: '#B8860B',
+      });
+      setShowResumeUpload(false);
+      setResumeFile(null);
+      router.refresh();
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Gagal',
+        text: error.message,
+        confirmButtonColor: '#B8860B',
+      });
+    } finally {
+      setIsUploadingResume(false);
+      Swal.close();
+    }
   };
+
+  const settingsItems = [
+    {
+      label: 'Upload Resume/CV',
+      icon: FileText,
+      onClick: () => setShowResumeUpload(true),
+      color: 'text-accent-blue',
+      bg: 'bg-accent-blue/10',
+    },
+    {
+      label: 'Change Password',
+      icon: KeyRound,
+      onClick: () => setShowChangePassword(true),
+      color: 'text-primary',
+      bg: 'bg-primary/10',
+    },
+    {
+      label: 'Security Settings',
+      icon: ShieldCheck,
+      href: '/admin/security',
+      color: 'text-accent-green',
+      bg: 'bg-accent-green/10',
+    },
+    {
+      label: 'Active Sessions',
+      icon: History,
+      href: '/admin/sessions',
+      color: 'text-accent-purple',
+      bg: 'bg-accent-purple/10',
+    },
+  ];
 
   return (
     <div className="space-y-6">
-      {/* Settings Card */}
-      <div className="bg-surface-card dark:bg-surface-card border border-hairline dark:border-hairline rounded-md p-6">
-        <h3 className="text-heading-md font-bold text-ink dark:text-ink mb-6 flex items-center gap-3">
-          Settings
+      <div className="bg-surface-card dark:bg-surface-card border border-hairline dark:border-hairline rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-lg">
+        <h3 className="text-xs font-black text-mute dark:text-mute uppercase tracking-[0.2em] mb-6 border-b border-hairline pb-2 flex items-center gap-2">
+          Account Settings
         </h3>
 
         <div className="space-y-3">
-          {/* Upload Resume Button */}
-          <button
-            onClick={() => setShowResumeUpload(true)}
-            className="w-full px-6 py-4 text-left bg-surface-card dark:bg-surface-card hover:bg-surface-soft dark:hover:bg-surface-soft border border-hairline dark:border-hairline rounded-md transition-all duration-300 group hover:border-stone dark:hover:border-stone"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div>
-                  <p className="font-body-strong text-body-md text-ink dark:text-ink">
-                    Upload Resume/CV
-                  </p>
+          {settingsItems.map((item) => {
+            const Content = (
+              <div className="flex items-center justify-between group">
+                <div className="flex items-center gap-4">
+                  <div className={`p-2.5 rounded-lg ${item.bg} ${item.color} border border-transparent group-hover:border-current transition-all`}>
+                    <item.icon className="w-5 h-5" />
+                  </div>
+                  <span className="font-bold text-ink dark:text-ink text-sm">{item.label}</span>
                 </div>
+                <ChevronRight className="w-5 h-5 text-mute opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
               </div>
-              <span className="text-2xl text-mute dark:text-mute group-hover:text-primary dark:group-hover:text-primary transition-colors">
-                →
-              </span>
-            </div>
-          </button>
+            );
 
-          {/* Change Password Button */}
-          <button
-            onClick={() => setShowChangePassword(true)}
-            className="w-full px-6 py-4 text-left bg-surface-card dark:bg-surface-card hover:bg-surface-soft dark:hover:bg-surface-soft border border-hairline dark:border-hairline rounded-md transition-all duration-300 group hover:border-stone dark:hover:border-stone"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div>
-                  <p className="font-body-strong text-body-md text-ink dark:text-ink">
-                    Change Password
-                  </p>
-                </div>
-              </div>
-              <span className="text-2xl text-mute dark:text-mute group-hover:text-primary dark:group-hover:text-primary transition-colors">
-                →
-              </span>
-            </div>
-          </button>
+            if (item.href) {
+              return (
+                <Link key={item.label} href={item.href} className="block p-2 rounded-xl hover:bg-surface-soft dark:hover:bg-surface-soft transition-colors">
+                  {Content}
+                </Link>
+              );
+            }
 
-          {/* Security Settings Link */}
-          <Link
-            href="/admin/security"
-            className="w-full px-6 py-4 text-left bg-surface-card dark:bg-surface-card hover:bg-surface-soft dark:hover:bg-surface-soft border border-hairline dark:border-hairline rounded-md transition-all duration-300 group hover:border-stone dark:hover:border-stone block"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div>
-                  <p className="font-body-strong text-body-md text-ink dark:text-ink">
-                    Security Settings
-                  </p>
-                </div>
-              </div>
-              <span className="text-2xl text-mute dark:text-mute group-hover:text-primary dark:group-hover:text-primary transition-colors">
-                →
-              </span>
-            </div>
-          </Link>
+            return (
+              <button key={item.label} onClick={item.onClick} className="w-full text-left p-2 rounded-xl hover:bg-surface-soft dark:hover:bg-surface-soft transition-colors cursor-pointer">
+                {Content}
+              </button>
+            );
+          })}
 
-          {/* Sessions Link */}
-          <Link
-            href="/admin/sessions"
-            className="w-full px-6 py-4 text-left bg-surface-card dark:bg-surface-card hover:bg-surface-soft dark:hover:bg-surface-soft border border-hairline dark:border-hairline rounded-md transition-all duration-300 group hover:border-stone dark:hover:border-stone block"
-          >
-            <div className="flex items-center justify-between">
+          <div className="pt-4 mt-4 border-t border-hairline">
+            <button
+              onClick={() => {
+                Swal.fire({
+                  title: 'Konfirmasi Keluar',
+                  text: 'Sesi admin Anda akan diakhiri.',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#cd4239',
+                  cancelButtonColor: '#8B7355',
+                  confirmButtonText: 'Ya, Keluar',
+                }).then((result) => result.isConfirmed && logout());
+              }}
+              className="w-full p-4 rounded-xl bg-accent-red-soft/20 hover:bg-accent-red-soft/40 border border-accent-red/10 hover:border-accent-red/30 transition-all flex items-center justify-between group cursor-pointer"
+            >
               <div className="flex items-center gap-4">
-                <div>
-                  <p className="font-body-strong text-body-md text-ink dark:text-ink">
-                    Active Sessions
-                  </p>
+                <div className="p-2.5 rounded-lg bg-accent-red-soft text-accent-red">
+                  <LogOut className="w-5 h-5" />
                 </div>
+                <span className="font-bold text-accent-red">{isLoggingOut ? 'Logging out...' : 'Logout Session'}</span>
               </div>
-              <span className="text-2xl text-mute dark:text-mute group-hover:text-primary dark:group-hover:text-primary transition-colors">
-                →
-              </span>
-            </div>
-          </Link>
-
-          {/* Logout Button */}
-          <button
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-            className="w-full px-6 py-4 text-left bg-accent-red-soft dark:bg-accent-red-soft hover:bg-accent-red/20 dark:hover:bg-accent-red/20 border border-accent-red/40 dark:border-accent-red/40 rounded-md transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed hover:border-accent-red/60 dark:hover:border-accent-red/60"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div>
-                  <p className="font-body-strong text-body-md text-accent-red dark:text-accent-red">
-                    {isLoggingOut ? 'Logging out...' : 'Logout'}
-                  </p>
-                </div>
-              </div>
-              <span className="text-2xl text-accent-red/70 dark:text-accent-red/70 group-hover:text-accent-red dark:group-hover:text-accent-red transition-colors">
-                →
-              </span>
-            </div>
-          </button>
+              <ChevronRight className="w-5 h-5 text-accent-red opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Logout Error Alert */}
-      {logoutError && (
-        <div className="bg-accent-red-soft dark:bg-accent-red-soft border border-accent-red/30 dark:border-accent-red/30 rounded-md p-4">
-          <p className="text-sm text-accent-red dark:text-accent-red">{logoutError}</p>
-        </div>
-      )}
+      <div className="p-5 rounded-2xl bg-primary/5 border border-primary/10 flex gap-4">
+        <Info className="w-6 h-6 text-primary flex-shrink-0" />
+        <p className="text-xs text-body leading-relaxed">
+          <span className="font-black text-primary uppercase tracking-wider block mb-1">Security Tip</span>
+          Jaga kerahasiaan password Anda dan ganti secara berkala untuk menjaga keamanan akun portofolio Anda.
+        </p>
+      </div>
 
-      {/* Resume Upload Modal */}
-      <Modal
-        isOpen={showResumeUpload}
-        onClose={() => {
-          setShowResumeUpload(false);
-          setResumeFile(null);
-        }}
-        title="Upload Resume/CV"
-      >
+      {/* Modals with modern styling */}
+      <Modal isOpen={showResumeUpload} onClose={() => setShowResumeUpload(false)} title="Update Resume/CV">
         <form onSubmit={handleResumeUpload} className="space-y-6">
-          <div>
-            <label className="block text-body-strong text-ink dark:text-ink mb-3">
-              Select PDF File
-            </label>
+          <div className="p-8 border-2 border-dashed border-hairline rounded-2xl hover:border-primary transition-colors group text-center cursor-pointer relative">
             <input
               type="file"
               accept=".pdf"
               onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
-              className="w-full px-4 py-3 bg-surface-card dark:bg-surface-card border-2 border-dashed border-hairline dark:border-hairline rounded-md text-ink dark:text-ink focus:outline-none focus:border-accent-blue dark:focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/20 dark:focus:ring-accent-blue/20 transition-all duration-300 cursor-pointer hover:border-stone dark:hover:border-stone"
-              disabled={isUploadingResume}
+              className="absolute inset-0 opacity-0 cursor-pointer"
             />
-            <p className="text-body-xs text-body dark:text-body mt-2">
-              Maximum file size: 5MB. Only PDF files are allowed.
-            </p>
+            <FileText className="w-12 h-12 text-mute group-hover:text-primary mx-auto mb-4 transition-colors" />
+            <p className="text-sm font-bold text-ink dark:text-ink">{resumeFile ? resumeFile.name : 'Pilih file PDF Resume'}</p>
+            <p className="text-xs text-mute mt-2">Maksimal ukuran file 5MB</p>
           </div>
+          <div className="flex gap-3">
+            <Button type="submit" disabled={!resumeFile} className="flex-1">Upload Resume</Button>
+            <Button type="button" variant="secondary" onClick={() => setShowResumeUpload(false)} className="flex-1">Batal</Button>
+          </div>
+        </form>
+      </Modal>
 
-          {resumeFile && (
-            <div className="p-4 bg-accent-blue-soft dark:bg-accent-blue-soft border border-accent-blue/30 dark:border-accent-blue/30 rounded-md">
-              <p className="text-sm text-accent-blue dark:text-accent-blue font-medium">
-                📄 {resumeFile.name} ({(resumeFile.size / 1024 / 1024).toFixed(2)}MB)
-              </p>
+      <Modal isOpen={showChangePassword} onClose={() => setShowChangePassword(false)} title="Ganti Password">
+        <form onSubmit={handlePasswordChange} className="space-y-4">
+          {['currentPassword', 'newPassword', 'confirmPassword'].map((field) => (
+            <div key={field}>
+              <label className="block text-[10px] font-black text-mute uppercase tracking-widest mb-1.5 ml-1">
+                {field.replace(/([A-Z])/g, ' $1').trim()}
+              </label>
+              <input
+                type="password"
+                className="w-full px-4 py-3 bg-surface-soft border border-hairline rounded-xl focus:border-primary outline-none transition-all"
+                placeholder={`Masukkan ${field.toLowerCase()}...`}
+                value={(passwordForm as any)[field]}
+                onChange={(e) => setPasswordForm({ ...passwordForm, [field]: e.target.value })}
+              />
             </div>
-          )}
-
-          <div className="flex gap-4 pt-4">
-            <Button
-              type="submit"
-              disabled={isUploadingResume || !resumeFile}
-              isLoading={isUploadingResume}
-              className="flex-1"
-            >
-              Upload Resume
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => {
-                setShowResumeUpload(false);
-                setResumeFile(null);
-              }}
-              disabled={isUploadingResume}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
+          ))}
+          <div className="flex gap-3 pt-4">
+            <Button type="submit" className="flex-1">Simpan Password</Button>
+            <Button type="button" variant="secondary" onClick={() => setShowChangePassword(false)} className="flex-1">Batal</Button>
           </div>
         </form>
       </Modal>
-
-      {/* Change Password Modal */}
-      <Modal
-        isOpen={showChangePassword}
-        onClose={() => {
-          setShowChangePassword(false);
-          setPasswordForm({
-            currentPassword: '',
-            newPassword: '',
-            confirmPassword: '',
-          });
-        }}
-        title="Change Password"
-      >
-        <form onSubmit={handlePasswordChange} className="space-y-6">
-          <div>
-            <label className="block text-body-strong text-ink dark:text-ink mb-2">
-              Current Password
-            </label>
-            <input
-              type="password"
-              value={passwordForm.currentPassword}
-              onChange={(e) =>
-                setPasswordForm({
-                  ...passwordForm,
-                  currentPassword: e.target.value,
-                })
-              }
-              className="w-full px-4 py-3 bg-surface-card dark:bg-surface-card border border-hairline dark:border-hairline rounded-md text-ink dark:text-ink placeholder-mute dark:placeholder-mute focus:outline-none focus:border-accent-blue dark:focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/20 dark:focus:ring-accent-blue/20 transition-all duration-300"
-              placeholder="Enter current password"
-              disabled={isSubmitting}
-            />
-          </div>
-
-          <div>
-            <label className="block text-body-strong text-ink dark:text-ink mb-2">
-              New Password
-            </label>
-            <input
-              type="password"
-              value={passwordForm.newPassword}
-              onChange={(e) =>
-                setPasswordForm({
-                  ...passwordForm,
-                  newPassword: e.target.value,
-                })
-              }
-              className="w-full px-4 py-3 bg-surface-card dark:bg-surface-card border border-hairline dark:border-hairline rounded-md text-ink dark:text-ink placeholder-mute dark:placeholder-mute focus:outline-none focus:border-accent-blue dark:focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/20 dark:focus:ring-accent-blue/20 transition-all duration-300"
-              placeholder="Enter new password (min 8 characters)"
-              disabled={isSubmitting}
-            />
-          </div>
-
-          <div>
-            <label className="block text-body-strong text-ink dark:text-ink mb-2">
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              value={passwordForm.confirmPassword}
-              onChange={(e) =>
-                setPasswordForm({
-                  ...passwordForm,
-                  confirmPassword: e.target.value,
-                })
-              }
-              className="w-full px-4 py-3 bg-surface-card dark:bg-surface-card border border-hairline dark:border-hairline rounded-md text-ink dark:text-ink placeholder-mute dark:placeholder-mute focus:outline-none focus:border-accent-blue dark:focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/20 dark:focus:ring-accent-blue/20 transition-all duration-300"
-              placeholder="Confirm new password"
-              disabled={isSubmitting}
-            />
-          </div>
-
-          <div className="flex gap-4 pt-4">
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              isLoading={isSubmitting}
-              className="flex-1"
-            >
-              Update Password
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => {
-                setShowChangePassword(false);
-                setPasswordForm({
-                  currentPassword: '',
-                  newPassword: '',
-                  confirmPassword: '',
-                });
-              }}
-              disabled={isSubmitting}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
-      </Modal>
-
-      {/* Quick Info Card */}
-      <div className="bg-accent-blue-soft dark:bg-accent-blue-soft border border-accent-blue/30 dark:border-accent-blue/30 rounded-md p-6">
-        <p className="text-sm text-body dark:text-body leading-relaxed">
-          <span className="font-body-strong text-accent-blue dark:text-accent-blue">Tip:</span> Keep your password
-          secure and change it regularly. Never share your credentials with anyone.
-        </p>
-      </div>
     </div>
   );
 }

@@ -10,6 +10,17 @@
 import { useSession } from '@/lib/useSession';
 import { useStatistics } from '@/lib/useStatistics';
 import { StatisticsWidget } from '@/components/admin/StatisticsWidget';
+import { SyncStatus } from '@/components/admin/SyncStatus';
+import { 
+  Briefcase, 
+  Trophy, 
+  Settings, 
+  Target, 
+  Mail, 
+  ChevronRight,
+  Plus,
+  FileText
+} from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminDashboard() {
@@ -36,8 +47,8 @@ export default function AdminDashboard() {
           <h1 className="text-4xl md:text-5xl font-black text-ink dark:text-ink mb-4">
             Welcome back, <span className="text-primary dark:text-primary">{user?.email?.split('@')[0]}</span>!
           </h1>
-          <p className="text-lg text-body dark:text-body font-medium">
-            Manage your portfolio content from this dashboard
+          <p className="text-md md:text-lg text-body dark:text-body max-w-2xl">
+            Manage your portfolio content, monitor your project stats, and update your professional journey.
           </p>
         </div>
 
@@ -53,54 +64,73 @@ export default function AdminDashboard() {
           <StatisticsWidget
             label="Total Projects"
             value={statistics?.projects ?? 0}
-            icon=" "
+            icon={Briefcase}
             isLoading={statsLoading}
+            color="blue"
           />
           <StatisticsWidget
             label="Total Achievements"
             value={statistics?.achievements ?? 0}
-            icon=" "
+            icon={Trophy}
             isLoading={statsLoading}
+            color="amber"
           />
           <StatisticsWidget
             label="Tech Stack Items"
             value={statistics?.techStack ?? 0}
-            icon=" "
+            icon={Settings}
             isLoading={statsLoading}
+            color="purple"
           />
         </div>
 
-        {/* Quick Actions */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-extrabold text-ink dark:text-ink mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { href: '/admin/hero', icon: '🎯', label: 'Edit Hero', desc: 'Update profile info' },
-              { href: '/admin/projects', icon: '💼', label: 'Projects', desc: 'Manage portfolio' },
-              { href: '/admin/achievements', icon: '🏆', label: 'Achievements', desc: 'Manage certificates' },
-              { href: '/admin/tech-stack', icon: '⚙️', label: 'Tech Stack', desc: 'Manage skills' },
-            ].map((action) => (
-              <Link
-                key={action.href}
-                href={action.href}
-                className="p-6 bg-surface-card dark:bg-surface-card border border-hairline dark:border-hairline rounded-xl shadow-sm hover:shadow-md hover:border-primary/20 dark:hover:border-primary/20 transition-all duration-200"
-              >
-                <div className="flex flex-col items-start gap-4">
-                  <span className="text-4xl opacity-40">{action.icon}</span>
-                  <div>
-                    <p className="font-bold text-ink dark:text-ink text-base">{action.label}</p>
-                    <p className="text-xs text-mute dark:text-mute mt-2">{action.desc}</p>
+        {/* Quick Actions & Recent Activity Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          {/* Quick Actions */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-extrabold text-ink dark:text-ink">Quick Actions</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { href: '/admin/hero', icon: Target, label: 'Edit Hero', desc: 'Update profile info', color: 'border-primary/20' },
+                { href: '/admin/projects', icon: Briefcase, label: 'Manage Projects', desc: 'Add or edit portfolio', color: 'border-accent-blue/20' },
+                { href: '/admin/achievements', icon: Trophy, label: 'Achievements', desc: 'Manage certificates', color: 'border-accent-green/20' },
+                { href: '/admin/contact', icon: Mail, label: 'Contact Info', desc: 'Manage social links', color: 'border-accent-purple/20' },
+              ].map((action) => (
+                <Link
+                  key={action.href}
+                  href={action.href}
+                  className={`group p-5 bg-surface-card dark:bg-surface-card border ${action.color} rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-between`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 rounded-lg bg-surface-soft dark:bg-surface-soft group-hover:bg-primary/10 transition-colors">
+                      <action.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-ink dark:text-ink text-base">{action.label}</p>
+                      <p className="text-xs text-mute dark:text-mute">{action.desc}</p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                  <ChevronRight className="w-5 h-5 text-mute opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0" />
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* New Project / Stats Summary */}
+          <div className="lg:col-span-1">
+             <SyncStatus />
           </div>
         </div>
 
         {/* Recent Activity Section */}
         <div className="p-6 lg:p-8 bg-surface-card dark:bg-surface-card border border-hairline dark:border-hairline rounded-xl shadow-sm">
           <h2 className="text-2xl font-extrabold text-ink dark:text-ink mb-6">Recent Activity</h2>
-          <div className="text-center py-12">
+          <div className="text-center py-12 border-2 border-dashed border-hairline dark:border-hairline rounded-xl bg-surface-soft/30">
+            <div className="w-16 h-16 bg-surface-soft dark:bg-surface-soft rounded-full flex items-center justify-center mx-auto mb-4">
+              <FileText className="w-8 h-8 text-mute" />
+            </div>
             <p className="text-lg text-mute dark:text-mute font-medium">No recent activity yet</p>
             <p className="text-sm text-stone dark:text-stone mt-2">
               Your activity log will appear here as you make changes to your portfolio

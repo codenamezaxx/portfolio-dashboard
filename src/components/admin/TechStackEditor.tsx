@@ -3,20 +3,8 @@
  * 
  * Allows admins to manage tech stack items including:
  * - View list of tech stack items with name and icon
- * - Add new tech stack items
- * - Edit existing tech stack items
- * - Delete tech stack items with confirmation
+ * - Add/Edit/Delete tech stack items
  * - Drag-and-drop reordering
- * - Icon preview
- * 
- * Features:
- * - Form validation with Zod
- * - Drag-and-drop reordering
- * - Icon preview
- * - Confirmation dialog for deletion
- * - Error handling and user feedback
- * - Accessibility features (ARIA labels, semantic HTML)
- * - Dark mode support via ThemeContext
  */
 
 'use client';
@@ -34,6 +22,15 @@ import { Breadcrumb } from '@/components/admin/Breadcrumb';
 import type { TechItem } from '@/types';
 import { techItemSchema } from '@/lib/validation';
 import { z } from 'zod';
+import { 
+  Settings, 
+  Plus, 
+  Edit2, 
+  Trash2, 
+  GripHorizontal,
+  Info,
+  Layers
+} from 'lucide-react';
 
 type TechItemFormData = z.infer<typeof techItemSchema>;
 
@@ -46,27 +43,22 @@ interface EditingItem extends TechItemFormData {
 }
 
 export function TechStackEditor({ initialData }: TechStackEditorProps) {
-  const router = useRouter();
   const [techItems, setTechItems] = useState<TechItem[]>(initialData || []);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(!initialData);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   
-  // Form state
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isFormOpen, setIsFormOpen] = useState(false);
   
-  // Delete confirmation state
   const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   
-  // Drag and drop state
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [dragOverItem, setDragOverItem] = useState<string | null>(null);
 
-  // Fetch tech stack items on mount if not provided
   useEffect(() => {
     if (!initialData) {
       fetchTechStack();
@@ -79,16 +71,12 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
       const response = await fetch('/api/content/tech-stack', {
         credentials: 'include',
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch tech stack items');
-      }
-
+      if (!response.ok) throw new Error('Failed to fetch tech stack items');
       const data = await response.json();
       setTechItems(data.data || []);
     } catch (error) {
-      console.error('Error fetching tech stack:', error);
-      setErrorMessage('Failed to load tech stack items. Please try again.');
+      console.error(error);
+      setErrorMessage('Failed to load tech stack items.');
     } finally {
       setIsFetching(false);
     }
@@ -104,9 +92,7 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
         const newErrors: Record<string, string> = {};
         const flattened = error.flatten().fieldErrors;
         Object.entries(flattened).forEach(([key, messages]) => {
-          if (Array.isArray(messages) && messages.length > 0) {
-            newErrors[key] = messages[0];
-          }
+          if (Array.isArray(messages) && messages.length > 0) newErrors[key] = messages[0];
         });
         setFormErrors(newErrors);
       }
@@ -133,78 +119,27 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!editingItem || !validateForm({ name: editingItem.name, icon: editingItem.icon })) {
-      return;
-    }
+    if (!editingItem || !validateForm({ name: editingItem.name, icon: editingItem.icon })) return;
 
     setIsLoading(true);
-    setErrorMessage(null);
-    setSuccessMessage(null);
-
     try {
-      const payload = {
-        name: editingItem.name,
-        icon: editingItem.icon,
-        displayOrder: editingItem.displayOrder,
-        ...(editingItem.id && { id: editingItem.id }),
-      };
-
+      const payload = { ...editingItem };
       const method = editingItem.id ? 'PUT' : 'POST';
       const response = await fetch('/api/content/tech-stack', {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || `Failed to ${editingItem.id ? 'update' : 'create'} tech stack item`);
-      }
-
-      const data = await response.json();
-
-      if (editingItem.id) {
-        // Update existing item
-        setTechItems((prev) =>
-          prev.map((item) =>
-            item.id === editingItem.id
-              ? {
-                  ...item,
-                  name: data.data.name,
-                  icon: data.data.icon,
-                  displayOrder: data.data.displayOrder,
-                }
-              : item
-          )
-        );
-        setSuccessMessage('Tech stack item updated successfully!');
-      } else {
-        // Add new item
-        setTechItems((prev) => [
-          ...prev,
-          {
-            id: data.data.id,
-            name: data.data.name,
-            icon: data.data.icon,
-            displayOrder: data.data.displayOrder,
-            createdAt: new Date(data.data.createdAt),
-            updatedAt: new Date(data.data.updatedAt),
-          },
-        ]);
-        setSuccessMessage('Tech stack item added successfully!');
-      }
-
+      if (!response.ok) throw new Error('Failed to save tech item');
+      
+      setSuccessMessage(`Tech "${editingItem.name}" ${editingItem.id ? 'updated' : 'added'}!`);
       setIsFormOpen(false);
-      setEditingItem(null);
+      fetchTechStack();
       setTimeout(() => setSuccessMessage(null), 3000);
       await fetch('/api/revalidate', { method: 'POST', credentials: 'include' }).catch(() => {});
     } catch (error) {
-      console.error('Error saving tech stack item:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Failed to save tech stack item');
+      setErrorMessage('Failed to save tech stack item.');
     } finally {
       setIsLoading(false);
     }
@@ -216,349 +151,219 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
 
   const handleConfirmDelete = async () => {
     if (!deleteConfirm) return;
-
     setIsDeleting(true);
-    setErrorMessage(null);
-
     try {
       const response = await fetch(`/api/content/tech-stack?id=${deleteConfirm.id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to delete tech stack item');
-      }
-
-      setTechItems((prev) => prev.filter((item) => item.id !== deleteConfirm.id));
-      setSuccessMessage('Tech stack item deleted successfully!');
+      if (!response.ok) throw new Error('Failed to delete');
+      setTechItems(prev => prev.filter(i => i.id !== deleteConfirm.id));
+      setSuccessMessage('Tech item deleted.');
       setDeleteConfirm(null);
       setTimeout(() => setSuccessMessage(null), 3000);
       await fetch('/api/revalidate', { method: 'POST', credentials: 'include' }).catch(() => {});
     } catch (error) {
-      console.error('Error deleting tech stack item:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Failed to delete tech stack item');
+      setErrorMessage('Failed to delete item.');
     } finally {
       setIsDeleting(false);
     }
   };
 
-  const handleDragStart = (id: string) => {
-    setDraggedItem(id);
-  };
-
+  const handleDragStart = (id: string) => setDraggedItem(id);
   const handleDragOver = (e: React.DragEvent, id: string) => {
     e.preventDefault();
     setDragOverItem(id);
   };
-
-  const handleDragLeave = () => {
-    setDragOverItem(null);
-  };
-
   const handleDrop = async (e: React.DragEvent, targetId: string) => {
     e.preventDefault();
     setDragOverItem(null);
-
-    if (!draggedItem || draggedItem === targetId) {
-      setDraggedItem(null);
-      return;
-    }
-
-    // Reorder items locally
-    const draggedIndex = techItems.findIndex((item) => item.id === draggedItem);
-    const targetIndex = techItems.findIndex((item) => item.id === targetId);
-
-    if (draggedIndex === -1 || targetIndex === -1) {
-      setDraggedItem(null);
-      return;
-    }
+    if (!draggedItem || draggedItem === targetId) return;
 
     const newItems = [...techItems];
-    const [removed] = newItems.splice(draggedIndex, 1);
-    newItems.splice(targetIndex, 0, removed);
+    const draggedIdx = newItems.findIndex(i => i.id === draggedItem);
+    const targetIdx = newItems.findIndex(i => i.id === targetId);
+    if (draggedIdx === -1 || targetIdx === -1) return;
 
-    // Update display order
-    const reorderedItems = newItems.map((item, index) => ({
-      ...item,
-      displayOrder: index,
-    }));
+    const [removed] = newItems.splice(draggedIdx, 1);
+    newItems.splice(targetIdx, 0, removed);
 
-    setTechItems(reorderedItems);
-    setDraggedItem(null);
+    const reordered = newItems.map((item, index) => ({ ...item, displayOrder: index }));
+    setTechItems(reordered);
 
-    // Save reordering to server
     try {
-      const response = await fetch('/api/content/tech-stack', {
+      await fetch('/api/content/tech-stack', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(
-          reorderedItems.map((item) => ({
-            id: item.id,
-            displayOrder: item.displayOrder,
-          }))
-        ),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reordered.map(i => ({ id: i.id, displayOrder: i.displayOrder }))),
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to save reordering');
-      }
-
-      setSuccessMessage('Tech stack reordered successfully!');
-      setTimeout(() => setSuccessMessage(null), 2000);
     } catch (error) {
-      console.error('Error saving reordering:', error);
-      setErrorMessage('Failed to save reordering. Please try again.');
-      // Revert to original order
+      setErrorMessage('Failed to save order.');
       fetchTechStack();
     }
   };
 
-  if (isFetching) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  if (isFetching) return <div className="flex justify-center p-12"><LoadingSpinner /></div>;
 
   return (
-    <div className="space-y-6">
-      {/* Breadcrumb Navigation */}
+    <div className="space-y-8 pb-20">
       <Breadcrumb />
 
-      {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-ink dark:text-ink">Tech Stack Manager</h1>
-          <p className="text-body dark:text-body mt-2">
-            Manage your technology skills and tools. Drag to reorder.
-          </p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-primary/10 rounded-2xl">
+            <Layers className="w-8 h-8 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-3xl md:text-4xl font-black text-ink dark:text-ink tracking-tight">Tech Stack</h1>
+            <p className="text-body dark:text-body font-medium mt-1">Manage technologies and tools in your arsenal</p>
+          </div>
         </div>
-        <Button onClick={handleAddNew} disabled={isLoading}>
-          + Add Tech
+        <Button onClick={handleAddNew} disabled={isLoading} className="shadow-lg shadow-primary/20">
+          <Plus className="w-4 h-4 mr-2" /> Add Technology
         </Button>
       </div>
 
-      {/* Success Message */}
       {successMessage && <FormSuccess message={successMessage} />}
-
-      {/* Error Message */}
       {errorMessage && <FormError message={errorMessage} />}
 
-      {/* Tech Stack List */}
-      <div className="bg-surface-card dark:bg-surface-card border border-hairline dark:border-hairline rounded-md overflow-hidden">
-        {techItems.length === 0 ? (
-          <div className="p-8 text-center">
-            <p className="text-mute dark:text-mute mb-4">No tech stack items yet.</p>
-            <Button onClick={handleAddNew}>Add Your First Tech</Button>
-          </div>
-        ) : (
-          <div className="divide-y divide-[var(--border)]">
-            {techItems.map((item) => (
-              <div
-                key={item.id}
-                draggable
-                onDragStart={() => handleDragStart(item.id || '')}
-                onDragOver={(e) => handleDragOver(e, item.id || '')}
-                onDragLeave={handleDragLeave}
-                onDrop={(e) => handleDrop(e, item.id || '')}
-                className={`p-4 flex items-center gap-4 cursor-move transition-colors ${
-                  dragOverItem === item.id ? 'bg-[var(--accent)]/10' : 'hover:bg-[var(--card)]'
-                } ${draggedItem === item.id ? 'opacity-50' : ''}`}
-              >
-                {/* Drag Handle */}
-                <div className="text-mute dark:text-mute text-xl">⋮⋮</div>
-
-                {/* Icon Preview */}
-                <div className="w-12 h-12 flex items-center justify-center bg-[var(--card)] rounded-lg border border-[var(--border)]">
-                  {item.icon ? (
-                    <Image
-                      src={item.icon}
-                      alt={item.name}
-                      width={32}
-                      height={32}
-                      className="object-contain"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                  ) : (
-                    <span className="text-mute dark:text-mute">?</span>
-                  )}
-                </div>
-
-                {/* Tech Name */}
-                <div className="flex-1">
-                  <h3 className="font-medium text-ink dark:text-ink">{item.name}</h3>
-                  <p className="text-xs text-mute dark:text-mute truncate">{item.icon}</p>
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => handleEdit(item)}
-                    disabled={isLoading}
-                    variant="secondary"
-                    className="text-sm"
-                    aria-label={`Edit ${item.name}`}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    onClick={() => handleDeleteClick(item)}
-                    disabled={isLoading}
-                    variant="secondary"
-                    className="text-sm text-red-400 hover:text-red-500"
-                    aria-label={`Delete ${item.name}`}
-                  >
-                    Delete
-                  </Button>
-                </div>
+      {techItems.length === 0 ? (
+        <div className="bg-surface-card dark:bg-surface-card border-2 border-dashed border-hairline rounded-2xl p-12 text-center">
+          <p className="text-mute dark:text-mute font-medium mb-4">No technologies added yet.</p>
+          <Button variant="ghost" onClick={handleAddNew}>Add your first tech</Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+          {techItems.map((item) => (
+            <div
+              key={item.id}
+              draggable
+              onDragStart={() => handleDragStart(item.id || '')}
+              onDragOver={(e) => handleDragOver(e, item.id || '')}
+              onDrop={(e) => handleDrop(e, item.id || '')}
+              className={`group relative bg-surface-card dark:bg-white/5 border border-hairline dark:border-white/10 rounded-2xl p-6 flex flex-col items-center justify-center gap-4 transition-all duration-300 cursor-move hover:shadow-xl hover:border-primary/30 hover:-translate-y-1
+                ${dragOverItem === item.id ? 'ring-2 ring-primary border-transparent' : ''} 
+                ${draggedItem === item.id ? 'opacity-50 scale-95' : ''}`}
+            >
+              {/* Drag Handle Overlay */}
+              <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <GripHorizontal className="w-3.5 h-3.5 text-mute" />
               </div>
-            ))}
-          </div>
-        )}
+
+              {/* Action Buttons Overlay */}
+              <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all translate-y-1 group-hover:translate-y-0">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); handleEdit(item); }}
+                  className="p-1.5 rounded-lg bg-surface-soft dark:bg-surface-dark border border-hairline hover:text-primary transition-colors"
+                >
+                  <Edit2 className="w-3.5 h-3.5" />
+                </button>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); handleDeleteClick(item); }}
+                  className="p-1.5 rounded-lg bg-surface-soft dark:bg-surface-dark border border-hairline hover:text-accent-red transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Icon Container */}
+              <div className="w-16 h-16 flex items-center justify-center bg-surface-soft dark:bg-surface-dark rounded-xl border border-hairline transition-transform duration-500 group-hover:scale-110">
+                {item.icon ? (
+                  <Image
+                    src={item.icon}
+                    alt={item.name}
+                    width={40}
+                    height={40}
+                    className="object-contain"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary font-black text-xl">
+                    {item.name.charAt(0)}
+                  </div>
+                )}
+              </div>
+
+              <h3 className="font-bold text-center text-ink dark:text-ink text-sm group-hover:text-primary transition-colors">
+                {item.name}
+              </h3>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Info Tip */}
+      <div className="p-5 rounded-2xl bg-accent-blue-soft/20 border border-accent-blue/10 flex gap-4">
+        <Info className="w-6 h-6 text-accent-blue flex-shrink-0" />
+        <p className="text-xs text-body leading-relaxed">
+          <span className="font-black text-accent-blue uppercase tracking-wider block mb-1">Grid Management</span>
+          Drag and drop cards to reorder your tech stack. Use clear, high-quality SVG or PNG icons for the best visual representation.
+        </p>
       </div>
 
-      {/* Add/Edit Form Modal */}
+      {/* Add/Edit Modal */}
       <Modal
         isOpen={isFormOpen}
-        onClose={() => {
-          setIsFormOpen(false);
-          setEditingItem(null);
-          setFormErrors({});
-        }}
-        title={editingItem?.id ? 'Edit Tech Stack Item' : 'Add New Tech Stack Item'}
+        onClose={() => setIsFormOpen(false)}
+        title={editingItem?.id ? 'Edit Technology' : 'Add New Technology'}
       >
-        <form onSubmit={handleFormSubmit} className="space-y-4">
-          {/* Name Field */}
-          <div>
-            <TextInput
-              label="Technology Name"
-              name="tech-name"
-              placeholder="e.g., React, TypeScript, Tailwind CSS"
-              value={editingItem?.name || ''}
-              onChange={(e) =>
-                setEditingItem((prev) => prev ? { ...prev, name: e.target.value } : null)
-              }
-              error={formErrors.name}
-              disabled={isLoading}
-              required
-              aria-label="Technology name"
-              aria-describedby={formErrors.name ? 'name-error' : undefined}
-            />
-            {formErrors.name && (
-              <p id="name-error" className="text-sm text-red-400 mt-1">
-                {formErrors.name}
-              </p>
-            )}
-          </div>
+        <form onSubmit={handleFormSubmit} className="space-y-5">
+          <TextInput
+            label="Technology Name"
+            name="tech-name"
+            placeholder="e.g., React, TypeScript, Node.js"
+            value={editingItem?.name || ''}
+            onChange={(e) => setEditingItem(prev => prev ? { ...prev, name: e.target.value } : null)}
+            error={formErrors.name}
+            disabled={isLoading}
+            required
+            className="h-11 focus:ring-primary/50 focus:border-primary"
+          />
 
-          {/* Icon URL Field */}
-          <div>
-            <TextInput
-              label="Icon URL"
-              name="tech-icon"
-              placeholder="https://example.com/icon.svg"
-              value={editingItem?.icon || ''}
-              onChange={(e) =>
-                setEditingItem((prev) => prev ? { ...prev, icon: e.target.value } : null)
-              }
-              error={formErrors.icon}
-              disabled={isLoading}
-              required
-              aria-label="Icon URL"
-              aria-describedby={formErrors.icon ? 'icon-error' : undefined}
-            />
-            {formErrors.icon && (
-              <p id="icon-error" className="text-sm text-red-400 mt-1">
-                {formErrors.icon}
-              </p>
-            )}
+          <TextInput
+            label="Icon URL"
+            name="tech-icon"
+            placeholder="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/..."
+            value={editingItem?.icon || ''}
+            onChange={(e) => setEditingItem(prev => prev ? { ...prev, icon: e.target.value } : null)}
+            error={formErrors.icon}
+            disabled={isLoading}
+            required
+            className="h-11 focus:ring-primary/50 focus:border-primary"
+          />
 
-            {/* Icon Preview */}
-            {editingItem?.icon && (
-              <div className="mt-3 p-3 bg-surface-soft dark:bg-surface-soft border border-hairline dark:border-hairline rounded-md flex items-center gap-3">
-                <div className="w-10 h-10 flex items-center justify-center bg-surface-card dark:bg-surface-card rounded border border-hairline dark:border-hairline">
-                  <Image
-                    src={editingItem.icon}
-                    alt="Icon preview"
-                    width={32}
-                    height={32}
-                    className="object-contain"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                </div>
-                <span className="text-xs text-mute dark:text-mute">Icon preview</span>
+          {editingItem?.icon && (
+            <div className="p-4 bg-surface-soft dark:bg-surface-dark border border-hairline rounded-xl flex items-center gap-4">
+              <div className="w-12 h-12 flex items-center justify-center bg-surface-card dark:bg-surface-card rounded-lg border border-hairline">
+                <Image src={editingItem.icon} alt="Preview" width={32} height={32} className="object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
               </div>
-            )}
-          </div>
+              <div>
+                <p className="text-xs font-black text-mute uppercase tracking-widest">Icon Preview</p>
+                <p className="text-[10px] text-mute truncate max-w-[200px]">{editingItem.icon}</p>
+              </div>
+            </div>
+          )}
 
-          {/* Form Actions */}
-          <div className="flex gap-3 justify-end pt-4">
-            <Button
-              type="button"
-              onClick={() => {
-                setIsFormOpen(false);
-                setEditingItem(null);
-                setFormErrors({});
-              }}
-              disabled={isLoading}
-              variant="secondary"
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Saving...' : editingItem?.id ? 'Update' : 'Add'}
+          <div className="flex gap-3 justify-end pt-4 border-t border-hairline">
+            <Button variant="ghost" onClick={() => setIsFormOpen(false)} disabled={isLoading}>Cancel</Button>
+            <Button type="submit" disabled={isLoading} className="px-8 shadow-lg shadow-primary/20">
+              {isLoading ? 'Saving...' : editingItem?.id ? 'Update Technology' : 'Add Technology'}
             </Button>
           </div>
         </form>
       </Modal>
 
-      {/* Delete Confirmation Modal */}
-      <Modal
-        isOpen={!!deleteConfirm}
-        onClose={() => setDeleteConfirm(null)}
-        title="Delete Tech Stack Item"
-      >
+      {/* Delete Confirmation */}
+      <Modal isOpen={!!deleteConfirm} onClose={() => setDeleteConfirm(null)} title="Delete Technology">
         <div className="space-y-4">
-          <p className="text-ink dark:text-ink">
-            Are you sure you want to delete <strong>{deleteConfirm?.name}</strong>? This action cannot be undone.
-          </p>
-          <div className="flex gap-3 justify-end">
-            <Button
-              type="button"
-              onClick={() => setDeleteConfirm(null)}
-              disabled={isDeleting}
-              variant="secondary"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              onClick={handleConfirmDelete}
-              disabled={isDeleting}
-              className="bg-red-500 hover:bg-red-600"
-            >
-              {isDeleting ? 'Deleting...' : 'Delete'}
-            </Button>
+          <p className="text-body">Are you sure you want to delete <strong>{deleteConfirm?.name}</strong>?</p>
+          <p className="text-xs text-accent-red font-bold uppercase tracking-wider">This technology will be removed from your portfolio.</p>
+          <div className="flex gap-3 justify-end pt-4">
+            <Button variant="ghost" onClick={() => setDeleteConfirm(null)} disabled={isDeleting}>Cancel</Button>
+            <Button variant="danger" onClick={handleConfirmDelete} isLoading={isDeleting}>Delete Permanently</Button>
           </div>
         </div>
       </Modal>
-
-      {/* Info Box */}
-      <div className="bg-accent-blue-soft dark:bg-accent-blue-soft border border-accent-blue/30 dark:border-accent-blue/30 rounded-md p-4">
-        <p className="text-xs text-body dark:text-body leading-relaxed">
-          <span className="font-semibold text-accent-blue dark:text-accent-blue">💡 Tip:</span> Drag items to reorder them. The order will be saved automatically. Use icon URLs from CDNs like Simpleicons or Devicon for best results.
-        </p>
-      </div>
     </div>
   );
 }

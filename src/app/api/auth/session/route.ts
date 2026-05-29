@@ -50,6 +50,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           user: {
             id: user.id,
             email: user.email,
+            avatarUrl: user.avatarUrl,
             isActive: user.isActive,
             lastLogin: user.lastLogin,
             createdAt: user.createdAt,

@@ -21,6 +21,15 @@ import { Breadcrumb } from '@/components/admin/Breadcrumb';
 import type { JourneyItem } from '@/types';
 import { journeyItemSchema } from '@/lib/validation';
 import { z } from 'zod';
+import { 
+  Rocket, 
+  Calendar, 
+  GripVertical, 
+  Edit2, 
+  Trash2, 
+  Plus,
+  History
+} from 'lucide-react';
 
 type JourneyFormData = z.infer<typeof journeyItemSchema>;
 
@@ -178,59 +187,98 @@ export function JourneyEditor() {
   if (isFetching) return <div className="flex justify-center p-12"><LoadingSpinner /></div>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 pb-20">
       <Breadcrumb />
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gradient-gold">Journey Manager</h1>
-        <Button onClick={handleAddNew}>+ Add Milestone</Button>
+      
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-primary/10 rounded-2xl">
+            <History className="w-8 h-8 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-3xl md:text-4xl font-black text-ink dark:text-ink tracking-tight">Journey Manager</h1>
+            <p className="text-body dark:text-body font-medium mt-1">Manage your professional career timeline</p>
+          </div>
+        </div>
+        <Button onClick={handleAddNew} className="shadow-lg shadow-primary/20">
+          <Plus className="w-4 h-4 mr-2" /> Add Milestone
+        </Button>
       </div>
 
       {successMessage && <FormSuccess message={successMessage} />}
       {errorMessage && <FormError message={errorMessage} />}
 
-      <div className="bg-surface-card dark:bg-surface-card border border-hairline dark:border-hairline rounded-md divide-y divide-hairline dark:divide-hairline">
+      <div className="relative space-y-4">
+        {/* Timeline track line */}
+        <div className="absolute left-6 md:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/50 via-primary/20 to-transparent ml-[3px] hidden md:block" />
+
         {items.length === 0 ? (
-          <p className="p-8 text-center text-mute dark:text-mute">No journey milestones yet.</p>
+          <div className="bg-surface-card dark:bg-surface-card border-2 border-dashed border-hairline rounded-2xl p-12 text-center">
+            <p className="text-mute dark:text-mute font-medium">No journey milestones yet.</p>
+            <Button variant="ghost" onClick={handleAddNew} className="mt-4">Create your first milestone</Button>
+          </div>
         ) : (
-          items.map((item) => (
-            <div
-              key={item.id}
-              draggable
-              onDragStart={() => handleDragStart(item.id)}
-              onDragOver={(e) => handleDragOver(e, item.id)}
-              onDrop={(e) => handleDrop(e, item.id)}
-              className={`p-4 flex items-start gap-4 cursor-move transition-colors ${
-                dragOverItem === item.id ? 'bg-blue-500/10' : 'hover:bg-[var(--card)]'
-              } ${draggedItem === item.id ? 'opacity-50' : ''}`}
-            >
-              <div className="text-[var(--muted)] mt-1">⋮⋮</div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-xs font-bold rounded">
-                    {item.year}
-                  </span>
-                  <h3 className="font-semibold text-[var(--foreground)]">{item.title}</h3>
+          <div className="space-y-6">
+            {items.map((item) => (
+              <div
+                key={item.id}
+                draggable
+                onDragStart={() => handleDragStart(item.id)}
+                onDragOver={(e) => handleDragOver(e, item.id)}
+                onDrop={(e) => handleDrop(e, item.id)}
+                className={`relative flex items-start gap-4 md:gap-8 group cursor-move transition-all duration-300
+                  ${dragOverItem === item.id ? 'translate-y-2' : ''} 
+                  ${draggedItem === item.id ? 'opacity-50 grayscale' : ''}`}
+              >
+                {/* Timeline Dot */}
+                <div className="hidden md:flex flex-shrink-0 w-8 h-8 rounded-full bg-surface-card border-4 border-primary/20 items-center justify-center relative z-10 transition-transform group-hover:scale-110">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
                 </div>
-                <p className="text-sm text-[var(--muted)] line-clamp-2">{item.description}</p>
+
+                {/* Milestone Card */}
+                <div className="flex-1 bg-primary/5 dark:bg-white/5 backdrop-blur-md border border-primary/10 dark:border-white/10 rounded-2xl p-5 md:p-6 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all group-hover:-translate-y-1">
+                  <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                    <div className="flex-1 space-y-3">
+                      <div className="flex items-center gap-3">
+                        <span className="bg-primary/10 text-primary font-black px-4 py-1 rounded-full text-xs uppercase tracking-[0.1em]">
+                          {item.year}
+                        </span>
+                        <div className="p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <GripVertical className="w-4 h-4 text-mute" />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h3 className="text-xl font-black text-ink dark:text-ink group-hover:text-primary transition-colors">
+                          {item.title}
+                        </h3>
+                        <p className="text-sm text-body dark:text-body/80 mt-2 leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 self-end md:self-start">
+                      <button 
+                        onClick={() => handleEdit(item)}
+                        className="p-2 rounded-lg bg-surface-card dark:bg-surface-card border border-hairline hover:border-primary hover:text-primary transition-all shadow-sm"
+                        title="Edit milestone"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => setDeleteConfirm(item)}
+                        className="p-2 rounded-lg bg-surface-card dark:bg-surface-card border border-hairline hover:border-accent-red hover:text-accent-red transition-all shadow-sm"
+                        title="Delete milestone"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex gap-2">
-                <Button 
-                  variant="secondary"
-                  className="text-sm" 
-                  onClick={() => handleEdit(item)}
-                  >
-                    Edit
-                </Button>
-                <Button 
-                  variant="secondary" 
-                  className="text-sm text-red-400 hover:text-red-500"  
-                  onClick={() => setDeleteConfirm(item)}
-                  >
-                    Delete
-                  </Button>
-              </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
 
@@ -238,9 +286,9 @@ export function JourneyEditor() {
       <Modal 
         isOpen={isFormOpen} 
         onClose={() => setIsFormOpen(false)} 
-        title={editingItem?.id ? 'Edit Milestone' : 'Add Milestone'}
+        title={editingItem?.id ? 'Edit Milestone' : 'Add New Milestone'}
       >
-        <form onSubmit={handleFormSubmit} className="space-y-4">
+        <form onSubmit={handleFormSubmit} className="space-y-5">
           <TextInput 
             label="Year / Period" 
             name="year"
@@ -249,6 +297,7 @@ export function JourneyEditor() {
             onChange={e => setEditingItem(prev => prev ? { ...prev, year: e.target.value } : null)}
             error={formErrors.year}
             disabled={isLoading}
+            className="h-11 focus:ring-primary/50 focus:border-primary"
           />
           <TextInput 
             label="Title" 
@@ -258,6 +307,7 @@ export function JourneyEditor() {
             onChange={e => setEditingItem(prev => prev ? { ...prev, title: e.target.value } : null)}
             error={formErrors.title}
             disabled={isLoading}
+            className="h-11 focus:ring-primary/50 focus:border-primary"
           />
           <TextArea 
             label="Description" 
@@ -266,22 +316,28 @@ export function JourneyEditor() {
             value={editingItem?.description || ''} 
             onChange={e => setEditingItem(prev => prev ? { ...prev, description: e.target.value } : null)}
             error={formErrors.description}
-            rows={4}
+            rows={5}
             disabled={isLoading}
+            className="focus:ring-primary/50 focus:border-primary min-h-[150px]"
           />
-          <div className="flex justify-end gap-3 pt-4">
-            <Button variant="secondary" onClick={() => setIsFormOpen(false)} disabled={isLoading}>Cancel</Button>
-            <Button type="submit" isLoading={isLoading}>Save</Button>
+          <div className="flex justify-end gap-3 pt-4 border-t border-hairline">
+            <Button variant="ghost" onClick={() => setIsFormOpen(false)} disabled={isLoading}>Cancel</Button>
+            <Button type="submit" isLoading={isLoading} className="px-8 shadow-lg shadow-primary/20">
+              <Rocket className="w-4 h-4 mr-2" /> Save Milestone
+            </Button>
           </div>
         </form>
       </Modal>
 
       {/* Delete Modal */}
       <Modal isOpen={!!deleteConfirm} onClose={() => setDeleteConfirm(null)} title="Confirm Delete">
-        <p className="mb-6">Are you sure you want to delete <strong>{deleteConfirm?.title}</strong>?</p>
-        <div className="flex justify-end gap-3">
-          <Button variant="secondary" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
-          <Button variant="danger" onClick={handleDelete} isLoading={isLoading}>Delete</Button>
+        <div className="space-y-4">
+          <p className="text-body">Are you sure you want to delete milestone <strong>{deleteConfirm?.title}</strong>?</p>
+          <p className="text-xs text-accent-red font-bold uppercase tracking-wider">This action cannot be undone.</p>
+          <div className="flex justify-end gap-3 pt-4">
+            <Button variant="ghost" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
+            <Button variant="danger" onClick={handleDelete} isLoading={isLoading}>Delete Permanently</Button>
+          </div>
         </div>
       </Modal>
     </div>

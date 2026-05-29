@@ -30,9 +30,25 @@ import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Breadcrumb } from '@/components/admin/Breadcrumb';
+import Badge from '@/components/ui/Badge';
 import type { ContactInfo } from '@/types';
 import { contactInfoSchema } from '@/lib/validation';
 import { z } from 'zod';
+import { 
+  Mail, 
+  Send, 
+  History, 
+  ExternalLink,
+  Clock,
+  AlertCircle,
+  Settings,
+  RotateCcw
+} from 'lucide-react';
+import { 
+  GithubIcon, 
+  LinkedinIcon, 
+  InstagramIcon 
+} from '@/components/ui/Icons';
 
 type ContactInfoFormData = z.infer<typeof contactInfoSchema>;
 
@@ -72,14 +88,11 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
   const [versionHistory, setVersionHistory] = useState<VersionHistoryRecord[]>([]);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
-  const [contactInfoId, setContactInfoId] = useState<string | null>(null);
 
   // Fetch contact info on mount if not provided
   useEffect(() => {
     if (!initialData) {
       fetchContactInfo();
-    } else {
-      setContactInfoId(initialData.id || null);
     }
   }, [initialData]);
 
@@ -98,7 +111,6 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
       const contactInfo = res.data?.[0];
 
       if (contactInfo) {
-        setContactInfoId(contactInfo.id);
         setFormData({
           githubUrl: contactInfo.githubUrl || '',
           linkedinUrl: contactInfo.linkedinUrl || '',
@@ -122,7 +134,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
   const fetchVersionHistory = async () => {
     try {
       setIsLoadingHistory(true);
-      const response = await fetch('/api/content/contact-info/history?limit=50', {
+      const response = await fetch('/api/content/contact-info/history?limit=5', {
         credentials: 'include',
       });
 
@@ -146,7 +158,6 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
       [field]: value,
     }));
     setHasChanges(true);
-    // Clear error for this field when user starts typing
     if (errors[field]) {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -213,7 +224,6 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
         setLastUpdated(new Date(res.data.updatedAt));
       }
       
-      // Refresh version history
       if (showVersionHistory) {
         await fetchVersionHistory();
       }
@@ -221,10 +231,8 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
       setSuccessMessage('Contact information updated successfully!');
       setHasChanges(false);
 
-      // Trigger ISR revalidation
       await fetch('/api/revalidate', { method: 'POST', credentials: 'include' }).catch(() => {});
 
-      // Redirect after success
       setTimeout(() => {
         router.push('/admin');
       }, 2000);
@@ -233,16 +241,6 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
       setErrorMessage(error instanceof Error ? error.message : 'Failed to save contact information');
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleCancel = () => {
-    if (hasChanges) {
-      if (confirm('You have unsaved changes. Are you sure you want to discard them?')) {
-        router.back();
-      }
-    } else {
-      router.back();
     }
   };
 
@@ -286,7 +284,6 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
 
         const res = await response.json();
         
-        // Update form with restored data
         setFormData({
           githubUrl: version.github_url || '',
           linkedinUrl: version.linkedin_url || '',
@@ -301,7 +298,6 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
         setHasChanges(false);
         setShowVersionHistory(false);
         
-        // Refresh version history
         await fetchVersionHistory();
         
         setSuccessMessage('Version restored successfully!');
@@ -329,273 +325,259 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Breadcrumb Navigation */}
-      <div className="flex items-center justify-between">
-        <Breadcrumb />
-        <span className="text-xs text-[var(--muted)]">
-          Last updated: {formatLastUpdated(lastUpdated)}
-        </span>
-      </div>
-
-      {/* Page Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-[var(--foreground)]">Contact Information Editor</h1>
-        <p className="text-[var(--muted)] mt-2">
-          Manage your social media links and contact information
-        </p>
-      </div>
-
-      {/* Success Message */}
-      {successMessage && (
-        <FormSuccess message={successMessage} />
-      )}
-
-      {/* Error Message */}
-      {errorMessage && (
-        <FormError message={errorMessage} />
-      )}
-
-      {/* Form Container */}
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-6 space-y-6">
-          {/* GitHub URL Field */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-[var(--foreground)]">
-                GitHub URL
-              </label>
-              {formData.githubUrl && (
-                <button
-                  type="button"
-                  onClick={() => handleTestLink(formData.githubUrl || '', 'GitHub')}
-                  disabled={isLoading}
-                  className="text-xs text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50"
-                  aria-label="Test GitHub link"
-                >
-                  Test Link ↗
-                </button>
-              )}
-            </div>
-            <TextInput
-              placeholder="https://github.com/username"
-              value={formData.githubUrl}
-              onChange={(e) => handleInputChange('githubUrl', e.target.value)}
-              error={errors.githubUrl}
-              disabled={isLoading}
-              aria-label="GitHub URL"
-              aria-describedby={errors.githubUrl ? 'github-error' : undefined}
-            />
-            {errors.githubUrl && (
-              <p id="github-error" className="text-sm text-red-400 mt-1">
-                {errors.githubUrl}
-              </p>
-            )}
+    <div className="space-y-8 pb-12">
+      {/* Header & Breadcrumb */}
+      <Breadcrumb/>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+         <div className="flex items-center gap-4">
+          <div className="p-3 bg-primary/10 rounded-2xl">
+            <Mail className="w-8 h-8 text-primary" />
           </div>
-
-          {/* LinkedIn URL Field */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-[var(--foreground)]">
-                LinkedIn URL
-              </label>
-              {formData.linkedinUrl && (
-                <button
-                  type="button"
-                  onClick={() => handleTestLink(formData.linkedinUrl || '', 'LinkedIn')}
-                  disabled={isLoading}
-                  className="text-xs text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50"
-                  aria-label="Test LinkedIn link"
-                >
-                  Test Link ↗
-                </button>
-              )}
-            </div>
-            <TextInput
-              placeholder="https://linkedin.com/in/username"
-              value={formData.linkedinUrl}
-              onChange={(e) => handleInputChange('linkedinUrl', e.target.value)}
-              error={errors.linkedinUrl}
-              disabled={isLoading}
-              aria-label="LinkedIn URL"
-              aria-describedby={errors.linkedinUrl ? 'linkedin-error' : undefined}
-            />
-            {errors.linkedinUrl && (
-              <p id="linkedin-error" className="text-sm text-red-400 mt-1">
-                {errors.linkedinUrl}
-              </p>
-            )}
-          </div>
-
-          {/* Instagram URL Field */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-[var(--foreground)]">
-                Instagram URL
-              </label>
-              {formData.instagramUrl && (
-                <button
-                  type="button"
-                  onClick={() => handleTestLink(formData.instagramUrl || '', 'Instagram')}
-                  disabled={isLoading}
-                  className="text-xs text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50"
-                  aria-label="Test Instagram link"
-                >
-                  Test Link ↗
-                </button>
-              )}
-            </div>
-            <TextInput
-              placeholder="https://instagram.com/username"
-              value={formData.instagramUrl}
-              onChange={(e) => handleInputChange('instagramUrl', e.target.value)}
-              error={errors.instagramUrl}
-              disabled={isLoading}
-              aria-label="Instagram URL"
-              aria-describedby={errors.instagramUrl ? 'instagram-error' : undefined}
-            />
-            {errors.instagramUrl && (
-              <p id="instagram-error" className="text-sm text-red-400 mt-1">
-                {errors.instagramUrl}
-              </p>
-            )}
-          </div>
-
-          {/* Telegram URL Field */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-[var(--foreground)]">
-                Telegram URL
-              </label>
-              {formData.telegramUrl && (
-                <button
-                  type="button"
-                  onClick={() => handleTestLink(formData.telegramUrl || '', 'Telegram')}
-                  disabled={isLoading}
-                  className="text-xs text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50"
-                  aria-label="Test Telegram link"
-                >
-                  Test Link ↗
-                </button>
-              )}
-            </div>
-            <TextInput
-              placeholder="https://t.me/username"
-              value={formData.telegramUrl}
-              onChange={(e) => handleInputChange('telegramUrl', e.target.value)}
-              error={errors.telegramUrl}
-              disabled={isLoading}
-              aria-label="Telegram URL"
-              aria-describedby={errors.telegramUrl ? 'telegram-error' : undefined}
-            />
-            {errors.telegramUrl && (
-              <p id="telegram-error" className="text-sm text-red-400 mt-1">
-                {errors.telegramUrl}
-              </p>
-            )}
-          </div>
-
-          {/* Email Field */}
-          <div>
-            <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
-              Email Address
-            </label>
-            <TextInput
-              type="email"
-              placeholder="your.email@example.com"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              error={errors.email}
-              disabled={isLoading}
-              aria-label="Email address"
-              aria-describedby={errors.email ? 'email-error' : undefined}
-            />
-            {errors.email && (
-              <p id="email-error" className="text-sm text-red-400 mt-1">
-                {errors.email}
-              </p>
-            )}
+            <h1 className="text-4xl font-black text-[var(--foreground)] mt-2 tracking-tight">Contact Center</h1>
+            <p className="text-[var(--muted)] font-medium">Manage social connectivity and incoming inquiries</p>
           </div>
         </div>
-
-        {/* Form Actions */}
-        <div className="flex gap-3 justify-between">
-          <button
-            type="button"
-            onClick={handleShowVersionHistory}
-            disabled={isLoading || isLoadingHistory}
-            className="text-xs text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Show version history"
-          >
-            {isLoadingHistory ? 'Loading...' : showVersionHistory ? 'Hide' : 'Show'} Version History ({versionHistory.length})
-          </button>
-          <div className="flex gap-3">
-            <Button
-              type="button"
-              onClick={handleCancel}
-              disabled={isLoading}
-              variant="secondary"
-              aria-label="Cancel editing"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={isLoading || !hasChanges}
-              aria-label="Save contact information changes"
-            >
-              {isLoading ? 'Saving...' : 'Save Changes'}
-            </Button>
-          </div>
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 rounded-lg">
+          <Clock className="w-3.5 h-3.5 text-primary" />
+          <span className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
+            Last Sync: {formatLastUpdated(lastUpdated)}
+          </span>
         </div>
-      </form>
+      </div>
 
-      {/* Version History */}
-      {showVersionHistory && versionHistory.length > 0 && (
-        <div className="bg-[var(--surface-card)] border border-[var(--border)] rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">Version History</h3>
-          <div className="space-y-3 max-h-96 overflow-y-auto">
-            {versionHistory.map((version, index) => (
-              <div
-                key={version.id}
-                className="p-3 bg-[var(--card)] border border-[var(--border)] rounded-lg flex items-center justify-between"
-              >
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-[var(--foreground)]">
-                    {new Date(version.created_at).toLocaleDateString()} {new Date(version.created_at).toLocaleTimeString()}
-                  </p>
-                  <p className="text-xs text-[var(--muted)] mt-1">
-                    {Object.values({
-                      github: version.github_url,
-                      linkedin: version.linkedin_url,
-                      instagram: version.instagram_url,
-                      telegram: version.telegram_url,
-                      email: version.email,
-                    }).filter(v => v).length} fields set
-                  </p>
+      {/* Grid Layout */}
+      <div className="grid grid-cols-1 gap-8 items-start">
+        
+        {/* Left Column: Configuration Form */}
+        <div className="lg:col-span-1 space-y-6 w-full">
+          <div className="bg-primary/5 dark:bg-white/5 backdrop-blur-md border border-primary/10 rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-lg">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Settings className="w-5 h-5 text-primary" />
+              </div>
+              <h2 className="text-xl font-bold">Social Links</h2>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* GitHub */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-black uppercase tracking-widest text-mute flex items-center gap-2">
+                    <GithubIcon className="w-3 h-3" /> GitHub
+                  </label>
+                  {formData.githubUrl && (
+                    <button 
+                      type="button" 
+                      onClick={() => handleTestLink(formData.githubUrl || '', 'GitHub')}
+                      className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1"
+                    >
+                      Test Link <ExternalLink className="w-2.5 h-2.5" />
+                    </button>
+                  )}
                 </div>
-                {index > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => handleRestoreVersion(version)}
+                <div className="relative group">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute group-focus-within:text-primary transition-colors z-10">
+                    <GithubIcon className="w-4 h-4" />
+                  </div>
+                  <TextInput
+                    placeholder="https://github.com/..."
+                    value={formData.githubUrl}
+                    onChange={(e) => handleInputChange('githubUrl', e.target.value)}
+                    error={errors.githubUrl}
                     disabled={isLoading}
-                    className="ml-4 px-3 py-1 text-xs bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 rounded transition-colors disabled:opacity-50"
-                    aria-label="Restore this version"
-                  >
-                    Restore
-                  </button>
+                    className="pl-10 h-11 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all rounded-xl"
+                  />
+                </div>
+              </div>
+
+              {/* LinkedIn */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-black uppercase tracking-widest text-mute flex items-center gap-2">
+                    <LinkedinIcon className="w-3 h-3" /> LinkedIn
+                  </label>
+                  {formData.linkedinUrl && (
+                    <button 
+                      type="button" 
+                      onClick={() => handleTestLink(formData.linkedinUrl || '', 'LinkedIn')}
+                      className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1"
+                    >
+                      Test Link <ExternalLink className="w-2.5 h-2.5" />
+                    </button>
+                  )}
+                </div>
+                <div className="relative group">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute group-focus-within:text-primary transition-colors z-10">
+                    <LinkedinIcon className="w-4 h-4" />
+                  </div>
+                  <TextInput
+                    placeholder="https://linkedin.com/in/..."
+                    value={formData.linkedinUrl}
+                    onChange={(e) => handleInputChange('linkedinUrl', e.target.value)}
+                    error={errors.linkedinUrl}
+                    disabled={isLoading}
+                    className="pl-10 h-11 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all rounded-xl"
+                  />
+                </div>
+              </div>
+
+              {/* Instagram */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-black uppercase tracking-widest text-mute flex items-center gap-2">
+                    <InstagramIcon className="w-3 h-3" /> Instagram
+                  </label>
+                  {formData.instagramUrl && (
+                    <button 
+                      type="button" 
+                      onClick={() => handleTestLink(formData.instagramUrl || '', 'Instagram')}
+                      className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1"
+                    >
+                      Test Link <ExternalLink className="w-2.5 h-2.5" />
+                    </button>
+                  )}
+                </div>
+                <div className="relative group">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute group-focus-within:text-primary transition-colors z-10">
+                    <InstagramIcon className="w-4 h-4" />
+                  </div>
+                  <TextInput
+                    placeholder="https://instagram.com/..."
+                    value={formData.instagramUrl}
+                    onChange={(e) => handleInputChange('instagramUrl', e.target.value)}
+                    error={errors.instagramUrl}
+                    disabled={isLoading}
+                    className="pl-10 h-11 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all rounded-xl"
+                  />
+                </div>
+              </div>
+
+              {/* Telegram */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-black uppercase tracking-widest text-mute flex items-center gap-2">
+                    <Send className="w-3 h-3" /> Telegram
+                  </label>
+                  {formData.telegramUrl && (
+                    <button 
+                      type="button" 
+                      onClick={() => handleTestLink(formData.telegramUrl || '', 'Telegram')}
+                      className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1"
+                    >
+                      Test Link <ExternalLink className="w-2.5 h-2.5" />
+                    </button>
+                  )}
+                </div>
+                <div className="relative group">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute group-focus-within:text-primary transition-colors z-10">
+                    <Send className="w-4 h-4" />
+                  </div>
+                  <TextInput
+                    placeholder="https://t.me/..."
+                    value={formData.telegramUrl}
+                    onChange={(e) => handleInputChange('telegramUrl', e.target.value)}
+                    error={errors.telegramUrl}
+                    disabled={isLoading}
+                    className="pl-10 h-11 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all rounded-xl"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="space-y-2">
+                <label className="text-xs font-black uppercase tracking-widest text-mute flex items-center gap-2">
+                  <Mail className="w-3 h-3" /> Email Address
+                </label>
+                <div className="relative group">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute group-focus-within:text-primary transition-colors z-10">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <TextInput
+                    type="email"
+                    placeholder="your.email@example.com"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    error={errors.email}
+                    disabled={isLoading}
+                    className="pl-10 h-11 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all rounded-xl"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-4 flex flex-col gap-3">
+                <Button
+                  type="submit"
+                  disabled={isLoading || !hasChanges}
+                  className="w-full h-11 rounded-xl shadow-lg shadow-primary/20 font-bold"
+                >
+                  {isLoading ? <LoadingSpinner size="sm" /> : 'Save Configuration'}
+                </Button>
+                
+                <button
+                  type="button"
+                  onClick={handleShowVersionHistory}
+                  className="text-xs font-bold text-mute hover:text-primary transition-colors flex items-center justify-center gap-2 py-2"
+                >
+                  <History className="w-3.5 h-3.5" />
+                  {showVersionHistory ? 'Hide' : 'View'} Version History
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Version History (Conditional) */}
+          {showVersionHistory && (
+            <div className="bg-surface-card border border-hairline rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
+              <h3 className="text-sm font-black uppercase tracking-widest text-ink">Revision History</h3>
+              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                {isLoadingHistory ? (
+                   <div className="flex justify-center py-8"><LoadingSpinner size="sm" /></div>
+                ) : versionHistory.length === 0 ? (
+                   <p className="text-xs text-mute text-center py-4">No previous versions found.</p>
+                ) : (
+                  versionHistory.map((version) => (
+                    <div key={version.id} className="p-3 bg-surface-soft border border-hairline rounded-xl flex items-center justify-between group">
+                      <div>
+                        <p className="text-xs font-bold text-ink">{new Date(version.created_at).toLocaleDateString()}</p>
+                        <p className="text-[10px] text-mute uppercase font-black">{new Date(version.created_at).toLocaleTimeString()}</p>
+                      </div>
+                      <button
+                        onClick={() => handleRestoreVersion(version)}
+                        className="p-1.5 rounded-lg bg-primary/10 text-primary opacity-0 group-hover:opacity-100 transition-all hover:bg-primary/20"
+                        title="Restore this version"
+                      >
+                        <RotateCcw className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))
                 )}
               </div>
-            ))}
+            </div>
+          )}
+
+          {/* Tip Box */}
+          <div className="bg-accent-blue/5 border border-accent-blue/10 rounded-2xl p-4 flex gap-3">
+            <AlertCircle className="w-5 h-5 text-accent-blue shrink-0" />
+            <p className="text-xs text-accent-blue/80 leading-relaxed">
+              <strong>Pro Tip:</strong> Verified social links increase trust. Always use the "Test Link" feature before saving changes to ensure your connections are active.
+            </p>
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Info Box */}
-      <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4">
-        <p className="text-xs text-[var(--muted)] leading-relaxed">
-          <span className="font-semibold text-blue-400">💡 Tip:</span> Make sure your social media URLs are correct and publicly accessible. You can test each link by clicking the "Test Link" button next to each field.
-        </p>
+      {/* Form Feedback */}
+      <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-3 max-w-md w-full pointer-events-none">
+        {successMessage && (
+          <div className="pointer-events-auto animate-in slide-in-from-right-full duration-500">
+            <FormSuccess message={successMessage} />
+          </div>
+        )}
+        {errorMessage && (
+          <div className="pointer-events-auto animate-in slide-in-from-right-full duration-500">
+            <FormError message={errorMessage} />
+          </div>
+        )}
       </div>
     </div>
   );
