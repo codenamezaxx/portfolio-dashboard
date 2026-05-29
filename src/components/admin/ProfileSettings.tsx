@@ -265,7 +265,11 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
                   confirmButtonColor: '#cd4239',
                   cancelButtonColor: '#8B7355',
                   confirmButtonText: 'Ya, Keluar',
-                }).then((result) => result.isConfirmed && logout());
+                }).then((result) => {
+                   if (result.isConfirmed) {
+                    logout();
+                   }
+                });
               }}
               className="w-full p-4 rounded-xl bg-accent-red-soft/20 hover:bg-accent-red-soft/40 border border-accent-red/10 hover:border-accent-red/30 transition-all flex items-center justify-between group cursor-pointer"
             >

@@ -190,8 +190,8 @@ export async function updateAdminUser(userId: string, updates: Record<string, an
           email: fallbackData.email,
           isActive: fallbackData.is_active,
           lastLogin: fallbackData.last_login ? new Date(fallbackData.last_login) : undefined,
-          createdAt: new Date(fallbackData.createdAt),
-          updatedAt: new Date(fallbackData.updatedAt),
+          createdAt: new Date(fallbackData.created_at),  // Ubah ke snake_case
+          updatedAt: new Date(fallbackData.updated_at),  // Ubah ke snake_case
         };
       }
       throw new Error(`Database error: ${error.message}`);
