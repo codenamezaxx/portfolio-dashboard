@@ -34,7 +34,11 @@ export const revalidate = 3600;
 
 export default async function ProjectsPage() {
   try {
-    const projects = await getProjects();
+    const rawProjects = await getProjects();
+    const projects = rawProjects.map(p => ({
+      ...p,
+      id: p.id || `temp-${Math.random().toString(36).slice(2, 11)}`
+    }));
     const categories = Array.from(new Set(projects.map(p => p.category)));
 
     return (
