@@ -16,60 +16,7 @@ interface AchievementsProps {
   onViewAll?: () => void;
 }
 
-const defaultAchievements: Achievement[] = [
-  { 
-    id: 1, 
-    title: "Memulai Pemrograman dengan Python", 
-    category: "Kursus Online", 
-    issuer: "Dicoding Indonesia",
-    year: "2025", 
-    pdfPath: "/certificates/cert-1.pdf",
-    link: "https://www.dicoding.com/certificates/98XWOL0DLZM3"
-  },
-  { 
-    id: 2, 
-    title: "Belajar Dasar AI", 
-    category: "Kursus Online", 
-    issuer: "Dicoding Indonesia",
-    year: "2025", 
-    pdfPath: "/certificates/cert-2.pdf",
-    link: "https://www.dicoding.com/certificates/98XWOL0DLZM3"
-  },
-  { 
-    id: 3, 
-    title: "Participant of Mercu Buana Yogyakarta International Youth Forum (MIYF) 2024", 
-    category: "International Forum", 
-    issuer: "Mercu Buana University Yogyakarta",
-    year: "2024", 
-    pdfPath: "/certificates/cert-3.pdf"
-  },
-  { 
-    id: 4, 
-    title: "Public Speaking With Trainer", 
-    category: "Webinar Online", 
-    issuer: "KT&G SangSang University",
-    year: "2024", 
-    pdfPath: "/certificates/cert-4.pdf",
-  },
-  { 
-    id: 5, 
-    title: "Building Persona and Image", 
-    category: "Webinar Online", 
-    issuer: "KT&G SangSang University",
-    year: "2024", 
-    pdfPath: "/certificates/cert-5.pdf"
-  },
-  { 
-    id: 6, 
-    title: "Youth Leadership Camps", 
-    category: "Webinar Online", 
-    issuer: "PT. Seasia Intelektual Akademis",
-    year: "2024", 
-    pdfPath: "/certificates/cert-6.pdf",
-  },
-];
-
-const Achievements: React.FC<AchievementsProps> = ({ items = defaultAchievements, onViewAll }) => {
+const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) => {
   const router = useRouter();
   const constraintsRef = React.useRef<HTMLDivElement>(null);
   const [selectedAchievement, setSelectedAchievement] = React.useState<Achievement | null>(null);
@@ -108,7 +55,10 @@ const Achievements: React.FC<AchievementsProps> = ({ items = defaultAchievements
                 <motion.div 
                   key={item.id} 
                   variants={fadeInUp}
-                  className="flex-shrink-0 w-[300px] md:w-[350px] rounded-2xl dark:shadow-primary/10 shadow-xl backdrop-blur-md hover:scale-[1.05] transition-all duration-300"
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex-shrink-0 w-[300px] md:w-[350px] rounded-2xl dark:shadow-primary/10 shadow-xl backdrop-blur-md hover:border-primary/30 transition-all duration-300 cursor-pointer"
+                  onClick={() => setSelectedAchievement(item)}
                 >
                   <PDFPreviewCard 
                     title={item.title}
@@ -117,7 +67,7 @@ const Achievements: React.FC<AchievementsProps> = ({ items = defaultAchievements
                     pdfPath={item.pdfPath || item.pdfUrl}
                     issuer={item.issuer}
                     link={item.link}
-                    onView={() => setSelectedAchievement(item)}
+                    // onView prop is handled by the onClick on the motion.div parent
                   />
                 </motion.div>
               ))}

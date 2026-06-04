@@ -11,38 +11,10 @@ interface JourneyProps {
   items?: JourneyItem[] | null;
 }
 
-const Journey: React.FC<JourneyProps> = ({ items = null }) => {
+const Journey: React.FC<JourneyProps> = ({ items = [] }) => {
   const constraintsRef = React.useRef<HTMLDivElement>(null);
 
-  // Default journey items for fallback
-  const defaultJourneyItems: JourneyItem[] = [
-    {
-      year: '2020',
-      title: 'Memulai Perjalanan',
-      description: 'Memulai belajar web development dan menjadi passionate tentang teknologi.',
-      display_order: 1
-    },
-    {
-      year: '2021',
-      title: 'Pertama Kali Berbicara',
-      description: 'Memberikan talk pertama saya tentang web development di komunitas lokal.',
-      display_order: 2
-    },
-    {
-      year: '2022',
-      title: 'Pengalaman Profesional',
-      description: 'Memulai karir profesional sebagai Front-End Developer di perusahaan teknologi.',
-      display_order: 3
-    },
-    {
-      year: '2024',
-      title: 'Terus Berkembang',
-      description: 'Terus belajar teknologi baru dan berbagi pengetahuan dengan komunitas.',
-      display_order: 4
-    }
-  ];
-
-  const journeyItems = items && items.length > 0 ? items : defaultJourneyItems;
+  const journeyItems = items || [];
 
   return (
     <section id="journey" className="py-20 relative">
@@ -73,9 +45,11 @@ const Journey: React.FC<JourneyProps> = ({ items = null }) => {
                 <motion.div 
                   key={item.id || index} 
                   variants={fadeInUp} 
+                  whileHover={{ y: -10}}
+                  whileTap={{ scale: 0.98 }}
                   className="flex-shrink-0 w-[300px] md:w-[380px]"
                 >
-                  <GlassCard className="p-8 h-[280px] flex flex-col border-white/5 shadow-soft-light dark:shadow-primary/10 shadow-xl backdrop-blur-md rounded-3xl hover:scale-[1.05] transition-all duration-300">
+                  <GlassCard className="py-6 px-8 h-[290px] flex flex-col border-white/5 shadow-soft-light dark:shadow-primary/10 shadow-xl backdrop-blur-md rounded-3xl transition-all duration-300">
                     <span className="text-2xl font-black text-primary mb-6 block tracking-tight">
                       {item.year}
                     </span>

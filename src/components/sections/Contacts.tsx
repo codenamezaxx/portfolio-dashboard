@@ -17,15 +17,7 @@ interface ContactsProps {
  * Displays contact methods with custom colored cards, icon circles, and handles matching design specifications
  */
 const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
-  const defaultContactInfo: ContactInfo = {
-    email: 'zakky.ahmad@protonmail.com',
-    github_url: 'https://github.com/codenamezaxx',
-    linkedin_url: 'https://linkedin.com/in/zakky-el',
-    instagram_url: 'https://instagram.com/codenamezaxx',
-    telegram_url: 'https://t.me/codenamezaxx'
-  };
-
-  const contact = contactInfo || defaultContactInfo;
+  const contact = contactInfo || {};
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   const getHandleFromUrl = (url: string | undefined, defaultValue: string) => {
@@ -44,9 +36,9 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
     {
       id: 1,
       label: 'Email',
-      value: contact.email || 'zakky.ahmad@protonmail.com',
+      value: contact.email || '',
       icon: Mail,
-      link: `mailto:${contact.email || 'zakky.ahmad@protonmail.com'}`,
+      link: `mailto:${contact.email || ''}`,
       descriptionId: 'email',
       colors: {
         bg: 'bg-blue-900/10 dark:bg-blue-900/15',
@@ -61,9 +53,9 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
     {
       id: 2,
       label: 'LinkedIn',
-      value: getHandleFromUrl(contact.linkedin_url, '@zakky-el'),
+      value: getHandleFromUrl(contact.linkedin_url, ''),
       icon: LinkedinIcon,
-      link: contact.linkedin_url || 'https://linkedin.com/in/zakky-el',
+      link: contact.linkedin_url || '#',
       descriptionId: 'linkedin',
       colors: {
         bg: 'bg-teal-900/10 dark:bg-teal-900/20',
@@ -78,9 +70,9 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
     {
       id: 3,
       label: 'Instagram',
-      value: getHandleFromUrl(contact.instagram_url, '@codenamezaxx'),
+      value: getHandleFromUrl(contact.instagram_url, ''),
       icon: InstagramIcon,
-      link: contact.instagram_url || 'https://instagram.com/codenamezaxx',
+      link: contact.instagram_url || '#',
       descriptionId: 'instagram',
       colors: {
         bg: 'bg-pink-900/10 dark:bg-pink-900/20',
@@ -95,9 +87,9 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
     {
       id: 4,
       label: 'Telegram',
-      value: getHandleFromUrl(contact.telegram_url, '@codenamezaxx'),
+      value: getHandleFromUrl(contact.telegram_url, ''),
       icon: Send,
-      link: contact.telegram_url || 'https://t.me/codenamezaxx',
+      link: contact.telegram_url || '#',
       descriptionId: 'telegram',
       colors: {
         bg: 'bg-sky-900/10 dark:bg-sky-900/20',

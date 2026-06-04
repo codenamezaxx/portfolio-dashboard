@@ -28,24 +28,14 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
   const [liveResumeUrl, setLiveResumeUrl] = useState<string | null>(null);
   const [isHeroActive, setIsHeroActive] = useState(false);
 
-  const defaultProfile: Profile = {
-    name: 'Zakky Ahmad El-Kholily',
-    role: 'Front-End Web Developer | Public Speaker',
-    tagline: 'IT Enthusiast dari jurusan Teknik Jaringan Komputer dan Telekomunikasi yang senang memecahkan masalah, membangun sistem yang berjalan dengan baik, terus belajar teknologi baru, serta senang berbagi pengetahuan dan pengalaman.',
-    status_label: 'Open to work',
-    hero_image_url: '/hero.jpg'
+  const profileData = profile || {
+    name: '',
+    role: '',
+    tagline: '',
+    status_label: '',
+    hero_image_url: ''
   };
-
-  const defaultContactInfo: ContactInfo = {
-    github_url: 'https://github.com/codenamezaxx',
-    linkedin_url: 'https://linkedin.com/in/zakky-el',
-    instagram_url: 'https://instagram.com/codenamezaxx',
-    telegram_url: 'https://t.me/codenamezaxx',
-    email: 'zakky.ahmad@protonmail.com'
-  };
-
-  const profileData = profile || defaultProfile;
-  const contactData = contactInfo || defaultContactInfo;
+  const contactData = contactInfo || {};
 
   // Dynamically split roles for typewriter effect
   const rolesArray = profileData.role 

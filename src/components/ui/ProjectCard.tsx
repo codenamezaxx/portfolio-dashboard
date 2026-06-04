@@ -45,9 +45,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const finalDemoLink = liveLink || demoLink;
 
   return (
-    <div className="group overflow-hidden rounded-2xl border border-hairline bg-surface-card/10 dark:bg-surface-card/10 backdrop-blur-md shadow-xl hover:shadow-lg dark:shadow-primary/10 transition-all duration-300 flex flex-col h-full">
+    <div className="group overflow-hidden border border-hairline rounded-2xl bg-surface-card/40 dark:bg-surface-card/20 backdrop-blur-md shadow-xl hover:shadow-lg dark:shadow-primary/10 transition-all duration-300 flex flex-col h-full">
       {/* Top Section: Clean Image Preview */}
-      <div className="relative aspect-video w-full overflow-hidden bg-surface-card dark:bg-surface-card block">
+      <div className="relative aspect-video w-full overflow-hidden block">
         <Image
           src={imageUrl}
           alt={project.title}
@@ -58,7 +58,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         />
         {/* Category Badge overlay */}
         <div className="absolute top-4 left-4 z-10">
-          <span className="px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest bg-surface-card dark:bg-surface-card dark:text-primary shadow-sm backdrop-blur-sm">
+          <span className="px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest bg-surface-card/50 dark:text-primary shadow-sm backdrop-blur-sm">
             {project.category}
           </span>
         </div>
@@ -70,7 +70,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           <h3 className="py-2 text-2xl font-bold text-foreground group-hover:text-accent transition-colors line-clamp-1">
             {project.title}
           </h3>
-          <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
+          <p className="text-sm text-mute dark:text-mute line-clamp-2 leading-relaxed">
             {project.description}
           </p>
         </div>

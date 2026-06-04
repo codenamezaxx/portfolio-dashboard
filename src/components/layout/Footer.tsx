@@ -14,7 +14,8 @@ import {
   Server 
 } from 'lucide-react';
 import { LinkedinIcon, InstagramIcon, GithubIcon } from '@/components/ui/Icons';
-import type { Profile, ContactInfo } from '@/types';
+import type { Profile } from '@/types';
+import type { ContactInfo } from '@/lib/portfolio-data'
 
 interface FooterProps {
   profile?: Profile | null;
@@ -22,11 +23,8 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
+  const contact = contactInfo || {};
   const currentYear = new Date().getFullYear();
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   const quickLinks = [
     { label: 'Beranda', href: '/#hero' },
@@ -39,22 +37,22 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
   const socialLinks = [
     { 
       label: 'GitHub', 
-      href: contactInfo?.githubUrl || 'https://github.com/codenamezaxx', 
+      href: contact.github_url || '#', 
       icon: GithubIcon 
     },
     { 
       label: 'LinkedIn', 
-      href: contactInfo?.linkedinUrl || 'https://linkedin.com/in/zakky-el', 
+      href: contact.linkedin_url || '#', 
       icon: LinkedinIcon 
     },
     { 
       label: 'Instagram', 
-      href: contactInfo?.instagramUrl || 'https://instagram.com/codenamezaxx', 
+      href: contact.instagram_url || '#', 
       icon: InstagramIcon 
     },
     { 
       label: 'Telegram', 
-      href: contactInfo?.telegramUrl || 'https://t.me/codenamezaxx', 
+      href: contact.telegram_url || '#', 
       icon: Send 
     },
   ];
@@ -71,10 +69,10 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
           <div className="space-y-8">
             <div>
               <h2 className="text-3xl font-black text-ink dark:text-ink tracking-tight mb-3">
-                {profile?.name || 'Zakky Ahmad El-Kholily'}
+                {profile?.name}
               </h2>
               <p className="text-sm leading-relaxed text-mute font-bold uppercase tracking-wider">
-                {profile?.role || 'Junior Front-End Developer | Network Engineer'}
+                {profile?.role}
               </p>
             </div>
             
@@ -132,7 +130,7 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
               })}
               <li>
                 <a 
-                  href={`mailto:${contactInfo?.email || 'zakky.ahmad@protonmail.com'}`}
+                  href={`mailto:${contactInfo?.email || ''}`}
                   className="text-sm hover:text-[var(--foreground)] transition-colors duration-200 flex items-center gap-3 group"
                 >
                   <div className="w-10 h-10 rounded-xl bg-primary/5 border border-white/5 flex items-center justify-center group-hover:border-primary/20 group-hover:bg-primary/10 transition-all duration-300">
