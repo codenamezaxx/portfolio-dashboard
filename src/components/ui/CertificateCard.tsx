@@ -28,7 +28,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ certificate }) => {
 
   return (
     <>
-      <div className="bg-surface-card/40 dark:bg-surface-card/20 border border-hairline/50 dark:border-white/5 rounded-2xl overflow-hidden dark:shadow-primary/10 hover:border-primary/40 dark:hover:border-primary/40 transition-all duration-300 h-full flex flex-col group hover:scale-[1.01]">
+      <div className="bg-surface-card/40 dark:bg-surface-card/20 border border-hairline dark:border-white/5 rounded-2xl overflow-hidden dark:shadow-primary/10 hover:border-primary/40 dark:hover:border-primary/40 transition-all duration-300 h-full flex flex-col group hover:scale-[1.01]">
         {/* Header with Icon */}
         <div className="bg-surface-soft/30 dark:bg-surface-soft/10 border-b border-hairline/30 dark:border-white/5 p-6 flex items-start justify-between">
           <div className="flex-1">
@@ -90,23 +90,32 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ certificate }) => {
       {/* PDF Preview Modal */}
       {showPDF && certificate.pdf_url && (
         <Suspense fallback={<div>Loading PDF...</div>}>
-          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-            <div className="bg-surface-card dark:bg-surface-card rounded-md max-w-2xl w-full max-h-[90vh] overflow-auto border border-hairline dark:border-hairline">
-              <div className="sticky top-0 bg-surface-soft dark:bg-surface-soft border-b border-hairline dark:border-hairline p-4 flex items-center justify-between">
-                <h3 className="text-heading-md text-ink dark:text-ink font-semibold">{certificate.title}</h3>
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+            <div className="bg-surface-card dark:bg-surface-card rounded-xl max-w-5xl w-full max-h-[90vh] overflow-hidden border border-hairline dark:border-white/10 shadow-2xl flex flex-col">
+              <div className="bg-background/50 backdrop-blur-md border-b border-hairline dark:border-white/10 p-5 flex items-center justify-between">
+                <div className="flex-1">
+                  <span className="text-[10px] uppercase tracking-wider text-primary font-bold">{certificate.category}</span>
+                  <h3 className="text-heading-md text-foreground font-bold line-clamp-1">{certificate.title}</h3>
+                  <p className="text-xs text-zinc-400">{certificate.issuer}</p>
+                </div>
                 <button
                   onClick={() => setShowPDF(false)}
-                  className="text-body dark:text-body hover:text-ink dark:hover:text-ink"
+                  className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors text-foreground"
                 >
-                  ✕
+                  <span className="text-xl">✕</span>
                 </button>
               </div>
-              <div className="p-4">
-                <PDFPreview
-                  url={certificate.pdf_url}
-                  filename={`${certificate.title}.pdf`}
-                  maxHeight="600px"
-                />
+              <div className="flex-1 overflow-auto bg-background relative p-2 md:p-4">
+                <div className="w-full h-full min-h-[500px]">
+                  <PDFPreview
+                    url={certificate.pdf_url}
+                    filename={`${certificate.title}.pdf`}
+                    maxHeight="100%"
+                    className="w-full h-full bg-background"
+                    showDownload={true}
+                    showPageInfo={true}
+                  />
+                </div>
               </div>
             </div>
           </div>

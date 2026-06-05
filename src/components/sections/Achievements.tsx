@@ -23,7 +23,11 @@ const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) =>
 
   // Sort by displayOrder and take top 6 for landing page
   const featuredAchievements = [...items]
-    .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
+    .sort((a, b) => {
+      const orderA = a.displayOrder ?? (a as any).display_order ?? 0;
+      const orderB = b.displayOrder ?? (b as any).display_order ?? 0;
+      return orderA - orderB;
+    })
     .slice(0, 6);
 
   return (
@@ -63,11 +67,11 @@ const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) =>
                   <PDFPreviewCard 
                     title={item.title}
                     category={item.category}
-                    year={String(item.year)}
-                    pdfPath={item.pdfPath || item.pdfUrl}
+                    year={item.year ? String(item.year) : ''}
+                    pdfPath={item.pdfPath || item.pdfUrl || (item as any).pdf_url}
                     issuer={item.issuer}
-                    link={item.link}
-                    // onView prop is handled by the onClick on the motion.div parent
+                    link={item.link || (item as any).external_link || (item as any).link}
+                    onView={() => setSelectedAchievement(item)}
                   />
                 </motion.div>
               ))}
@@ -111,7 +115,7 @@ const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) =>
 
 // Internal Modal Component for clean hierarchy
 const AchievementModal: React.FC<{ achievement: Achievement, onClose: () => void }> = ({ achievement, onClose }) => {
-  const pdfPath = achievement.pdfPath || achievement.pdfUrl;
+  const pdfPath = achievement.pdfPath || achievement.pdfUrl || (achievement as any).pdf_url;
   
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 md:p-8" onClick={onClose}>

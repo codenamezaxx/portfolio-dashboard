@@ -249,7 +249,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
           {paginatedAchievements.map((certificate) => (
             <GlassCard
               key={certificate.id}
-              className="group/cert h-full flex flex-col overflow-hidden border-white/5 shadow-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 rounded-3xl animate-fadeIn"
+              className="group/cert h-full flex flex-col overflow-hidden border border-hairline shadow-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 rounded-2xl animate-fadeIn"
             >
               {/* Top Banner / Icon Area */}
               <div className="relative h-24 bg-surface-soft/30 border-b border-hairline/30 flex items-center justify-center overflow-hidden">
