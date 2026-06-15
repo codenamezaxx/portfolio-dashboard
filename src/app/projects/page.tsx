@@ -9,7 +9,6 @@ import { getProjects } from '@/lib/portfolio-data';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeft } from 'lucide-react';
 import SectionHeader from '@/components/shared/SectionHeader';
-import BackgroundGrid from '@/components/shared/BackgroundGrid';
 import { GithubIcon } from '@/components/ui/Icons';
 import ThemeToggleButton from '@/components/ui/ThemeToggleButton';
 import ProjectCard from '@/components/ui/ProjectCard';
@@ -33,7 +32,6 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function ProjectsPage() {
-  try {
     const rawProjects = await getProjects();
     const projects = rawProjects.map(p => ({
       ...p,
@@ -43,8 +41,6 @@ export default async function ProjectsPage() {
 
     return (
       <main className="relative min-h-screen bg-background pt-20 pb-32 overflow-hidden">
-        <BackgroundGrid />
-        
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <Link
@@ -98,17 +94,4 @@ export default async function ProjectsPage() {
         </div>
       </main>
     );
-  } catch (error) {
-    console.error('Error loading projects:', error);
-    return (
-      <main className="min-h-screen bg-[var(--background)]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center py-20">
-            <h1 className="text-4xl font-bold text-[var(--ink)] mb-4">Terjadi Kesalahan</h1>
-            <p className="text-[var(--mute)]">Gagal memuat proyek. Silakan coba lagi nanti.</p>
-          </div>
-        </div>
-      </main>
-    );
-  }
 }

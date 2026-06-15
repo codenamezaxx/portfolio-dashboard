@@ -12,7 +12,6 @@ import Badge from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeft, ExternalLink, Gamepad2 } from 'lucide-react';
 import { GithubIcon } from '@/components/ui/Icons';
-import BackgroundGrid from '@/components/shared/BackgroundGrid';
 import GlassCard from '@/components/ui/GlassCard';
 import ThemeToggleButton from '@/components/ui/ThemeToggleButton';
 
@@ -71,19 +70,19 @@ export async function generateMetadata(
 export const revalidate = 3600;
 
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
-  try {
-    const { id } = await params;
-    const project = await getProjectById(id);
-    if (!project) notFound();
+  
+  const { id } = await params;
+  const project = await getProjectById(id);
+  if (!project) notFound();
 
-    const allProjects = await getProjects();
-    const currentIndex = allProjects.findIndex(p => p.id === project.id);
-    const previousProject = currentIndex > 0 ? allProjects[currentIndex - 1] : null;
-    const nextProject = currentIndex < allProjects.length - 1 ? allProjects[currentIndex + 1] : null;
+  const allProjects = await getProjects();
+  const currentIndex = allProjects.findIndex(p => p.id === project.id);
+  const previousProject = currentIndex > 0 ? allProjects[currentIndex - 1] : null;
+  const nextProject = currentIndex < allProjects.length - 1 ? allProjects[currentIndex + 1] : null;
 
-    return (
+  return (
       <main className="relative min-h-screen bg-background pb-20 overflow-hidden">
-        <BackgroundGrid />
+        {/* <BackgroundGrid /> */}
 
         {/* Hero Section */}
         {project.image_url && (
@@ -214,8 +213,4 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
         </div>
       </main>
     );
-  } catch (error) {
-    console.error('Error loading project:', error);
-    notFound();
-  }
 }
