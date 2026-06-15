@@ -3,7 +3,6 @@ import { Space_Grotesk, IBM_Plex_Sans, Source_Code_Pro } from 'next/font/google'
 import './globals.css';
 import { ThemeProvider } from '@/contexts/ThemeProvider';
 import { RealtimeProvider } from '@/components/providers/RealtimeProvider';
-import BackgroundGrid from '@/components/shared/BackgroundGrid';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -106,7 +105,6 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--body)] font-ibm-plex leading-normal">
         <ThemeProvider defaultTheme="light" storageKey="portfolio-theme">
           <RealtimeProvider enableNotifications={true}>
-            <BackgroundGrid />
             {children}
           </RealtimeProvider>
         </ThemeProvider>

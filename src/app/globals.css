@@ -93,11 +93,11 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     /* Canvas & Surfaces - Dark Mode */
-    --background: #151515;
-    --surface-soft: #272727;
-    --surface-card: #202020;
-    --surface-doc: #1f1f1d;
-    --surface-dark: #0f0f0d;
+    --background: #17171a;
+    --surface-soft: #242429;
+    --surface-card: #202025;
+    --surface-doc: #1d1d20;
+    --surface-dark: #0d0d0f;
 
     /* Brand & Accent - Gold Accent (same as light) */
     --primary: #ebb042;
@@ -139,11 +139,11 @@
 /* Dark mode class strategy for explicit theme switching */
 .dark {
   /* Canvas & Surfaces - Dark Mode */
-  --background: #1F1F1F;
-  --surface-soft: #2A2A2A;
-  --surface-card: #242424;
-  --surface-doc: #1f1f1d;
-  --surface-dark: #0f0f0d;
+  --background: #1d1d20;
+  --surface-soft: #242429;
+  --surface-card: #202025;
+  --surface-doc: #1d1d20;
+  --surface-dark: #0d0d0f;
 
   /* Brand & Accent - Gold Accent (same as light) */
   --primary: #e0a73b;
