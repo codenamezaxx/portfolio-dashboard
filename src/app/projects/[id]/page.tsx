@@ -8,11 +8,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getProjectById, getProjects } from '@/lib/portfolio-data';
-import Badge from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
 import { ArrowLeft, ExternalLink, Gamepad2 } from 'lucide-react';
 import { GithubIcon } from '@/components/ui/Icons';
-import GlassCard from '@/components/ui/GlassCard';
 import ThemeToggleButton from '@/components/ui/ThemeToggleButton';
 
 interface ProjectDetailPageProps {
@@ -101,16 +98,16 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
               <div className="flex items-center justify-between mb-6">
                 <Link
                   href="/projects"
-                  className="group inline-flex items-center gap-2 text-mute hover:text-primary transition-all duration-300 text-sm font-bold bg-surface-soft/50 backdrop-blur-sm px-4 py-2 rounded-full border border-hairline hover:border-primary/30"
+                  className="inline-flex items-center gap-1 text-mute hover:text-primary text-sm border border-line px-3 py-1.5"
                 >
-                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                  <ArrowLeft className="w-3.5 h-3.5" />
                   Kembali ke Proyek
                 </Link>
                 <ThemeToggleButton />
               </div>
-              <Badge variant="accent" className="bg-primary/10 text-primary border-primary/20 rounded-lg px-3 py-1 text-[10px] font-black uppercase tracking-widest mb-3">
+              <span className="bg-primary/10 text-primary border border-[var(--primary)]/20 px-2 py-0.5 text-[10px] font-sans uppercase tracking-[2px] mb-3 inline-block">
                 {project.category}
-              </Badge>
+              </span>
               <h1 className="text-4xl md:text-5xl font-extrabold text-ink mb-4 tracking-tight leading-tight">
                 {project.title}
               </h1>
@@ -125,86 +122,60 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
           {/* Technologies */}
           {project.technologies && project.technologies.length > 0 && (
-            <GlassCard className="mb-12 p-8 border-white/5 shadow-xl">
-              <h2 className="text-lg font-black text-ink mb-6 tracking-tight">Teknologi yang Digunakan</h2>
-              <div className="flex flex-wrap gap-3">
+            <div className="mb-8 p-6 border border-line bg-surface-card">
+              <h2 className="text-base font-medium text-ink mb-4">Teknologi yang Digunakan</h2>
+              <div className="flex flex-wrap gap-2">
                 {project.technologies.map((tech) => (
-                  <Badge 
-                    key={tech} 
-                    variant="outline" 
-                    className="text-[10px] font-bold rounded-lg border-hairline bg-surface-soft/50 px-2.5 py-1 text-ink/80"
-                  >
+                  <span key={tech} className="px-2 py-0.5 text-[10px] font-sans uppercase tracking-[2px] text-accent border border-line">
                     {tech}
-                  </Badge>
+                  </span>
                 ))}
               </div>
-            </GlassCard>
+            </div>
           )}
 
           {/* Links */}
-          <GlassCard className="mb-12 p-8 border-white/5 shadow-xl">
-            <h2 className="text-lg font-black text-ink mb-6 tracking-tight">Tautan Proyek</h2>
-            <div className="flex flex-wrap gap-4">
+          <div className="mb-8 p-6 border border-line bg-surface-card">
+            <h2 className="text-base font-medium text-ink mb-4">Tautan Proyek</h2>
+            <div className="flex flex-wrap gap-3">
               {project.github_link && (
-                <a
-                  href={project.github_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/btn"
-                >
-                  <Button variant="secondary" size="lg" className="rounded-xl h-12 px-6 font-bold hover:bg-surface-soft">
-                    <GithubIcon className="w-5 h-5 mr-2 group-hover/btn:rotate-12 transition-transform" />
-                    GitHub
-                  </Button>
+                <a href={project.github_link} target="_blank" rel="noopener noreferrer">
+                  <button className="px-4 py-2 border border-line text-sm text-accent hover:bg-white/20">
+                    <GithubIcon className="w-4 h-4 inline-block mr-1.5" /> GitHub
+                  </button>
                 </a>
               )}
               {project.live_link && (
-                <a
-                  href={project.live_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/btn"
-                >
-                  <Button variant="primary" size="lg" className="rounded-xl h-12 px-6 font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95">
-                    <ExternalLink className="w-5 h-5 mr-2" />
-                    Live Demo
-                  </Button>
+                <a href={project.live_link} target="_blank" rel="noopener noreferrer">
+                  <button className="px-4 py-2 border border-line bg-primary/10 text-ink text-sm hover:bg-primary/20">
+                    <ExternalLink className="w-4 h-4 inline-block mr-1.5" /> Live Demo
+                  </button>
                 </a>
               )}
               {project.demo_link && (
-                <a
-                  href={project.demo_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/btn"
-                >
-                  <Button variant="secondary" size="lg" className="rounded-xl h-12 px-6 font-bold hover:bg-surface-soft">
-                    <Gamepad2 className="w-5 h-5 mr-2" />
-                    Main Game
-                  </Button>
+                <a href={project.demo_link} target="_blank" rel="noopener noreferrer">
+                  <button className="px-4 py-2 border border-line text-sm text-accent hover:bg-white/20">
+                    <Gamepad2 className="w-4 h-4 inline-block mr-1.5" /> Main Game
+                  </button>
                 </a>
               )}
             </div>
-          </GlassCard>
+          </div>
 
           {/* Prev / Next Navigation */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16 pt-8 border-t border-hairline/30">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12 pt-6 border-t border-line">
             {previousProject ? (
-              <Link href={`/projects/${previousProject.id}`}>
-                <Button variant="secondary" className="w-full justify-start gap-2 h-12 rounded-xl px-6 font-bold hover:bg-surface-soft">
-                  <ArrowLeft className="w-5 h-5" />
-                  <span className="truncate">Prev: {previousProject.title}</span>
-                </Button>
+              <Link href={`/projects/${previousProject.id}`} className="px-4 py-3 border border-line text-sm text-accent hover:bg-white/20">
+                <ArrowLeft className="w-4 h-4 inline-block mr-1.5" />
+                <span className="truncate">Prev: {previousProject.title}</span>
               </Link>
             ) : (
               <div />
             )}
             {nextProject ? (
-              <Link href={`/projects/${nextProject.id}`}>
-                <Button variant="secondary" className="w-full justify-end gap-2 h-12 rounded-xl px-6 font-bold hover:bg-surface-soft">
-                  <span className="truncate">Next: {nextProject.title}</span>
-                  <ArrowLeft className="w-5 h-5 rotate-180" />
-                </Button>
+              <Link href={`/projects/${nextProject.id}`} className="px-4 py-3 border border-line text-sm text-accent hover:bg-white/20 text-right">
+                <span className="truncate">Next: {nextProject.title}</span>
+                <ArrowLeft className="w-4 h-4 inline-block ml-1.5 rotate-180" />
               </Link>
             ) : (
               <div />
