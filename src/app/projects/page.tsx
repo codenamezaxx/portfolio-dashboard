@@ -6,10 +6,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getProjects } from '@/lib/portfolio-data';
-import { Button } from '@/components/ui/Button';
 import { ArrowLeft } from 'lucide-react';
 import SectionHeader from '@/components/shared/SectionHeader';
-import { GithubIcon } from '@/components/ui/Icons';
 import ThemeToggleButton from '@/components/ui/ThemeToggleButton';
 import ProjectCard from '@/components/ui/ProjectCard';
 
@@ -45,7 +43,7 @@ export default async function ProjectsPage() {
           <div className="flex items-center justify-between mb-12">
             <Link
               href="/#projects"
-              className="group inline-flex items-center gap-2 text-mute hover:text-primary transition-all duration-300 text-sm font-bold bg-surface-soft/50 backdrop-blur-sm px-4 py-2 rounded-full border border-hairline hover:border-primary/30"
+              className="group inline-flex items-center gap-2 px-4 py-2 border border-line text-sm text-mute hover:bg-white/20"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               Kembali ke Beranda
@@ -68,7 +66,7 @@ export default async function ProjectsPage() {
                   <h2 className="text-2xl font-black text-ink tracking-tight">
                     {category}
                   </h2>
-                  <div className="h-px flex-1 bg-gradient-to-r from-hairline to-transparent" />
+                  <div className="h-px flex-1 bg-line" />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -88,7 +86,7 @@ export default async function ProjectsPage() {
           {/* Empty State */}
           {projects.length === 0 && (
             <div className="text-center py-16">
-              <p className="text-[var(--mute)] text-lg">Belum ada proyek tersedia.</p>
+              <p className="text-mute text-lg">Belum ada proyek tersedia.</p>
             </div>
           )}
         </div>
