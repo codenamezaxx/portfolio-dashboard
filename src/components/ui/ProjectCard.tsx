@@ -1,11 +1,9 @@
 'use client';
-
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ExternalLink, Gamepad2, Eye } from 'lucide-react';
+import { ExternalLink, Eye, Gamepad2 } from 'lucide-react';
 import { GithubIcon } from './Icons';
-import Button from './Button';
 
 interface ProjectCardProps {
   project: {
@@ -35,116 +33,59 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const technologies = project.tech || project.technologies || [];
   const githubLink = project.links?.github || project.github_link;
   const liveLink = project.links?.live || project.live_link;
-  
-  // Itch.io link can be in links.itchio, or hidden in demo_link/links.demo
-  const itchioLink = project.links?.itchio || 
-                    (project.links?.demo?.includes('itch.io') ? project.links.demo : undefined) ||
-                    (project.demo_link?.includes('itch.io') ? project.demo_link : undefined);
-                    
+  const itchioLink = project.links?.itchio ||
+    (project.links?.demo?.includes('itch.io') ? project.links.demo : undefined) ||
+    (project.demo_link?.includes('itch.io') ? project.demo_link : undefined);
   const demoLink = project.links?.demo || project.demo_link || project.links?.itchio;
   const finalDemoLink = liveLink || demoLink;
 
   return (
-    <div className="group overflow-hidden border border-hairline rounded-2xl bg-surface-card/40 dark:bg-surface-card/20 backdrop-blur-md shadow-xl hover:shadow-lg dark:shadow-primary/10 transition-all duration-300 flex flex-col h-full">
-      {/* Top Section: Clean Image Preview */}
-      <div className="relative aspect-video w-full overflow-hidden block">
+    <div className="group border border-line bg-surface-card hover:bg-white/30 transition-colors duration-200 flex flex-col h-full">
+      <div className="relative aspect-video w-full border-b border-line">
         <Image
           src={imageUrl}
           alt={project.title}
           fill
-          className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+          className="object-cover"
           sizes="(max-width: 768px) 100vw, 50vw"
           quality={90}
         />
-        {/* Category Badge overlay */}
-        <div className="absolute top-4 left-4 z-10">
-          <span className="px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest bg-surface-card/50 dark:text-primary shadow-sm backdrop-blur-sm">
+        <div className="absolute top-3 left-3">
+          <span className="px-2 py-0.5 text-[10px] font-sans uppercase tracking-[2px] text-accent border border-line">
             {project.category}
           </span>
         </div>
       </div>
-
-      {/* Bottom Section: Plain Background Content Area */}
       <div className="p-5 space-y-3 flex-1 flex flex-col">
-        <div className="space-y-2">
-          <h3 className="py-2 text-2xl font-bold text-foreground group-hover:text-accent transition-colors line-clamp-1">
-            {project.title}
-          </h3>
-          <p className="text-sm text-mute dark:text-mute line-clamp-2 leading-relaxed">
-            {project.description}
-          </p>
-        </div>
-
-        {/* Tags & Metadata Alignment */}
-        <div className="flex flex-wrap gap-2 pt-1">
+        <h3 className="text-base font-medium text-ink line-clamp-1">{project.title}</h3>
+        <p className="text-sm leading-relaxed line-clamp-2" style={{fontFamily: "'Inter', sans-serif", color: 'var(--body)'}}>{project.description}</p>
+        <div className="flex flex-wrap gap-1.5 pt-1">
           {technologies.slice(0, 5).map((tech) => (
-            <span
-              key={tech}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-surface-card dark:bg-surface-card dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50"
-            >
+            <span key={tech} className="px-2 py-0.5 text-[10px] font-sans uppercase tracking-[2px] text-accent border border-line">
               {tech}
             </span>
           ))}
           {technologies.length > 5 && (
-            <span className="inline-flex items-center px-2 py-1 rounded-md text-[10px] font-medium bg-surface-card dark:bg-surface-card dark:text-slate-400">
-              +{technologies.length - 5}
-            </span>
+            <span className="px-2 py-0.5 text-[10px] font-sans uppercase tracking-[2px] text-accent border border-line">+{technologies.length - 5}</span>
           )}
         </div>
-
-        {/* Actions */}
-        <div className="flex items-center gap-3 pt-4 mt-auto border-t border-hairline">
+        <div className="flex items-center gap-2 pt-3 mt-auto border-t border-line">
           {githubLink && (
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                window.open(githubLink, '_blank');
-              }}
-              variant="outline"
-              className="!p-2 h-10 w-10 rounded-xl text-foreground hover:text-primary hover:bg-primary/5 cursor-pointer"
-              title="Lihat source code di GitHub"
-            >
-              <GithubIcon className="w-5 h-5" />
-            </Button>
+            <button onClick={(e: React.MouseEvent) => { e.preventDefault(); window.open(githubLink, '_blank'); }} className="p-1.5 h-8 w-8 border border-line text-accent hover:bg-white/20" title="GitHub"><GithubIcon className="w-4 h-4" /></button>
           )}
-
           {itchioLink && (
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                window.open(itchioLink, '_blank');
-              }}
-              variant="outline"
-              className="!p-2 h-10 w-10 rounded-xl text-foreground hover:text-rose-500 hover:bg-rose-500/5 cursor-pointer"
-              title="Mainkan di itch.io"
-            >
-              <Gamepad2 className="w-5 h-5" />
-            </Button>
+            <button onClick={(e: React.MouseEvent) => { e.preventDefault(); window.open(itchioLink, '_blank'); }} className="p-1.5 h-8 w-8 border border-line text-accent hover:bg-white/20" title="itch.io"><Gamepad2 className="w-4 h-4" /></button>
           )}
-
           <div className="flex-1" />
-
           <Link href={`/projects/${project.id}`}>
-            <Button
-              variant="outline"
-              className="rounded-xl px-4 py-2 font-medium cursor-pointer hover:scale-[1.02] transition-transform duration-300 border-slate-200 dark:border-slate-700"
-              title="Lihat detail project"
-            >
-              <Eye className="w-4 h-4 mr-2" /> Detail
-            </Button>
+            <button className="px-3 py-1 text-xs font-medium border border-line bg-surface-soft hover:bg-white/20 cursor-pointer">
+              <Eye className="w-3.5 h-3.5 mr-1.5" /> Detail
+            </button>
           </Link>
-
           {finalDemoLink && (
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                window.open(finalDemoLink, '_blank');
-              }}
-              className="rounded-xl px-5 py-2 font-medium shadow-lg shadow-primary/10 cursor-pointer hover:scale-[1.02] transition-transform duration-300"
-              title="Buka demo aplikasi"
-            >
-              <ExternalLink className="w-4 h-4 mr-2" /> Demo
-            </Button>
+            <button onClick={(e: React.MouseEvent) => { e.preventDefault(); window.open(finalDemoLink, '_blank'); }} className="px-3 py-1 text-xs font-medium border border-line bg-primary/10 text-ink hover:bg-primary/20 cursor-pointer">
+              <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> Demo
+            </button>
           )}
         </div>
       </div>
