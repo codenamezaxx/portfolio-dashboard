@@ -62,7 +62,7 @@ const Projects: React.FC<ProjectsProps> = ({ items = [] }) => {
               <div className="w-full md:w-1/2 space-y-5 p-4 md:p-8 self-center">
                 <h3
                   className="text-2xl md:text-3xl leading-tight"
-                  style={{fontFamily: "var(--font-display)", fontWeight: 400, color: 'var(--ink)'}}
+                  style={{fontFamily: "var(--font-display)", fontWeight: 600, color: 'var(--ink)'}}
                 >
                   {project.title}
                 </h3>
@@ -120,7 +120,7 @@ const Projects: React.FC<ProjectsProps> = ({ items = [] }) => {
           <motion.div variants={fadeInUp} className="mt-16 text-center">
             <button
               onClick={() => router.push('/projects')}
-              className="inline-flex items-center gap-2 px-6 py-3 border border-line text-ink hover:bg-white/20 transition-colors text-sm"
+              className="inline-flex items-center gap-2 px-6 py-3 border border-line text-ink bg-surface-card hover:bg-surface-card/80 transition-colors text-sm cursor-pointer"
               style={{fontFamily: "'Inter', sans-serif", fontWeight: 500}}
             >
               <Code2 className="w-4 h-4" /> Lihat Semua Proyek

@@ -29,7 +29,7 @@ const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) =>
     .slice(0, 6);
 
   return (
-    <section id="certificates" className="py-20 relative">
+    <section id="certificates" className="py-20 md:px-8 relative">
       <div className="container mx-auto px-6">
         <motion.div
           variants={staggerContainer}
@@ -42,7 +42,6 @@ const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) =>
             title="Pelatihan & Penghargaan" 
             subtitle="Sertifikat & highlights"
             sectionNumber="05"
-            center
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -73,7 +72,7 @@ const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) =>
                 e.stopPropagation();
                 onViewAll ? onViewAll() : router.push('/certificates');
               }}
-              className="inline-flex items-center gap-2 px-6 py-3 border border-line text-ink hover:bg-white/20 transition-colors cursor-pointer text-sm"
+              className="inline-flex items-center gap-2 px-6 py-3 border border-line text-ink bg-surface-card hover:bg-surface-card/80 transition-colors cursor-pointer text-sm"
               style={{fontFamily: "'Inter', sans-serif", fontWeight: 500}}
             >
               <FileCheck className='w-4 h-4' /> Lihat Semua Sertifikat

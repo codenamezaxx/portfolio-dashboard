@@ -122,93 +122,25 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center pt-16 pb-12 overflow-hidden">
       {/* Vertical line — drafting alignment guide */}
-      <div className="vline" style={{left: '5vw'}} />
+      <div className="vline" style={{right: '5vw'}} />
 
       {/* Geo-ring — compass decoration right side */}
-      <div className="geo-ring" style={{width: '46vw', height: '46vw', right: '-8vw', top: '50%', transform: 'translateY(-50%)', opacity: 0.5}}>
+      <div className="geo-ring" style={{width: '46vw', height: '46vw', left: '-2vw', top: '50%', transform: 'translateY(-50%)', opacity: 0.5}}>
         <div className="geo-ring dashed" style={{inset: '14%', position: 'absolute', border: '1px dashed var(--line)', borderRadius: '50%', opacity: 0.7}} />
       </div>
 
       <div className="container mx-auto px-6 relative z-10" style={{maxWidth: '1280px'}}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-0 items-center">
 
-          {/* Left Column */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="order-2 lg:order-1 flex flex-col items-start text-left w-full space-y-6 max-w-xl"
-          >
-            {/* Label eyebrow */}
-            {profileData.status_label && (
-              <motion.span variants={fadeInUp} className="label">
-                {profileData.status_label}
-              </motion.span>
-            )}
-
-            {/* Name as Playfair h1 */}
-            <motion.h1
-              variants={fadeInUp}
-              className="text-4xl md:text-6xl lg:text-7xl leading-[1.06] max-w-lg"
-              style={{fontFamily: "serif", fontWeight: 400, color: "var(--ink)"}}
-            >
-              Hi, I&apos;m <em style={{fontStyle: 'italic'}}>{profileData.name}</em>
-            </motion.h1>
-
-            {/* Role subtitle — typewriter */}
-            <motion.p
-              variants={fadeInUp}
-              className="text-lg md:text-2xl leading-relaxed max-w-md min-h-[1.6em]"
-              style={{fontFamily: "monospace", color: "var(--body)", lineHeight: 1.6}}
-            >
-              {displayedRole}
-              {!isPaused && <span style={{color: 'var(--accent)', animation: 'blink 0.8s step-end infinite'}}>_</span>}
-            </motion.p>
-
-            {/* Tagline */}
-            {profileData.tagline && (
-              <motion.p
-                variants={fadeInUp}
-                className="text-sm leading-relaxed max-w-md"
-                style={{fontFamily: "'Inter', sans-serif", color: "var(--body)", lineHeight: 1.6}}
-              >
-                {profileData.tagline}
-              </motion.p>
-            )}
-
-            {/* Horizontal accent — the one ink-black rule */}
-            <motion.div variants={fadeInUp} className="haccent my-4" />
-
-            {/* Action links */}
-            <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 pt-2">
-              <a
-                href="#projects"
-                onClick={(e) => { e.preventDefault(); document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); }}
-                className="inline-flex items-center gap-2 px-6 py-3 border border-line bg-foreground text-background hover:bg-foreground/70 transition-colors text-sm"
-                style={{fontFamily: "'Inter', sans-serif", fontWeight: 500}}
-              >
-                Lihat Proyek <ArrowRight className="w-4 h-4" />
-              </a>
-              <button
-                onClick={handleViewResume}
-                disabled={isActionLoading || !resumeUrl}
-                className="inline-flex items-center gap-2 px-6 py-3 border border-line text-ink hover:bg-white/20 transition-colors text-sm disabled:opacity-30"
-                style={{fontFamily: "'Inter', sans-serif", fontWeight: 500}}
-              >
-                {isActionLoading ? 'Memuat...' : 'Lihat CV'} <FileSearchCorner className="w-4 h-4" />
-              </button>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Column: Image + Meta */}
+          {/* Left Column: Image + Meta */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="order-1 lg:order-2 flex flex-col items-center lg:items-end mb-8 lg:mb-0"
+            className="order-1 flex flex-col items-center lg:items-start mb-4 lg:mb-0 lg:ml-32"
           >
-            <div className="relative w-full max-w-70 lg:max-w-sm mx-auto lg:ml-auto lg:mr-0">
-              <div className="relative bg-backdrop backdrop:backdrop-blur-2xl aspect-3/4 border-b-5 border-line">
+            <div className="relative w-full max-w-70 lg:max-w-sm mx-auto lg:ml-0 lg:mr-auto">
+              <div className="relative dark:brightness-90 contrast-120 dark:contrast-130 saturate-90 aspect-3/4 border-b-5 border-line">
                 <Image
                   src={profileData.hero_image_url || '/hero.jpg'}
                   alt={profileData.name}
@@ -221,18 +153,18 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
             </div>
 
             {/* Meta row (Cartesian cover style) */}
-            <div className="flex gap-8 md:gap-16 mt-8 lg:mt-10">
+            <div className="flex gap-8 md:gap-16 mt-8">
               <div>
-                <div className="text-lg md:text-xl" style={{fontFamily: "var(--font-display)", color: "var(--ink)"}}>
+                <div className="text-lg" style={{fontFamily: "var(--font-display)", color: "var(--ink)"}}>
                   Jawa Timur, Indonesia
                 </div>
                 <div className="micro-label mt-1">Lokasi</div>
               </div>
               <div>
-                <div className="text-lg md:text-xl" style={{fontFamily: "var(--font-display)", color: "var(--ink)"}}>
-                  {new Date().getFullYear() - 2022}+
+                <div className="text-lg" style={{fontFamily: "var(--font-display)", color: "var(--ink)"}}>
+                  {new Date().getFullYear() - 2025}+ Tahun
                 </div>
-                <div className="micro-label mt-1">Tahun</div>
+                <div className="micro-label mt-1">Pengalaman</div>
               </div>
             </div>
 
@@ -259,6 +191,73 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
             </div>
           </motion.div>
 
+          {/* Right Column */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            className="order-2 flex flex-col items-start text-left w-full space-y-6 max-w-2xl"
+          >
+            {/* Label eyebrow */}
+            {profileData.status_label && (
+              <motion.span variants={fadeInUp} className="label">
+                {profileData.status_label}
+              </motion.span>
+            )}
+
+            {/* Name as Playfair h1 */}
+            <motion.h1
+              variants={fadeInUp}
+              className="text-4xl md:text-6xl lg:text-7xl leading-[1.06] max-w-xl"
+              style={{fontFamily: "serif", fontWeight: 400, color: "var(--ink)"}}
+            >
+              Hi, I&apos;m <em style={{fontStyle: 'italic'}}>{profileData.name}</em>
+            </motion.h1>
+
+            {/* Role subtitle — typewriter */}
+            <motion.p
+              variants={fadeInUp}
+              className="text-lg md:text-2xl leading-relaxed max-w-md min-h-[1.6em]"
+              style={{fontFamily: "monospace", color: "var(--body)", lineHeight: 1.6}}
+            >
+              {displayedRole}
+              {!isPaused && <span style={{color: 'var(--accent)', animation: 'blink 0.8s step-end infinite'}}>_</span>}
+            </motion.p>
+
+            {/* Tagline */}
+            {profileData.tagline && (
+              <motion.p
+                variants={fadeInUp}
+                className="text-sm md:text-md leading-relaxed max-w-lg"
+                style={{fontFamily: "'Inter', sans-serif", color: "var(--body)", lineHeight: 1.6}}
+              >
+                {profileData.tagline}
+              </motion.p>
+            )}
+
+            {/* Horizontal accent — the one ink-black rule */}
+            <motion.div variants={fadeInUp} className="haccent my-4" />
+
+            {/* Action links */}
+            <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 pt-2">
+              <a
+                href="#projects"
+                onClick={(e) => { e.preventDefault(); document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); }}
+                className="inline-flex items-center gap-2 px-6 py-3 border border-line bg-foreground text-background hover:bg-foreground/70 transition-colors text-sm"
+                style={{fontFamily: "'Inter', sans-serif", fontWeight: 500}}
+              >
+                Lihat Proyek <ArrowRight className="w-4 h-4" />
+              </a>
+              <button
+                onClick={handleViewResume}
+                disabled={isActionLoading || !resumeUrl}
+                className="inline-flex items-center gap-2 px-6 py-3 border border-line text-ink hover:bg-white/20 transition-colors text-sm disabled:opacity-30 cursor-pointer"
+                style={{fontFamily: "'Inter', sans-serif", fontWeight: 500}}
+              >
+                {isActionLoading ? 'Memuat...' : 'Lihat CV'} <FileSearchCorner className="w-4 h-4" />
+              </button>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </section>

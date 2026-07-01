@@ -62,8 +62,8 @@ const Navbar: React.FC = () => {
       
       <div className="container mx-auto px-6 h-16 flex items-center justify-between relative z-10" style={{maxWidth: '1280px'}}>
         {/* Logo in Playfair */}
-        <Link href="/" className="text-xl" style={{fontFamily: "serif", color: 'var(--ink)'}}>
-          <Terminal className="w-5 h-5 inline-block mr-2" style={{color: 'var(--accent)'}} />
+        <Link href="/" className="text-lg md:text-xl" style={{fontFamily: "monospace", color: 'var(--ink)', fontWeight: 600}}>
+          <Terminal className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2" style={{color: 'var(--accent)'}} />
           codenamezaxx
         </Link>
 

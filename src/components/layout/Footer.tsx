@@ -103,9 +103,13 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
           {/* Column 4: Tech stack */}
           <div className="space-y-4">
             <h3 className="label text-xs">Dibangun Dengan</h3>
-            <p className="text-sm leading-relaxed" style={{fontFamily: "monospace", color: 'var(--body)'}}>
-              Next.js · Tailwind CSS · Framer Motion · Supabase · Vercel
-            </p>
+            <div className="flex flex-wrap gap-3" style={{fontFamily: "monospace", color: 'var(--body)'}}>
+              <span className="bg-surface-card border border-line px-2 py-1">Next.js</span>
+              <span className="bg-surface-card border border-line px-2 py-1">Tailwind CSS</span>
+              <span className="bg-surface-card border border-line px-2 py-1">Framer Motion</span>
+              <span className="bg-surface-card border border-line px-2 py-1">Supabase</span>
+              <span className="bg-surface-card border border-line px-2 py-1">Vercel</span>
+            </div>
           </div>
         </div>
 

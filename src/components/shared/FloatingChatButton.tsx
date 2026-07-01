@@ -108,7 +108,7 @@ export default function FloatingChatButton() {
       {/* Main Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-6 py-3 border border-line bg-primary text-background hover:bg-primary/80 cursor-pointer"
+        className="flex items-center gap-2 px-6 py-3 border border-line bg-foreground/75 text-background hover:bg-foreground/90 cursor-pointer"
       >
         <MessageCircleMore className="w-4 h-4" />
         <span className="text-sm" style={{fontFamily: "'Inter', sans-serif"}}>Contact</span>

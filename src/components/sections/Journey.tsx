@@ -52,7 +52,7 @@ const Journey: React.FC<JourneyProps> = ({ items = [] }) => {
                     {/* Title in Playfair Display */}
                     <h3
                       className="text-lg md:text-xl leading-snug"
-                      style={{fontFamily: "var(--font-display)", fontWeight: 400, color: 'var(--ink)'}}
+                      style={{fontFamily: "var(--font-display)", fontWeight: 500, color: 'var(--ink)'}}
                     >
                       {item.title}
                     </h3>

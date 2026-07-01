@@ -22,8 +22,7 @@ import type { JourneyItem } from '@/types';
 import { journeyItemSchema } from '@/lib/validation';
 import { z } from 'zod';
 import { 
-  Rocket, 
-  Calendar, 
+  Rocket,
   GripVertical, 
   Edit2, 
   Trash2, 
