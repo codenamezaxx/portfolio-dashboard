@@ -44,7 +44,7 @@ export default function AdminLayout({
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           {/* Top Header */}
-          <header className="border-b border-hairline dark:border-hairline bg-[var(--surface-card)] shadow-sm sticky top-0 z-30">
+          <header className="border-b border-line bg-surface-card sticky top-0 z-30">
             <div className="max-w-full mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-4">
               
               {/* Left Side: Toggles and Breadcrumb */}
@@ -52,7 +52,7 @@ export default function AdminLayout({
                 {/* Mobile Sidebar Toggle */}
                 <button
                   onClick={() => setIsMobileOpen(true)}
-                  className="flex md:hidden p-2 hover:bg-surface-soft dark:hover:bg-surface-soft rounded-md transition-colors text-mute hover:text-primary cursor-pointer"
+                  className="flex md:hidden p-2 hover:bg-surface-soft text-mute hover:text-primary"
                   aria-label="Open mobile menu"
                 >
                   <Menu className="w-6 h-6" />
@@ -61,7 +61,7 @@ export default function AdminLayout({
                 {/* Desktop Sidebar Toggle */}
                 <button
                   onClick={() => setIsCollapsed(!isCollapsed)}
-                  className="hidden md:flex p-2 hover:bg-surface-soft dark:hover:bg-surface-soft rounded-md transition-colors text-mute hover:text-primary cursor-pointer"
+                  className="hidden md:flex p-2 hover:bg-surface-soft text-mute hover:text-primary"
                   aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
                 >
                   <Menu className="w-5 h-5" />
@@ -75,14 +75,14 @@ export default function AdminLayout({
                 {/* Theme Toggle */}
                 <ThemeToggleButton />
                 {/* User Profile Info */}
-                <div className="flex items-center gap-3 pl-2 md:pl-4 border-l border-[var(--hairline)]">
+                <div className="flex items-center gap-3 pl-2 md:pl-4 border-l border-line">
                   <div className="hidden sm:flex flex-col items-end">
-                    <p className="text-xs text-[var(--mute)] uppercase font-bold tracking-wider">Administrator</p>
-                    <p className="text-sm font-semibold text-[var(--ink)] truncate max-w-[150px]">
+                    <p className="text-xs text-mute uppercase font-bold tracking-wider">Administrator</p>
+                    <p className="text-sm font-semibold text-ink truncate max-w-[150px]">
                       {user?.email?.split('@')[0] || 'Admin'}
                     </p>
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-surface-soft dark:bg-surface-soft border border-hairline flex items-center justify-center text-primary overflow-hidden shadow-sm">
+                  <div className="w-10 h-10 bg-surface-soft border border-line flex items-center justify-center text-primary">
                     {user?.avatarUrl && typeof user.avatarUrl === 'string' && user.avatarUrl.trim() !== '' ? (
                       <img 
                         src={user.avatarUrl} 

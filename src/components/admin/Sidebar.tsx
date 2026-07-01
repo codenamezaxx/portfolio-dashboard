@@ -17,7 +17,6 @@ import {
   Settings, Briefcase, Trophy, Mail, 
   Users, FileText, Database, X
 } from 'lucide-react';
-import Button from '../ui/Button';
 import Swal from 'sweetalert2';
 
 interface NavItem {
@@ -141,27 +140,27 @@ export function Sidebar({
       {/* Overlay for mobile */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={onMobileClose}
         />
       )}
 
-      {/* Sidebar - Design System Compliant */}
+      {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen bg-[var(--surface-card)] border-r border-[var(--hairline)] flex flex-col z-50 transition-all duration-300 ease-in-out md:relative md:translate-x-0 
+        className={`fixed left-0 top-0 h-screen bg-surface-card border-r border-line flex flex-col z-50 md:relative md:translate-x-0 
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} 
           ${isCollapsed ? 'w-20' : 'w-64'}`}
       >
         {/* Logo / Branding */}
-        <div className={`p-5 border border-[var(--hairline)] flex items-center justify-between gap-3 overflow-hidden ${isCollapsed ? 'px-4' : ''}`}>
+        <div className={`p-5 border-b border-line flex items-center justify-between gap-3 overflow-hidden ${isCollapsed ? 'px-4' : ''}`}>
           <div className="flex items-center gap-3">
             <div className="flex-shrink-0">
-              <Terminal className="text-[var(--primary)] w-8 h-8" />
+              <Terminal className="text-accent w-8 h-8" />
             </div>
             {!isCollapsed && (
-              <div className="whitespace-nowrap opacity-100 transition-opacity duration-300">
-                <p className="text-xl font-bold uppercase tracking-wider text-[var(--foreground)]">Admin Panel</p>
-                <p className="text-xs text-[var(--mute)] uppercase tracking-wider">Portfolio Manager</p>
+              <div className="whitespace-nowrap">
+                <p className="text-xl font-bold uppercase tracking-wider text-ink">Admin Panel</p>
+                <p className="text-xs text-mute uppercase tracking-wider">Portfolio Manager</p>
               </div>
             )}
           </div>
@@ -170,9 +169,9 @@ export function Sidebar({
           {isMobileOpen && (
             <button 
               onClick={onMobileClose}
-              className="md:hidden p-1 hover:bg-[var(--surface-soft)] rounded-md"
+              className="md:hidden p-1 hover:bg-surface-soft text-mute"
             >
-              <X className="w-6 h-6 text-[var(--mute)]" />
+              <X className="w-6 h-6" />
             </button>
           )}
         </div>
@@ -188,16 +187,16 @@ export function Sidebar({
                 href={item.href}
                 onClick={onMobileClose}
                 title={isCollapsed ? item.label : ''}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 text-sm font-medium group
+                className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium
                   ${active
-                    ? 'bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20 shadow-sm'
-                    : 'text-[var(--body)] hover:bg-[var(--surface-soft)] hover:text-[var(--ink)]'
+                    ? 'bg-primary/10 text-accent border border-[var(--primary)]/20'
+                    : 'text-body hover:bg-surface-soft hover:text-ink'
                   }
                   ${isCollapsed ? 'justify-center px-0' : ''}`}
               >
-                <Icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 ${active ? 'scale-110' : 'group-hover:scale-110'}`} />
+                <Icon className={`w-5 h-5 flex-shrink-0`} />
                 {!isCollapsed && (
-                  <span className="whitespace-nowrap overflow-hidden transition-all duration-300">{item.label}</span>
+                  <span className="whitespace-nowrap overflow-hidden">{item.label}</span>
                 )}
               </Link>
             );
@@ -205,27 +204,26 @@ export function Sidebar({
         </nav>
 
         {/* Action Buttons Section */}
-        <div className={`border-t border-[var(--hairline)] p-4 space-y-2 ${isCollapsed ? 'items-center' : ''}`}>
+        <div className={`border-t border-line p-4 space-y-2 ${isCollapsed ? 'items-center' : ''}`}>
           <Link
             href="/"
             title={isCollapsed ? "Kembali ke Portfolio" : ""}
-            className={`flex items-center justify-center gap-2 w-full px-3 py-2 bg-[var(--surface-soft)] hover:bg-[var(--surface-card)] text-[var(--ink)] border border-[var(--hairline)] rounded-xl transition-colors text-md font-medium
+            className={`flex items-center justify-center gap-2 w-full px-3 py-2 bg-surface-soft text-ink border border-line text-sm font-medium
               ${isCollapsed ? 'px-0' : ''}`}
           >
             <ArrowLeft className="w-4 h-4" /> 
             {!isCollapsed && <span>Kembali</span>}
           </Link>
-          <Button
-            variant='danger'
+          <button
             onClick={handleLogout}
             disabled={isLoggingOut}
             title={isCollapsed ? "Logout" : ""}
-            className={`w-full px-3 py-2 text-md font-medium cursor-pointer flex items-center justify-center gap-2
+            className={`w-full px-3 py-2 text-sm font-medium flex items-center justify-center gap-2 bg-red-950/30 text-red-400 border border-red-900/50 disabled:opacity-50
               ${isCollapsed ? 'px-0' : ''}`}
           >
             {!isCollapsed && (isLoggingOut ? '...' : 'Logout')}
             <LogOut className="w-4 h-4" />
-          </Button>
+          </button>
         </div>
       </aside>
     </>
