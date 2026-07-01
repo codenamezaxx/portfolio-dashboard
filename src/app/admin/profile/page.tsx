@@ -19,10 +19,10 @@ export default function UserProfilePage() {
 
   if (isLoading) {
     return (
-      <main className="flex flex-1 flex-col items-center justify-center min-h-screen bg-canvas dark:bg-canvas">
+      <main className="flex flex-1 flex-col items-center justify-center min-h-screen bg-canvas">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-4 border-surface-soft dark:border-surface-soft border-t-primary dark:border-t-primary rounded-full animate-spin" />
-          <p className="text-mute dark:text-mute">Loading profile...</p>
+          <div className="w-8 h-8 border-4 border-surface-soft border-t-primary animate-spin" />
+          <p className="text-mute">Loading profile...</p>
         </div>
       </main>
     );
@@ -30,22 +30,22 @@ export default function UserProfilePage() {
 
   if (error || !user) {
     return (
-      <main className="flex flex-1 flex-col items-center justify-center min-h-screen bg-canvas dark:bg-canvas">
+      <main className="flex flex-1 flex-col items-center justify-center min-h-screen bg-canvas">
         <div className="flex flex-col items-center gap-4">
-          <p className="text-accent-red dark:text-accent-red">Failed to load profile</p>
-          <p className="text-mute dark:text-mute text-sm">{error || 'User not found'}</p>
+          <p className="text-accent-red">Failed to load profile</p>
+          <p className="text-mute text-sm">{error || 'User not found'}</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="flex flex-1 flex-col min-h-screen bg-canvas dark:bg-canvas">
+    <main className="flex flex-1 flex-col min-h-screen bg-canvas">
       <div className="max-w-6xl mx-auto w-full px-4 md:px-8 py-8 md:py-12">
         {/* Page Header */}
         <div className="mb-10">
-          <h1 className="text-4xl font-black text-ink dark:text-ink mb-3">User Profile</h1>
-          <p className="text-lg text-mute dark:text-mute font-medium">
+          <h1 className="text-4xl font-black text-ink mb-3">User Profile</h1>
+          <p className="text-lg text-mute font-medium">
             Manage your administrator account, security settings, and professional resume.
           </p>
         </div>
