@@ -2,13 +2,10 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { Achievement } from '@/lib/portfolio-data';
-import Badge from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
 import { TextInput } from '@/components/ui/TextInput';
 import { Modal } from '@/components/ui/Modal';
 import { PDFPreview } from '@/components/ui/PDFPreview';
 import { Search, X, ChevronLeft, ChevronRight, Download, ExternalLink, FileText, Medal } from 'lucide-react';
-import GlassCard from '@/components/ui/GlassCard';
 
 interface CertificatesGalleryProps {
   achievements: Achievement[];
@@ -158,7 +155,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
   return (
     <>
       {/* Filters and Search */}
-      <div className="mb-12 p-8 bg-surface-card/30 backdrop-blur-md rounded-3xl border border-hairline/50 space-y-8 shadow-soft-light dark:shadow-soft-dark">
+      <div className="mb-12 p-6 border border-line bg-surface-card space-y-6">
         {/* Search Bar */}
         <div className="relative group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-mute group-focus-within:text-primary transition-colors" />
@@ -167,7 +164,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
             placeholder="Cari berdasarkan judul, penerbit, atau kategori..."
             value={filters.searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            className="pl-12 h-14 bg-surface-soft/50 border-hairline hover:border-primary/30 focus:border-primary transition-all duration-300 rounded-2xl"
+            className="pl-12 h-12 bg-surface-soft border border-line text-sm"
             aria-label="Search certificates"
           />
         </div>
@@ -180,10 +177,10 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
               <button
                 key={category}
                 onClick={() => handleCategoryFilter(category)}
-                className={`px-6 py-2.5 rounded-xl text-sm font-bold border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+                className={`px-4 py-2 text-sm border border-line ${
                   filters.category === category
-                    ? 'bg-primary text-on-primary border-primary shadow-lg shadow-primary/20'
-                    : 'bg-surface-soft/80 text-body border-hairline hover:border-primary/40 hover:bg-surface-soft hover:text-ink'
+                    ? 'bg-primary text-background'
+                    : 'bg-surface-soft text-body hover:bg-white/20'
                 }`}
                 aria-pressed={filters.category === category}
               >
@@ -203,7 +200,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-sm text-[var(--mute)]">Filter aktif:</span>
             {filters.category && (
-              <Badge variant="accent" className="flex items-center gap-2">
+              <span className="flex items-center gap-2 bg-primary/10 text-accent border border-[var(--primary)]/20 px-2 py-0.5 text-xs">
                 {filters.category}
                 <button
                   onClick={() => handleCategoryFilter(filters.category)}
@@ -212,10 +209,10 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
                 >
                   <X className="w-3 h-3" />
                 </button>
-              </Badge>
+              </span>
             )}
             {filters.searchQuery && (
-              <Badge variant="accent" className="flex items-center gap-2">
+              <span className="flex items-center gap-2 bg-primary/10 text-accent border border-[var(--primary)]/20 px-2 py-0.5 text-xs">
                 Pencarian: {filters.searchQuery}
                 <button
                   onClick={() => handleSearch('')}
@@ -224,7 +221,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
                 >
                   <X className="w-3 h-3" />
                 </button>
-              </Badge>
+              </span>
             )}
             <button
               onClick={handleClearFilters}
@@ -237,7 +234,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
       </div>
 
       {/* Results Count */}
-      <div className="mb-6 text-sm text-[var(--mute)]">
+      <div className="mb-4 text-sm text-mute font-sans">
         Menampilkan {paginatedAchievements.length > 0 ? (pagination.currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}–{' '}
         {Math.min(pagination.currentPage * ITEMS_PER_PAGE, filteredAchievements.length)} dari{' '}
         {filteredAchievements.length} sertifikat
@@ -247,63 +244,56 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
       {paginatedAchievements.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {paginatedAchievements.map((certificate) => (
-            <GlassCard
+            <div
               key={certificate.id}
-              className="group/cert h-full flex flex-col overflow-hidden border border-hairline shadow-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 rounded-2xl animate-fadeIn"
+              className="group/cert h-full flex flex-col border border-line bg-surface-card"
             >
               {/* Top Banner / Icon Area */}
-              <div className="relative h-24 bg-surface-soft/30 border-b border-hairline/30 flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 opacity-10 group-hover/cert:opacity-20 transition-opacity">
-                   <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/20 to-transparent" />
-                </div>
-                <div className="relative z-10 w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover/cert:scale-110 group-hover/cert:rotate-3 transition-all duration-500 shadow-lg shadow-primary/5">
+              <div className="relative h-20 bg-surface-soft border-b border-line flex items-center justify-center">
+                <div className="w-10 h-10 bg-primary/10 flex items-center justify-center text-primary">
                   <Medal className="w-6 h-6" />
                 </div>
               </div>
 
               {/* Header Content */}
-              <div className="p-8 flex flex-col flex-1">
+              <div className="p-5 flex flex-col flex-1">
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="space-y-1">
-                    <Badge variant="accent" className="bg-primary/10 text-primary border-primary/20 rounded-lg px-3 py-1 text-[10px] font-black uppercase tracking-widest mb-2 inline-block">
+                    <span className="bg-primary/10 text-primary border border-[var(--primary)]/20 px-2 py-0.5 text-[10px] font-sans uppercase tracking-[2px] mb-2 inline-block">
                       {certificate.category}
-                    </Badge>
-                    <h3 className="text-xl font-black text-ink line-clamp-2 group-hover/cert:text-primary transition-colors leading-tight tracking-tight">
+                    </span>
+                    <h3 className="text-lg font-medium text-ink line-clamp-2">
                       {certificate.title}
                     </h3>
                   </div>
-                  <span className="flex-shrink-0 text-[10px] font-black px-2.5 py-1 rounded-lg bg-surface-soft text-mute border border-hairline shadow-sm">
+                  <span className="flex-shrink-0 text-[10px] font-sans px-2 py-0.5 bg-surface-soft text-mute border border-line">
                     {certificate.year}
                   </span>
                 </div>
                 
-                <p className="text-sm font-bold text-mute/80 mb-8 line-clamp-1 italic">
+                <p className="text-sm text-mute mb-5 line-clamp-1" style={{fontFamily: "'Inter', sans-serif"}}>
                   {certificate.issuer}
                 </p>
 
                 {/* Actions */}
-                <div className="mt-auto flex items-center gap-3 pt-6 border-t border-hairline/30">
-                  <Button
+                <div className="mt-auto flex items-center gap-2 pt-4 border-t border-line">
+                  <button
                     onClick={() => handleViewPDF(certificate)}
-                    variant="primary"
-                    size="sm"
-                    className="flex-1 rounded-xl h-11 font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
+                    className="flex-1 px-3 py-2 border border-line bg-primary/10 text-ink text-sm hover:bg-primary/20"
                     aria-label={`View ${certificate.title} PDF`}
                   >
-                    <FileText className="w-4 h-4 mr-2" />
+                    <FileText className="w-4 h-4 inline-block mr-1.5" />
                     Preview
-                  </Button>
+                  </button>
                   
                   <div className="flex gap-2">
-                    <Button
+                    <button
                       onClick={() => handleDownloadPDF(certificate)}
-                      variant="secondary"
-                      size="sm"
-                      className="w-11 h-11 p-0 rounded-xl hover:bg-surface-soft transition-colors"
+                      className="w-9 h-9 p-0 border border-line bg-surface-soft text-accent hover:bg-white/20"
                       aria-label={`Download ${certificate.title} PDF`}
                     >
                       <Download className="w-4 h-4" />
-                    </Button>
+                    </button>
                     
                     {certificate.external_link && (
                       <a
@@ -311,20 +301,18 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          className="w-11 h-11 p-0 rounded-xl hover:bg-surface-soft transition-colors"
+                        <button
+                          className="w-9 h-9 p-0 border border-line bg-surface-soft text-accent hover:bg-white/20"
                           aria-label={`View ${certificate.title} external link`}
                         >
                           <ExternalLink className="w-4 h-4" />
-                        </Button>
+                        </button>
                       </a>
                     )}
                   </div>
                 </div>
               </div>
-            </GlassCard>
+            </div>
           ))}
         </div>
       )}
@@ -338,26 +326,24 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
               : 'Belum ada sertifikat tersedia.'}
           </p>
           {(filters.category || filters.searchQuery) && (
-            <Button onClick={handleClearFilters} variant="secondary">
+            <button onClick={handleClearFilters} className="px-4 py-2 border border-line bg-surface-soft text-ink text-sm hover:bg-white/20">
               Hapus Filter
-            </Button>
+            </button>
           )}
         </div>
       )}
 
       {/* Pagination */}
       {pagination.totalPages > 1 && (
-        <div className="flex items-center justify-center gap-4 mt-16 p-4 bg-surface-card/20 backdrop-blur-md rounded-2xl border border-hairline/30 w-fit mx-auto shadow-soft-light dark:shadow-soft-dark">
-          <Button
+        <div className="flex items-center justify-center gap-2 mt-12 p-3 border border-line w-fit mx-auto">
+          <button
             onClick={handlePreviousPage}
             disabled={pagination.currentPage === 1}
-            variant="secondary"
-            size="sm"
-            className="w-10 h-10 p-0 rounded-xl"
+            className="w-9 h-9 p-0 border border-line bg-surface-soft text-accent hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Previous page"
           >
-            <ChevronLeft className="w-5 h-5" />
-          </Button>
+            <ChevronLeft className="w-4 h-4" />
+          </button>
 
           {/* Page Numbers */}
           <div className="flex gap-2">
@@ -365,10 +351,10 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
-                className={`w-10 h-10 rounded-xl text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+                className={`w-9 h-9 text-sm border border-line ${
                   pagination.currentPage === page
-                    ? 'bg-primary text-on-primary shadow-lg shadow-primary/20'
-                    : 'bg-surface-soft/50 text-body border border-hairline hover:border-primary/40 hover:text-ink'
+                    ? 'bg-primary text-background'
+                    : 'bg-surface-soft text-body hover:bg-white/20'
                 }`}
                 aria-current={pagination.currentPage === page ? 'page' : undefined}
                 aria-label={`Go to page ${page}`}
@@ -378,16 +364,14 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
             ))}
           </div>
 
-          <Button
+          <button
             onClick={handleNextPage}
             disabled={pagination.currentPage === pagination.totalPages}
-            variant="secondary"
-            size="sm"
-            className="w-10 h-10 p-0 rounded-xl"
+            className="w-9 h-9 p-0 border border-line bg-surface-soft text-accent hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Next page"
           >
-            <ChevronRight className="w-5 h-5" />
-          </Button>
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
       )}
 
@@ -407,28 +391,28 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
               showPageInfo={true}
             />
             <div className="flex gap-2 justify-end">
-              <Button
+              <button
                 onClick={() => handleDownloadPDF(selectedCertificate)}
-                variant="secondary"
+                className="px-4 py-2 border border-line bg-surface-soft text-ink text-sm hover:bg-white/20"
               >
                 <Download className="w-4 h-4 mr-2" />
                 Unduh PDF
-              </Button>
+              </button>
               {selectedCertificate.external_link && (
                 <a
                   href={selectedCertificate.external_link}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button variant="secondary">Lihat Sertifikat</Button>
+                  <button className="px-4 py-2 border border-line bg-surface-soft text-ink text-sm hover:bg-white/20">Lihat Sertifikat</button>
                 </a>
               )}
-              <Button
+              <button
                 onClick={() => setShowPDFModal(false)}
-                variant="ghost"
+                className="px-4 py-2 border border-line text-ink text-sm hover:bg-white/20"
               >
                 Tutup
-              </Button>
+              </button>
             </div>
           </div>
         </Modal>
