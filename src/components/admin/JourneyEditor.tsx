@@ -17,7 +17,7 @@ import { FormSuccess } from '@/components/ui/FormSuccess';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useToast } from '@/hooks/useToast';
 import { Modal } from '@/components/ui/Modal';
-import { Breadcrumb } from '@/components/admin/Breadcrumb';
+import { Button } from '@/components/ui/Button';
 import type { JourneyItem } from '@/types';
 import { journeyItemSchema } from '@/lib/validation';
 import { z } from 'zod';
@@ -331,7 +331,9 @@ export function JourneyEditor() {
             className="focus:ring-primary/50 focus:border-primary min-h-[150px]"
           />
           <div className="flex justify-end gap-3 pt-4 border-t border-hairline">
-            <Button variant="ghost" onClick={() => setIsFormOpen(false)} disabled={isLoading}>Cancel</Button>
+            <Button variant="ghost" onClick={() => setIsFormOpen(false)} disabled={isLoading}>
+              Cancel
+            </Button>
             <Button type="submit" isLoading={isLoading} className="px-8 shadow-lg shadow-primary/20">
               <Rocket className="w-4 h-4 mr-2" /> Save Milestone
             </Button>
@@ -345,8 +347,12 @@ export function JourneyEditor() {
           <p className="text-body">Are you sure you want to delete milestone <strong>{deleteConfirm?.title}</strong>?</p>
           <p className="text-xs text-accent-red font-bold uppercase tracking-wider">This action cannot be undone.</p>
           <div className="flex justify-end gap-3 pt-4">
-            <Button variant="ghost" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
-            <Button variant="danger" onClick={handleDelete} isLoading={isLoading}>Delete Permanently</Button>
+            <Button variant="ghost" onClick={() => setDeleteConfirm(null)}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleDelete} isLoading={isLoading}>
+              Delete Permanently
+            </Button>
           </div>
         </div>
       </Modal>
