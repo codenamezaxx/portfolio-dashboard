@@ -11,7 +11,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/Button';
+
 import { FormError } from '@/components/ui/FormError';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { FileText, Download, Filter, Info } from 'lucide-react';
@@ -181,23 +181,23 @@ export function ActivityLogViewer() {
     <div className="space-y-8 pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-primary/10 rounded-2xl">
+          <div className="p-3 bg-primary/10">
             <FileText className="w-8 h-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl md:text-4xl font-black text-ink dark:text-ink tracking-tight">Activity Log</h1>
-            <p className="text-body dark:text-body font-medium mt-1">View all admin actions and changes</p>
+            <h1 className="text-3xl md:text-4xl font-black text-ink tracking-tight">Activity Log</h1>
+            <p className="text-body font-medium mt-1">View all admin actions and changes</p>
           </div>
         </div>
-        <Button onClick={handleExportCSV} disabled={exporting} variant="ghost" className="shadow-lg">
+        <button onClick={handleExportCSV} disabled={exporting}>
           <Download className="w-4 h-4 mr-2" /> {exporting ? 'Exporting...' : 'Export CSV'}
-        </Button>
+        </button>
       </div>
 
       {error && <FormError message={error} />}
 
       {/* Filters */}
-      <div className="bg-surface-card dark:bg-surface-card rounded-2xl p-6 border border-hairline">
+      <div className="bg-surface-card p-6 border border-line">
         <div className="flex items-center gap-2 mb-4">
           <Filter className="w-5 h-5 text-primary" />
           <h2 className="text-lg font-black text-ink">Filters</h2>
@@ -208,7 +208,7 @@ export function ActivityLogViewer() {
             <select
               value={filters.action}
               onChange={(e) => handleFilterChange('action', e.target.value)}
-              className="w-full px-4 py-2 rounded-xl border border-hairline bg-surface-soft focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-2 border border-line bg-surface-soft focus:outline-none"
             >
               <option value="">All Actions</option>
               {ACTION_TYPES.map(action => (
@@ -221,7 +221,7 @@ export function ActivityLogViewer() {
             <select
               value={filters.entityType}
               onChange={(e) => handleFilterChange('entityType', e.target.value)}
-              className="w-full px-4 py-2 rounded-xl border border-hairline bg-surface-soft focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-2 border border-line bg-surface-soft focus:outline-none"
             >
               <option value="">All Entities</option>
               {ENTITY_TYPES.map(entity => (
@@ -233,10 +233,10 @@ export function ActivityLogViewer() {
       </div>
 
       {/* Logs Table */}
-      <div className="bg-surface-card dark:bg-surface-card rounded-2xl shadow-md overflow-hidden border border-hairline">
+      <div className="bg-surface-card overflow-hidden border border-line">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-hairline">
-            <thead className="bg-surface-soft dark:bg-surface-soft">
+          <table className="min-w-full divide-y divide-line">
+            <thead className="bg-surface-soft ">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-black text-mute uppercase tracking-wider">Timestamp</th>
                 <th className="px-6 py-3 text-left text-xs font-black text-mute uppercase tracking-wider">User</th>
@@ -246,7 +246,7 @@ export function ActivityLogViewer() {
                 <th className="px-6 py-3 text-left text-xs font-black text-mute uppercase tracking-wider">IP</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-hairline">
+            <tbody className="divide-y divide-line">
               {logs.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-8 text-center text-mute">
@@ -255,7 +255,7 @@ export function ActivityLogViewer() {
                 </tr>
               ) : (
                 logs.map((log) => (
-                  <tr key={log.id} className="hover:bg-surface-soft dark:hover:bg-surface-soft transition-colors">
+                  <tr key={log.id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-body">
                       {new Date(log.createdAt).toLocaleString()}
                     </td>
@@ -263,7 +263,7 @@ export function ActivityLogViewer() {
                       {log.adminUserEmail}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 rounded-full text-xs font-bold ${
+                      <span className={`inline-flex px-2 py-1 text-xs font-bold ${
                         log.action === 'CREATE' ? 'bg-accent-green-soft text-accent-green' :
                         log.action === 'UPDATE' ? 'bg-accent-blue-soft text-accent-blue' :
                         log.action === 'DELETE' ? 'bg-accent-red-soft text-accent-red' :
@@ -290,35 +290,33 @@ export function ActivityLogViewer() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="px-6 py-4 border-t border-hairline flex items-center justify-between">
+          <div className="px-6 py-4 border-t border-line flex items-center justify-between">
             <div className="text-sm text-body">
               Showing {pagination.offset + 1} to {Math.min(pagination.offset + pagination.limit, pagination.total)} of {pagination.total} logs
             </div>
             <div className="flex gap-2">
-              <Button
-                variant="ghost"
+              <button
                 onClick={() => handlePageChange('prev')}
                 disabled={pagination.offset === 0}
               >
                 Previous
-              </Button>
+              </button>
               <div className="px-4 py-2 text-sm font-bold text-body">
                 Page {currentPage} of {totalPages}
               </div>
-              <Button
-                variant="ghost"
+              <button
                 onClick={() => handlePageChange('next')}
                 disabled={pagination.offset + pagination.limit >= pagination.total}
               >
                 Next
-              </Button>
+              </button>
             </div>
           </div>
         )}
       </div>
 
       {/* Info Tip */}
-      <div className="p-5 rounded-2xl bg-accent-blue-soft/20 border border-accent-blue/10 flex gap-4">
+      <div className="p-5 bg-accent-blue-soft/20 border border-accent-blue/10 flex gap-4">
         <Info className="w-6 h-6 text-accent-blue flex-shrink-0" />
         <p className="text-xs text-body leading-relaxed">
           <span className="font-black text-accent-blue uppercase tracking-wider block mb-1">Audit Trail</span>

@@ -5,10 +5,7 @@ export const fadeInUp: Variants = {
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut"
-    }
+    transition: { duration: 0.5, ease: "easeOut" }
   }
 };
 
@@ -17,25 +14,8 @@ export const staggerContainer: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.15,
       delayChildren: 0.2
     }
   }
-};
-
-export const slideInFromLeft: Variants = {
-  hidden: { x: -60, opacity: 0 },
-  visible: { 
-    x: 0, 
-    opacity: 1,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut"
-    }
-  }
-};
-
-export const scaleOnHover: Variants = {
-  hover: { scale: 1.05, transition: { duration: 0.2 } },
-  tap: { scale: 0.95 }
 };

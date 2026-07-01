@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Send, ArrowUpRight } from 'lucide-react';
 import { LinkedinIcon, InstagramIcon } from '@/components/ui/Icons';
@@ -14,11 +14,10 @@ interface ContactsProps {
 
 /**
  * Contacts Component (Footer)
- * Displays contact methods with custom colored cards, icon circles, and handles matching design specifications
+ * Cartesian editorial colophon — taupe hairline rows, Inter body, accent icons.
  */
 const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
   const contact = contactInfo || {};
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   const getHandleFromUrl = (url: string | undefined, defaultValue: string) => {
     if (!url) return defaultValue;
@@ -40,15 +39,6 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
       icon: Mail,
       link: `mailto:${contact.email || ''}`,
       descriptionId: 'email',
-      colors: {
-        bg: 'bg-blue-900/10 dark:bg-blue-900/15',
-        bgHover: 'bg-blue-900/20 dark:bg-blue-900/30',
-        shadow: 'dark:shadow-blue-500/20',
-        border: 'border-blue-500/20',
-        borderHover: 'border-blue-500/50',
-        iconBg: 'bg-blue-500/15',
-        text: 'text-blue-600 dark:text-blue-400',
-      }
     },
     {
       id: 2,
@@ -57,15 +47,6 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
       icon: LinkedinIcon,
       link: contact.linkedin_url || '#',
       descriptionId: 'linkedin',
-      colors: {
-        bg: 'bg-teal-900/10 dark:bg-teal-900/20',
-        bgHover: 'bg-teal-900/20 dark:bg-teal-900/35',
-        shadow: 'dark:shadow-teal-500/20',
-        border: 'border-teal-500/20',
-        borderHover: 'border-teal-500/50',
-        iconBg: 'bg-teal-500/15',
-        text: 'text-teal-700 dark:text-teal-400',
-      }
     },
     {
       id: 3,
@@ -74,15 +55,6 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
       icon: InstagramIcon,
       link: contact.instagram_url || '#',
       descriptionId: 'instagram',
-      colors: {
-        bg: 'bg-pink-900/10 dark:bg-pink-900/20',
-        bgHover: 'bg-pink-900/20 dark:bg-pink-900/35',
-        shadow: 'dark:shadow-pink-500/20',
-        border: 'border-pink-500/20',
-        borderHover: 'border-pink-500/50',
-        iconBg: 'bg-pink-500/15',
-        text: 'text-pink-600 dark:text-pink-400',
-      }
     },
     {
       id: 4,
@@ -91,46 +63,36 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
       icon: Send,
       link: contact.telegram_url || '#',
       descriptionId: 'telegram',
-      colors: {
-        bg: 'bg-sky-900/10 dark:bg-sky-900/20',
-        bgHover: 'bg-sky-900/20 dark:bg-sky-900/35',
-        shadow: 'dark:shadow-sky-500/20',
-        border: 'border-sky-500/20',
-        borderHover: 'border-sky-500/50',
-        iconBg: 'bg-sky-500/15',
-        text: 'text-sky-600 dark:text-sky-400',
-      }
     },
   ];
 
   return (
-    <section id="contacts" className="py-20 md:py-32 relative border-t border-white/5">
-      <div className="container mx-auto px-6">
+    <section id="contacts" className="py-20 md:py-32 relative border-t border-line overflow-hidden">
+      {/* Geo-ring */}
+      <div className="geo-ring" style={{width: '35vw', height: '35vw', right: '-10%', top: '-5%', opacity: 0.08}} />
+
+      <div className="container mx-auto px-6 relative z-10" style={{maxWidth: '960px'}}>
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          <SectionHeader
-            title="Hubungi Saya"
-            subtitle="Kontak"
-            center={true}
-          />
+          <SectionHeader title="Hubungi Saya" subtitle="Kontak" sectionNumber="04" center />
 
-          {/* Intro Text */}
-          <motion.div variants={fadeInUp} className="text-center max-w-2xl mx-auto mb-16">
-            <p className="text-sm md:text-lg text-body dark:text-body leading-relaxed">
-              Tertarik untuk berkolaborasi atau memiliki pertanyaan? Jangan ragu untuk menghubungi saya melalui salah satu platform di bawah ini.
-            </p>
-          </motion.div>
+          {/* Opening */}
+          <motion.p
+            variants={fadeInUp}
+            className="text-center max-w-lg mx-auto mb-16 text-sm md:text-base leading-relaxed"
+            style={{fontFamily: "'Inter', sans-serif", color: 'var(--body)', lineHeight: 1.6}}
+          >
+            Tertarik untuk berkolaborasi? Hubungi saya melalui platform berikut.
+          </motion.p>
 
-          {/* Contact Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-16">
-            {contactMethods.map((method) => {
+          {/* Contact list — taupe hairline rows */}
+          <div className="max-w-lg mx-auto mb-16">
+            {contactMethods.map((method, i) => {
               const IconComponent = method.icon;
-              const isHovered = hoveredId === method.id;
-              
               return (
                 <motion.a
                   key={method.id}
@@ -138,64 +100,29 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   variants={fadeInUp}
-                  whileHover={{ y: -8 }}
-                  onMouseEnter={() => setHoveredId(method.id)}
-                  onMouseLeave={() => setHoveredId(null)}
-                  className={`group relative rounded-2xl border p-7 overflow-hidden transition-all duration-300 cursor-pointer backdrop-blur-md ${method.colors.shadow} shadow-xl ${isHovered ? `${method.colors.bgHover} ${method.colors.borderHover}` : `${method.colors.bg} ${method.colors.border}`}`}
+                  className={`flex items-center gap-4 py-5 border-t border-line hover:bg-white/20 transition-colors px-4 ${i === contactMethods.length - 1 ? 'border-b border-line' : ''}`}
                   aria-label={`Contact via ${method.label}`}
-                  aria-describedby={method.descriptionId}
                 >
-                  {/* Background Accent Glow */}
-                  <div 
-                    className={`absolute top-0 right-0 w-32 h-32 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full blur-2xl -mr-16 -mt-16 bg-current ${method.colors.text}`}
-                  />
-
-                  {/* Content */}
-                  <div className="relative z-10 flex flex-col h-full justify-between">
-                    {/* Circle Icon Container */}
-                    <div 
-                      className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110 ${method.colors.iconBg} ${method.colors.text}`}
-                    >
-                      <IconComponent className="w-5 h-5" aria-hidden="true" />
-                    </div>
-
-                    {/* Text Content */}
-                    <div>
-                      <h3 className="text-xl font-extrabold text-ink dark:text-ink mb-2 tracking-tight">
-                        {method.label}
-                      </h3>
-                      <p 
-                        className={`text-body-sm mb-4 transition-colors duration-300 font-medium ${method.colors.text}`}
-                        id={method.descriptionId}
-                      >
-                        {method.value}
-                      </p>
-                    </div>
-
-                    {/* Arrow Icon & Button Text */}
-                    <div className="flex items-center justify-between">
-                      <span 
-                        className={`text-[10px] uppercase font-bold tracking-wider transition-colors duration-300 ${method.colors.text}`}
-                      >
-                        Hubungi
-                      </span>
-                      <ArrowUpRight 
-                        className={`w-4 h-4 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 ${method.colors.text}`}
-                        aria-hidden="true" 
-                      />
-                    </div>
+                  <IconComponent className="w-5 h-5 shrink-0" style={{color: 'var(--accent)'}} aria-hidden="true" />
+                  <div className="flex-1 min-w-0">
+                    <span className="block micro-label text-xs">{method.label}</span>
+                    <span className="block text-sm mt-0.5 truncate" style={{fontFamily: "'Inter', sans-serif", color: 'var(--body)'}}>
+                      {method.value}
+                    </span>
                   </div>
+                  <ArrowUpRight className="w-4 h-4 shrink-0" style={{color: 'var(--accent)'}} aria-hidden="true" />
                 </motion.a>
               );
             })}
           </div>
 
-          {/* Footer Note */}
+          {/* Closing */}
           <motion.p
             variants={fadeInUp}
-            className="text-center text-sm md:text-lg dark:text-body mt-12"
+            className="text-center text-sm leading-relaxed"
+            style={{fontFamily: "'Inter', sans-serif", color: 'var(--body)'}}
           >
-            Terima kasih atas kunjungan Anda! Saya menantikan kesempatan untuk terhubung dan bekerja sama dengan Anda.
+            Terima kasih telah berkunjung.
           </motion.p>
         </motion.div>
       </div>

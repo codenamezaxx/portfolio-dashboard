@@ -112,7 +112,7 @@ export function ProfileForm({
 
         {/* Hero Image Upload - Integrated Component */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-[var(--foreground)]">
+          <label className="text-sm font-medium text-ink">
             Hero Image <span className="text-red-500">*</span>
           </label>
           <ImageUpload
@@ -124,7 +124,7 @@ export function ProfileForm({
           {form.errors.heroImageUrl && form.touched.heroImageUrl && (
             <p className="text-sm text-red-400">{form.errors.heroImageUrl}</p>
           )}
-          <p className="text-xs text-[var(--muted)]">
+          <p className="text-xs text-mute">
             Optional: Upload a hero section image
           </p>
         </div>

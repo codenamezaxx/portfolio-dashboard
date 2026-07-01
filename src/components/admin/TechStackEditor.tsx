@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/Button';
 import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { useToast } from '@/hooks/useToast';
 import { Modal } from '@/components/ui/Modal';
 import { Breadcrumb } from '@/components/admin/Breadcrumb';
 import type { TechItem } from '@/types';
@@ -43,6 +44,7 @@ interface EditingItem extends TechItemFormData {
 }
 
 export function TechStackEditor({ initialData }: TechStackEditorProps) {
+  const toast = useToast();
   const [techItems, setTechItems] = useState<TechItem[]>(initialData || []);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(!initialData);
@@ -133,13 +135,17 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
 
       if (!response.ok) throw new Error('Failed to save tech item');
       
-      setSuccessMessage(`Tech "${editingItem.name}" ${editingItem.id ? 'updated' : 'added'}!`);
+      const successMsg = `Tech "${editingItem.name}" ${editingItem.id ? 'updated' : 'added'}!`;
+      setSuccessMessage(successMsg);
+      toast.success(successMsg);
       setIsFormOpen(false);
       fetchTechStack();
       setTimeout(() => setSuccessMessage(null), 3000);
       await fetch('/api/revalidate', { method: 'POST', credentials: 'include' }).catch(() => {});
     } catch (error) {
-      setErrorMessage('Failed to save tech stack item.');
+      const msg = 'Failed to save tech stack item.';
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -159,12 +165,16 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
       });
       if (!response.ok) throw new Error('Failed to delete');
       setTechItems(prev => prev.filter(i => i.id !== deleteConfirm.id));
-      setSuccessMessage('Tech item deleted.');
+      const successMsg = 'Tech item deleted.';
+      setSuccessMessage(successMsg);
+      toast.success(successMsg);
       setDeleteConfirm(null);
       setTimeout(() => setSuccessMessage(null), 3000);
       await fetch('/api/revalidate', { method: 'POST', credentials: 'include' }).catch(() => {});
     } catch (error) {
-      setErrorMessage('Failed to delete item.');
+      const msg = 'Failed to delete item.';
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setIsDeleting(false);
     }
@@ -197,8 +207,11 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(reordered.map(i => ({ id: i.id, displayOrder: i.displayOrder }))),
       });
+      toast.success('Tech stack order updated!');
     } catch (error) {
-      setErrorMessage('Failed to save order.');
+      const msg = 'Failed to save order.';
+      setErrorMessage(msg);
+      toast.error(msg);
       fetchTechStack();
     }
   };

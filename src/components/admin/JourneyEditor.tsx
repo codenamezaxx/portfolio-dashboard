@@ -12,10 +12,10 @@
 import { useState, useEffect } from 'react';
 import { TextInput } from '@/components/ui/TextInput';
 import { TextArea } from '@/components/ui/TextArea';
-import { Button } from '@/components/ui/Button';
 import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { useToast } from '@/hooks/useToast';
 import { Modal } from '@/components/ui/Modal';
 import { Breadcrumb } from '@/components/admin/Breadcrumb';
 import type { JourneyItem } from '@/types';
@@ -34,6 +34,7 @@ import {
 type JourneyFormData = z.infer<typeof journeyItemSchema>;
 
 export function JourneyEditor() {
+  const toast = useToast();
   const [items, setItems] = useState<JourneyItem[]>([]);
   const [isFetching, setIsFetching] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -122,13 +123,17 @@ export function JourneyEditor() {
 
       if (!response.ok) throw new Error('Failed to save item');
       
-      setSuccessMessage(`Journey item ${editingItem.id ? 'updated' : 'added'} successfully!`);
+      const successMsg = `Journey item ${editingItem.id ? 'updated' : 'added'} successfully!`;
+      setSuccessMessage(successMsg);
+      toast.success(successMsg);
       setIsFormOpen(false);
       fetchItems();
       setTimeout(() => setSuccessMessage(null), 3000);
       await fetch('/api/revalidate', { method: 'POST', credentials: 'include' }).catch(() => {});
     } catch (error) {
-      setErrorMessage('Failed to save journey item.');
+      const msg = 'Failed to save journey item.';
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -140,13 +145,17 @@ export function JourneyEditor() {
     try {
       const response = await fetch(`/api/content/journey?id=${deleteConfirm.id}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Delete failed');
-      setSuccessMessage('Journey item deleted.');
+      const deleteMsg = 'Journey item deleted.';
+      setSuccessMessage(deleteMsg);
+      toast.success(deleteMsg);
       setDeleteConfirm(null);
       fetchItems();
       setTimeout(() => setSuccessMessage(null), 3000);
       await fetch('/api/revalidate', { method: 'POST', credentials: 'include' }).catch(() => {});
     } catch (error) {
-      setErrorMessage('Failed to delete item.');
+      const msg = 'Failed to delete item.';
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -178,8 +187,11 @@ export function JourneyEditor() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(reordered.map(i => ({ id: i.id, displayOrder: i.displayOrder }))),
       });
+      toast.success('Journey order updated!');
     } catch (error) {
-      setErrorMessage('Failed to save new order.');
+      const msg = 'Failed to save new order.';
+      setErrorMessage(msg);
+      toast.error(msg);
       fetchItems();
     }
   };
@@ -190,17 +202,17 @@ export function JourneyEditor() {
     <div className="space-y-8 pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-primary/10 rounded-2xl">
+          <div className="p-3 bg-primary/10">
             <History className="w-8 h-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl md:text-4xl font-black text-ink dark:text-ink tracking-tight">Journey Manager</h1>
-            <p className="text-body dark:text-body font-medium mt-1">Manage your professional career timeline</p>
+            <h1 className="text-3xl md:text-4xl font-black text-ink tracking-tight">Journey Manager</h1>
+            <p className="text-body font-medium mt-1">Manage your professional career timeline</p>
           </div>
         </div>
-        <Button onClick={handleAddNew} className="shadow-lg shadow-primary/20">
+        <button onClick={handleAddNew}>
           <Plus className="w-4 h-4 mr-2" /> Add Milestone
-        </Button>
+        </button>
       </div>
 
       {successMessage && <FormSuccess message={successMessage} />}
@@ -211,9 +223,9 @@ export function JourneyEditor() {
         <div className="absolute left-6 md:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/50 via-primary/20 to-transparent ml-[3px] hidden md:block" />
 
         {items.length === 0 ? (
-          <div className="bg-surface-card dark:bg-surface-card border-2 border-dashed border-hairline rounded-2xl p-12 text-center">
-            <p className="text-mute dark:text-mute font-medium">No journey milestones yet.</p>
-            <Button variant="ghost" onClick={handleAddNew} className="mt-4">Create your first milestone</Button>
+          <div className="bg-surface-card border-2 border-dashed border-line p-12 text-center">
+            <p className="text-mute font-medium">No journey milestones yet.</p>
+            <button onClick={handleAddNew} className="mt-4">Create your first milestone</button>
           </div>
         ) : (
           <div className="space-y-6">
@@ -224,24 +236,24 @@ export function JourneyEditor() {
                 onDragStart={() => handleDragStart(item.id)}
                 onDragOver={(e) => handleDragOver(e, item.id)}
                 onDrop={(e) => handleDrop(e, item.id)}
-                className={`relative flex items-start gap-4 md:gap-8 group cursor-move transition-all duration-300
+                className={`relative flex items-start gap-4 md:gap-8 group cursor-move
                   ${dragOverItem === item.id ? 'translate-y-2' : ''} 
                   ${draggedItem === item.id ? 'opacity-50 grayscale' : ''}`}
               >
                 {/* Timeline Dot */}
-                <div className="hidden md:flex flex-shrink-0 w-8 h-8 rounded-full bg-surface-card border-4 border-primary/20 items-center justify-center relative z-10 transition-transform group-hover:scale-110">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
+                <div className="hidden md:flex flex-shrink-0 w-8 h-8 bg-surface-card border-4 border-primary/20 items-center justify-center relative z-10">
+                  <div className="w-2 h-2 bg-primary" />
                 </div>
 
                 {/* Milestone Card */}
-                <div className="flex-1 bg-primary/5 dark:bg-white/5 backdrop-blur-md border border-primary/10 dark:border-white/10 rounded-2xl p-5 md:p-6 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all group-hover:-translate-y-1">
+                <div className="flex-1 bg-primary/5 dark:bg-white/5 border border-primary/10 border-line p-5 md:p-6 hover:border-primary/30">
                   <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                     <div className="flex-1 space-y-3">
                       <div className="flex items-center gap-3">
-                        <span className="bg-primary/10 text-primary font-black px-4 py-1 rounded-full text-xs uppercase tracking-[0.1em]">
+                        <span className="bg-primary/10 text-primary font-black px-4 py-1 text-xs uppercase tracking-[0.1em]">
                           {item.year}
                         </span>
-                        <div className="p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="p-1 opacity-0">
                           <GripVertical className="w-4 h-4 text-mute" />
                         </div>
                       </div>

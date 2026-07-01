@@ -79,7 +79,7 @@ export function StatisticsWidget({
   const styles = colorMap[color] || colorMap.primary;
 
   return (
-    <div className={`relative overflow-hidden p-6 ${styles.bg} border ${styles.border} shadow-xl ${styles.shadow} rounded-xl shadow-sm hover:shadow-md transition-all duration-300 group`}>
+    <div className={`relative overflow-hidden p-6 ${styles.bg} border ${styles.border}`}>
       {/* Left Accent Stripe */}
       <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${styles.stripe}`} />
       
@@ -87,7 +87,7 @@ export function StatisticsWidget({
         <div className="flex-1">
           <p className="text-xs font-extrabold text-mute dark:text-mute uppercase tracking-[0.15em] mb-4">{label}</p>
           {isLoading ? (
-            <div className="h-10 w-24 bg-surface-soft/50 dark:bg-surface-soft/50 rounded-lg animate-pulse" />
+            <div className="h-10 w-24 bg-surface-soft/50" />
           ) : (
             <div className="flex items-baseline gap-1">
               <p className={`text-4xl lg:text-5xl font-black ${styles.text} leading-tight tabular-nums`}>
@@ -97,13 +97,13 @@ export function StatisticsWidget({
           )}
         </div>
         
-        <div className={`p-3 rounded-lg ${styles.bg} border ${styles.border} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
+        <div className={`p-3 ${styles.bg} border ${styles.border}`}>
           <Icon className={`w-8 h-8 ${styles.icon} opacity-80`} />
         </div>
       </div>
       
       {/* Subtle Background Decorative Element */}
-      <div className={`absolute -right-4 -bottom-4 opacity-[0.03] dark:opacity-[0.05] transition-transform duration-500 group-hover:scale-150`}>
+      <div className={`absolute -right-4 -bottom-4 opacity-[0.03] dark:opacity-[0.05]`}>
         <Icon className="w-24 h-24" />
       </div>
     </div>

@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Terminal, Sun, Moon } from 'lucide-react';
+import { Menu, Terminal, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { useTheme } from '@/contexts/ThemeProvider';
 import ThemeToggleButton from '@/components/ui/ThemeToggleButton';
 
 const NAV_ITEMS = [
@@ -12,22 +11,26 @@ const NAV_ITEMS = [
   { label: "Perjalanan", href: "#journey" },
   { label: "Tech Stack", href: "#tech" },
   { label: "Proyek", href: "#projects" },
-  { label: "Sertifikat", href: "#achievements" },
+  { label: "Sertifikat", href: "#certificates" },
   { label: "Kontak", href: "#contacts" },
 ];
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
-    setMounted(true);
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const sections = document.querySelectorAll('section[id]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    }, { rootMargin: '-50% 0px -50% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+    return () => observer.disconnect();
   }, []);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -53,40 +56,44 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className={`fixed top-1 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 rounded-2xl border border-white/5 dark:border-white/5 backdrop-blur-md w-[97%] max-w-7xl ${scrolled ? 'bg-background/80 dark:bg-background/80 h-16 shadow-soft-light dark:shadow-soft-dark' : 'bg-background/40 dark:bg-background/40 h-20'}`}>
-      <div className="container mx-auto px-8 h-full flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 text-[var(--foreground)] font-bold text-xl hover:text-[var(--primary)] transition-colors">
-          <Terminal className="w-6 h-6 text-[var(--primary)]" />
-          <span className='font-mono'>codenamezaxx</span>
+    <nav className="fixed top-0 left-0 w-full z-50 bg-background">
+      {/* Hairline bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-line" />
+      
+      <div className="container mx-auto px-6 h-16 flex items-center justify-between relative z-10" style={{maxWidth: '1280px'}}>
+        {/* Logo in Playfair */}
+        <Link href="/" className="text-xl" style={{fontFamily: "serif", color: 'var(--ink)'}}>
+          <Terminal className="w-5 h-5 inline-block mr-2" style={{color: 'var(--accent)'}} />
+          codenamezaxx
         </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-5">
-          {NAV_ITEMS.map((item) => (
-            <a 
-              key={item.label} 
-              href={item.href}
-              onClick={(e) => handleNavClick(e, item.href)}
-              className="text-sm font-medium text-[var(--mute)] hover:text-[var(--primary)] transition-colors relative group"
-            >
-              {item.label}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all duration-300 group-hover:w-full" />
-            </a>
-          ))}
-          
-          {/* Theme Toggle Button */}
+        {/* Desktop */}
+        <div className="hidden md:flex items-center gap-6">
+          {NAV_ITEMS.map((item) => {
+            const sectionId = item.href.replace('#', '');
+            const isActive = activeSection === sectionId;
+            return (
+              <a
+                key={item.label}
+                href={item.href}
+                onClick={(e) => handleNavClick(e, item.href)}
+                className="micro-label transition-opacity"
+                style={{opacity: isActive ? 1 : 0.5}}
+                onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                onMouseLeave={(e) => e.currentTarget.style.opacity = isActive ? '1' : '0.5'}
+              >
+                {item.label}
+              </a>
+            );
+          })}
           <ThemeToggleButton />
         </div>
 
-        {/* Mobile Controls */}
+        {/* Mobile */}
         <div className="md:hidden flex items-center gap-4">
-          {/* Theme Toggle Mobile */}
           <ThemeToggleButton />
-          
-          {/* Menu Button */}
-          <button 
-            className="text-[var(--primary)] p-2 relative z-[60]"
+          <button
+            className="text-ink p-2 relative z-[60]"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -94,27 +101,28 @@ const Navbar: React.FC = () => {
             }}
             aria-label="Toggle menu"
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile dropdown */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[var(--background)] backdrop-blur-md border-t border-[var(--hairline)] overflow-hidden flex flex-col items-center justify-center text-center rounded-b-lg"
+            className="md:hidden bg-background border-t border-line overflow-hidden"
           >
-            <div className="flex flex-col p-6 gap-4">
+            <div className="flex flex-col px-6 py-4 gap-3">
               {NAV_ITEMS.map((item) => (
-                <a 
+                <a
                   key={item.label}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className="text-lg font-medium text-[var(--primary)] hover:text-[var(--primary-pressed)] py-2 transition-colors"
+                  className="py-2 text-sm"
+                  style={{fontFamily: "'Inter', sans-serif", color: 'var(--body)'}}
                 >
                   {item.label}
                 </a>

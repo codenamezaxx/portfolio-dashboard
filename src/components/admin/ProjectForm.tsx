@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react';
 import { useFormValidation } from '@/lib/useFormValidation';
 import { projectSchema, type ProjectInput } from '@/lib/validation';
-import { FormField, TextAreaField, SelectField, Button, FormGroup, ImageUpload } from '@/components/ui';
+import { FormField, TextAreaField, SelectField, FormGroup, ImageUpload } from '@/components/ui';
 import { FormError, FormSuccess } from '@/components/ui';
 
 interface ProjectFormProps {
@@ -175,13 +175,13 @@ export function ProjectForm({
                 }
               }}
               placeholder="Add technology (e.g., React)"
-              className="flex-1 px-3 py-2 bg-[var(--surface)] border border-hairline text-[var(--foreground)] rounded-lg focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20"
+              className="flex-1 px-3 py-2 bg-[var(--surface)] border border-line text-[var(--foreground)] focus:outline-none focus:border-blue-500/50"
               disabled={isLoading || form.isSubmitting}
             />
             <button
               type="button"
               onClick={handleAddTechnology}
-              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50"
               disabled={isLoading || form.isSubmitting || !techInput.trim()}
             >
               Add
@@ -195,7 +195,7 @@ export function ProjectForm({
               {form.values.technologies.map((tech, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-2 px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded-full"
+                  className="flex items-center gap-2 px-3 py-1 bg-blue-500/20 border border-blue-500/30"
                 >
                   <span className="text-sm text-blue-400">{tech}</span>
                   <button
@@ -260,22 +260,21 @@ export function ProjectForm({
 
       {/* Submit Button */}
       <div className="flex gap-3 pt-4">
-        <Button
+        <button
           type="submit"
-          disabled={isLoading || form.isSubmitting }
+          disabled={isLoading || form.isSubmitting}
           className="flex-1"
         >
           {form.isSubmitting ? 'Saving...' : 'Save Project'}
-        </Button>
-        <Button
+        </button>
+        <button
           type="button"
-          variant="secondary"
           onClick={form.resetForm}
           disabled={isLoading || form.isSubmitting}
           className="flex-1"
         >
           Reset
-        </Button>
+        </button>
       </div>
     </form>
   );

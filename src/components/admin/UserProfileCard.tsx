@@ -117,7 +117,7 @@ export function UserProfileCard({ user }: UserProfileCardProps) {
   };
 
   return (
-    <div className="bg-surface-card dark:bg-surface-card border border-hairline dark:border-hairline rounded-2xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg">
+    <div className="bg-surface-card border border-line overflow-hidden">
       {/* Header / Banner */}
       <div className="h-32 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent dark:from-primary/30 dark:via-primary/20 dark:to-transparent" />
       
@@ -128,13 +128,13 @@ export function UserProfileCard({ user }: UserProfileCardProps) {
           <div className="relative group">
             <div 
               onClick={handleAvatarClick}
-              className={`w-32 h-32 rounded-2xl border-4 border-surface-card bg-surface-soft dark:bg-surface-soft shadow-xl overflow-hidden flex items-center justify-center cursor-pointer relative ${isUploading ? 'opacity-50' : ''}`}
+              className={`w-32 h-32 border-4 border-surface-card bg-surface-soft overflow-hidden flex items-center justify-center cursor-pointer relative ${isUploading ? 'opacity-50' : ''}`}
             >
               {previewUrl && typeof previewUrl === 'string' && previewUrl.trim() !== '' ? (
                 <img 
                   src={previewUrl} 
                   alt="Profile" 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
                     setPreviewUrl(null);
@@ -149,14 +149,14 @@ export function UserProfileCard({ user }: UserProfileCardProps) {
               )}
               
               {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center">
                 <Camera className="text-white w-8 h-8" />
               </div>
 
               {/* Uploading Spinner */}
               {isUploading && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                  <div className="w-8 h-8 border-4 border-primary border-t-transparent" />
                 </div>
               )}
             </div>
@@ -171,7 +171,7 @@ export function UserProfileCard({ user }: UserProfileCardProps) {
           </div>
 
           <div className="flex-1 pb-2">
-            <h2 className="text-3xl font-black text-ink dark:text-ink leading-tight">
+            <h2 className="text-3xl font-black text-ink leading-tight">
               {user.email.split('@')[0]}
             </h2>
             <div className="flex items-center gap-3 mt-2">

@@ -44,6 +44,7 @@ lerna-debug.log*
 next-env.d.ts
 
 # Editor directories and files
+.superpowers
 .agents
 .gemini
 .vscode
@@ -56,3 +57,4 @@ next-env.d.ts
 *.sln
 *.sw?
 .kiro
+docs/superpowers

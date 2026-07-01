@@ -1,5 +1,4 @@
 'use client';
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { fadeInUp } from '@/lib/motion';
@@ -9,27 +8,39 @@ interface SectionHeaderProps {
   subtitle: string;
   description?: string;
   center?: boolean;
+  sectionNumber?: string;
 }
 
-const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description, subtitle, center = false }) => {
+const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description, subtitle, center = false, sectionNumber }) => {
   return (
     <div className={`mb-16 ${center ? 'text-center' : ''}`}>
-      <motion.span 
-        variants={fadeInUp}
-        className="block text-primary font-bold tracking-[0.2em] text-xs md:text-sm mb-3 uppercase opacity-90"
-      >
-        {subtitle}
-      </motion.span>
-      <motion.h2 
-        variants={fadeInUp}
-        className="text-4xl md:text-5xl font-black text-ink dark:text-ink tracking-tight"
-      >
-        {title}
-      </motion.h2>
-      {description && (
-        <motion.p 
+      {/* Section header with number + title + spacer + label (Cartesian style) */}
+      <div className="flex items-baseline gap-6 mb-6">
+        {sectionNumber && (
+          <span className="display-serif text-xl md:text-2xl" style={{color: 'var(--accent)'}}>
+            {sectionNumber}
+          </span>
+        )}
+        <motion.h2
           variants={fadeInUp}
-          className="text-body-sm md:text-body-md text-body dark:text-body mt-4"
+          className="text-3xl md:text-5xl"
+          style={{fontFamily: "serif", fontWeight: 400, color: "var(--ink)"}}
+        >
+          {title}
+        </motion.h2>
+        {!center && <div className="flex-1 h-px bg-line self-center" />}
+        <motion.span
+          variants={fadeInUp}
+          className="label hidden md:block"
+        >
+          {subtitle}
+        </motion.span>
+      </div>
+      {description && (
+        <motion.p
+          variants={fadeInUp}
+          className="mt-4 text-base leading-relaxed max-w-2xl"
+          style={{color: 'var(--body)'}}
         >
           {description}
         </motion.p>

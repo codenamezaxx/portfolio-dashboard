@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/Button';
 import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { useToast } from '@/hooks/useToast';
 import { Modal } from '@/components/ui/Modal';
 import { PDFUpload } from '@/components/ui/PDFUpload';
 import { PDFPreview } from '@/components/ui/PDFPreview';
@@ -43,6 +44,7 @@ import {
 type AchievementFormData = z.infer<typeof achievementSchema>;
 
 export function AchievementManager() {
+  const toast = useToast();
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [isFetching, setIsFetching] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -123,10 +125,13 @@ export function AchievementManager() {
       if (!response.ok) throw new Error('Failed to save order');
       
       setSuccessMessage('Achievement order updated!');
+      toast.success('Achievement order updated!');
       setTimeout(() => setSuccessMessage(null), 2000);
       await fetch('/api/revalidate', { method: 'POST', credentials: 'include' }).catch(() => {});
     } catch (error) {
-      setErrorMessage('Failed to save new order.');
+      const msg = 'Failed to save new order.';
+      setErrorMessage(msg);
+      toast.error(msg);
       fetchAchievements();
     }
   };
@@ -221,13 +226,17 @@ export function AchievementManager() {
 
       if (!response.ok) throw new Error('Failed to save achievement');
       
-      setSuccessMessage(`Achievement ${editingAchievement.id ? 'updated' : 'added'} successfully!`);
+      const successMsg = `Achievement ${editingAchievement.id ? 'updated' : 'added'} successfully!`;
+      setSuccessMessage(successMsg);
+      toast.success(successMsg);
       setIsFormOpen(false);
       fetchAchievements();
       setTimeout(() => setSuccessMessage(null), 3000);
       await fetch('/api/revalidate', { method: 'POST', credentials: 'include' }).catch(() => {});
     } catch (error) {
-      setErrorMessage('Failed to save achievement.');
+      const msg = 'Failed to save achievement.';
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -251,14 +260,18 @@ export function AchievementManager() {
 
       if (!response.ok) throw new Error('Delete failed');
       
-      setSuccessMessage(deleteConfirm.type === 'single' ? 'Achievement deleted.' : `${selectedIds.size} achievements deleted.`);
+      const successMsg = deleteConfirm.type === 'single' ? 'Achievement deleted.' : `${selectedIds.size} achievements deleted.`;
+      setSuccessMessage(successMsg);
+      toast.success(successMsg);
       setDeleteConfirm(null);
       setSelectedIds(new Set());
       fetchAchievements();
       setTimeout(() => setSuccessMessage(null), 3000);
       await fetch('/api/revalidate', { method: 'POST', credentials: 'include' }).catch(() => {});
     } catch (error) {
-      setErrorMessage('Failed to delete achievement(s).');
+      const msg = 'Failed to delete achievement(s).';
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }

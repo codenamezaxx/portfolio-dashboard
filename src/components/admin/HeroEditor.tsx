@@ -16,10 +16,10 @@ import { useRouter } from 'next/navigation';
 import { ImageUpload } from '@/components/ui/ImageUpload';
 import { TextInput } from '@/components/ui/TextInput';
 import { TextArea } from '@/components/ui/TextArea';
-import { Button } from '@/components/ui/Button';
 import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { useToast } from '@/hooks/useToast';
 import { Breadcrumb } from '@/components/admin/Breadcrumb';
 import type { Profile } from '@/types';
 import { z } from 'zod';
@@ -51,6 +51,7 @@ interface HeroEditorProps {
 
 export function HeroEditor({ initialData }: HeroEditorProps) {
   const router = useRouter();
+  const toast = useToast();
   const [formData, setFormData] = useState<HeroFormData>({
     name: initialData?.name || '',
     role: initialData?.role || '',
@@ -131,11 +132,14 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
     setImagePreview(result.url);
     setHasChanges(true);
     setSuccessMessage('Image uploaded successfully');
+    toast.success('Image uploaded successfully');
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
   const handleImageError = (error: Error) => {
-    setErrorMessage(`Image upload failed: ${error.message}`);
+    const msg = `Image upload failed: ${error.message}`;
+    setErrorMessage(msg);
+    toast.error(msg);
     setTimeout(() => setErrorMessage(null), 5000);
   };
 
@@ -188,6 +192,7 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
       const data = await response.json();
       setLastUpdated(new Date(data.data.updatedAt));
       setSuccessMessage('Hero section updated successfully!');
+      toast.success('Hero section updated successfully!');
       setHasChanges(false);
 
       await fetch('/api/revalidate', {
@@ -200,7 +205,9 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
       }, 2000);
     } catch (error) {
       console.error('Error saving hero data:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Failed to save hero data');
+      const msg = error instanceof Error ? error.message : 'Failed to save hero data';
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -229,7 +236,7 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
       {/* Breadcrumb Navigation & Last Updated */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {lastUpdated && (
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-soft dark:bg-surface-soft border border-hairline rounded-full">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-soft border border-line">
             <Clock className="w-3.5 h-3.5 text-mute" />
             <span className="text-[10px] font-black text-mute uppercase tracking-widest">
               Last Updated: {lastUpdated.toLocaleDateString()} {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -240,12 +247,12 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
 
       {/* Page Header */}
       <div className="flex items-center gap-4">
-        <div className="p-3 bg-primary/10 rounded-2xl">
+        <div className="p-3 bg-primary/10">
           <Rocket className="w-8 h-8 text-primary" />
         </div>
         <div>
-          <h1 className="text-3xl md:text-4xl font-black text-ink dark:text-ink tracking-tight">Hero Section Editor</h1>
-          <p className="text-body dark:text-body font-medium mt-1">
+          <h1 className="text-3xl md:text-4xl font-black text-ink tracking-tight">Hero Section Editor</h1>
+          <p className="text-body font-medium mt-1">
             Refine your digital identity and professional introduction
           </p>
         </div>
@@ -260,7 +267,7 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
           {errorMessage && <FormError message={errorMessage} />}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="bg-primary/5 dark:bg-white/5 backdrop-blur-md border border-primary/10 dark:border-white/10 rounded-2xl p-6 md:p-8 shadow-md space-y-6">
+            <div className="bg-primary/5 dark:bg-white/5 border border-primary/10 border-line p-6 md:p-8 space-y-6">
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles className="w-4 h-4 text-primary" />
                 <h3 className="text-xs font-black text-mute uppercase tracking-[0.2em]">Profile Content</h3>
@@ -273,7 +280,7 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
                 onChange={(e) => handleInputChange('status_label', e.target.value)}
                 error={errors.status_label}
                 disabled={isLoading}
-                className="h-11 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+                className="h-11 focus:border-primary"
               />
 
               <TextInput
@@ -284,7 +291,7 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
                 error={errors.name}
                 disabled={isLoading}
                 required
-                className="h-11 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+                className="h-11 focus:border-primary"
               />
 
               <TextInput
@@ -295,7 +302,7 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
                 error={errors.role}
                 disabled={isLoading}
                 required
-                className="h-11 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+                className="h-11 focus:border-primary"
               />
 
               <TextArea
@@ -307,11 +314,11 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
                 disabled={isLoading}
                 required
                 rows={4}
-                className="focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all min-h-[120px]"
+                className="focus:border-primary min-h-[120px]"
               />
 
               {/* Image Upload */}
-              <div className="space-y-4 pt-4 border-t border-hairline/30">
+              <div className="space-y-4 pt-4 border-t border-line/30">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-mute uppercase tracking-wider">
                     Hero Presentation Image
@@ -332,19 +339,18 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
 
             {/* Form Actions */}
             <div className="flex items-center justify-end gap-4 pt-2">
-              <Button
+              <button
                 type="button"
                 onClick={handleCancel}
                 disabled={isLoading}
-                variant="ghost"
-                className="px-6 hover:bg-surface-soft"
+                className="px-6"
               >
                 <X className="w-4 h-4 mr-2" /> Discard
-              </Button>
-              <Button
+              </button>
+              <button
                 type="submit"
                 disabled={isLoading || !hasChanges}
-                className="px-8 shadow-lg shadow-primary/20 transition-all duration-300 active:scale-95 disabled:shadow-none"
+                className="px-8 active:scale-95 disabled:shadow-none"
               >
                 {isLoading ? (
                   <>Saving Changes...</>
@@ -353,12 +359,12 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
                     <Save className="w-4 h-4 mr-2" /> Save
                   </>
                 )}
-              </Button>
+              </button>
             </div>
           </form>
 
           {/* Tip Box */}
-          <div className="p-5 rounded-2xl bg-accent-blue-soft/20 border border-accent-blue/10 flex gap-4">
+          <div className="p-5 bg-accent-blue-soft/20 border border-accent-blue/10 flex gap-4">
             <Info className="w-6 h-6 text-accent-blue flex-shrink-0" />
             <p className="text-xs text-body leading-relaxed">
               <span className="font-black text-accent-blue uppercase tracking-wider block mb-1">UI/UX Tip</span>
@@ -374,28 +380,28 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
             <h3 className="text-xs font-black text-mute uppercase tracking-[0.2em]">Live Mockup</h3>
           </div>
 
-          <div className="relative group rounded-3xl border border-hairline overflow-hidden shadow-2xl bg-canvas dark:bg-surface-dark">
+          <div className="relative group border border-line overflow-hidden bg-canvas dark:bg-surface-dark">
             {/* Browser Header Mockup */}
-            <div className="bg-surface-soft dark:bg-surface-card px-4 py-3 border-b border-hairline flex items-center gap-2">
+            <div className="bg-surface-soft dark:bg-surface-card px-4 py-3 border-b border-line flex items-center gap-2">
               <div className="flex gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                <div className="w-2.5 h-2.5 bg-red-400" />
+                <div className="w-2.5 h-2.5 bg-amber-400" />
+                <div className="w-2.5 h-2.5 bg-green-400" />
               </div>
-              <div className="flex-1 max-w-[200px] mx-auto h-5 bg-white/50 dark:bg-white/5 rounded-md border border-hairline flex items-center px-2">
-                <div className="w-2 h-2 rounded-full bg-mute/30 mr-2" />
-                <div className="w-full h-1 bg-mute/20 rounded-full" />
+              <div className="flex-1 max-w-[200px] mx-auto h-5 bg-white/50 dark:bg-white/5 border border-line flex items-center px-2">
+                <div className="w-2 h-2 bg-mute/30 mr-2" />
+                <div className="w-full h-1 bg-mute/20" />
               </div>
             </div>
 
             {/* Hero Mockup Content */}
             <div className="relative p-8 md:p-12 min-h-[400px] flex flex-col justify-center overflow-hidden">
               {/* Background Ambient Glow */}
-              <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-primary/10 rounded-full blur-[80px]" />
-              <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-48 h-48 bg-accent-blue/10 rounded-full blur-[60px]" />
+              <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-primary/10 blur-[80px]" />
+              <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-48 h-48 bg-accent-blue/10 blur-[60px]" />
 
               <div className="relative z-10 space-y-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20">
                   <Monitor className="w-3 h-3 text-primary" />
                   <span className="text-[10px] font-black text-primary uppercase tracking-widest">
                     {formData.status_label || 'Status Label'}
@@ -403,7 +409,7 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="text-4xl md:text-5xl font-black text-ink dark:text-ink tracking-tight break-words">
+                  <h4 className="text-4xl md:text-5xl font-black text-ink tracking-tight break-words">
                     {formData.name || 'Your Name'}
                   </h4>
                   <p className="text-xl md:text-2xl font-bold text-primary italic">
@@ -417,7 +423,7 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
 
                 {/* Hero Image Mockup */}
                 {imagePreview && (
-                  <div className="mt-8 relative w-full aspect-video rounded-2xl overflow-hidden border border-white/20 shadow-xl group-hover:scale-[1.02] transition-transform duration-500">
+                  <div className="mt-8 relative w-full aspect-video overflow-hidden border border-white/20">
                     <Image
                       src={imagePreview}
                       alt="Mockup hero"
@@ -433,22 +439,22 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
 
           {/* Quick Stats / Info Badges */}
           <div className="grid grid-cols-2 gap-4 mt-6">
-             <div className="p-4 rounded-2xl bg-surface-card dark:bg-surface-card border border-hairline shadow-sm flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
-                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+             <div className="p-4 bg-surface-card border border-line flex items-center gap-3">
+                <div className="w-10 h-10 bg-green-500/10 flex items-center justify-center">
+                   <div className="w-2 h-2 bg-green-500" />
                 </div>
                 <div>
                    <p className="text-[10px] font-black text-mute uppercase tracking-widest">Visibility</p>
-                   <p className="text-xs font-bold text-ink dark:text-ink">Live on Portfolio</p>
+                   <p className="text-xs font-bold text-ink">Live on Portfolio</p>
                 </div>
              </div>
-             <div className="p-4 rounded-2xl bg-surface-card dark:bg-surface-card border border-hairline shadow-sm flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+             <div className="p-4 bg-surface-card border border-line flex items-center gap-3">
+                <div className="w-10 h-10 bg-primary/10 flex items-center justify-center text-primary">
                    <Save className="w-5 h-5" />
                 </div>
                 <div>
                    <p className="text-[10px] font-black text-mute uppercase tracking-widest">Changes</p>
-                   <p className="text-xs font-bold text-ink dark:text-ink">{hasChanges ? 'Unsaved Edits' : 'Up to date'}</p>
+                   <p className="text-xs font-bold text-ink">{hasChanges ? 'Unsaved Edits' : 'Up to date'}</p>
                 </div>
              </div>
           </div>

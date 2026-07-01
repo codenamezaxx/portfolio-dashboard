@@ -94,7 +94,7 @@ export default function FloatingChatButton() {
                   target={option.id !== 'email' ? '_blank' : undefined}
                   rel={option.id !== 'email' ? 'noopener noreferrer' : undefined}
                   variants={itemVariants}
-                  className="flex items-center gap-2 px-4 py-2 border border-line bg-surface-card hover:bg-white/20 text-ink"
+                  className="flex items-center gap-2 px-4 py-2 border border-line bg-background hover:bg-white/20 text-ink"
                 >
                   {option.icon}
                   <span className="text-sm" style={{fontFamily: "'Inter', sans-serif"}}>{option.label}</span>
@@ -108,7 +108,7 @@ export default function FloatingChatButton() {
       {/* Main Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 border border-line bg-primary text-background hover:bg-primary/80 cursor-pointer"
+        className="flex items-center gap-2 px-6 py-3 border border-line bg-primary text-background hover:bg-primary/80 cursor-pointer"
       >
         <MessageCircleMore className="w-4 h-4" />
         <span className="text-sm" style={{fontFamily: "'Inter', sans-serif"}}>Contact</span>

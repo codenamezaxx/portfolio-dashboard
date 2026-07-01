@@ -42,68 +42,43 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles = `
-      font-button-md rounded-xl
-      transition-all duration-300
-      focus:outline-none focus:ring-2 focus:ring-accent-blue/50 focus:ring-offset-1
-      dark:focus:ring-offset-surface-card
-      disabled:cursor-not-allowed
+      font-button-md border border-line
+      transition-colors duration-200
+      focus:outline-none
+      disabled:cursor-not-allowed disabled:opacity-30
       inline-flex items-center justify-center gap-2
     `;
 
     const variantStyles = {
-      // Primary: Gold background, deep olive text, 40px height
       primary: `
-        bg-primary text-on-primary hover-glow
-        hover:bg-primary-pressed active:bg-primary-active
-        disabled:bg-surface-soft disabled:text-ash
-        dark:bg-primary dark:text-on-primary
-        dark:hover:bg-primary-pressed dark:active:bg-primary-active
-        dark:disabled:bg-surface-soft dark:disabled:text-ash
+        bg-primary/10 text-ink
+        hover:bg-primary/20 active:bg-primary/20
+        disabled:bg-transparent disabled:text-ink/30
       `,
-      // Secondary: Soft cream background, ink text, 40px height
       secondary: `
-        bg-surface-soft text-ink
-        hover:bg-surface-soft/80 active:bg-surface-soft/60
-        disabled:bg-surface-soft disabled:text-ash
-        dark:bg-surface-soft dark:text-ink
-        dark:hover:bg-surface-soft/80 dark:active:bg-surface-soft/60
-        dark:disabled:bg-surface-soft dark:disabled:text-ash
+        bg-transparent text-ink
+        hover:bg-white/20 active:bg-white/20
+        disabled:text-ink/30
       `,
-      // Tertiary: Transparent background, ink text
       tertiary: `
         bg-transparent text-ink
-        hover:bg-surface-soft/50 active:bg-surface-soft/70
-        disabled:text-ash
-        dark:text-ink
-        dark:hover:bg-surface-soft/20 dark:active:bg-surface-soft/30
-        dark:disabled:text-ash
+        hover:opacity-60 active:opacity-40
+        disabled:text-ink/30
       `,
-      // Danger: Red accent background
       danger: `
-        bg-accent-red-soft text-accent-red
-        hover:bg-accent-red hover:text-white
-        disabled:bg-surface-soft disabled:text-ash
-        dark:bg-accent-red-soft dark:text-accent-red
-        dark:hover:bg-accent-red dark:hover:text-white
-        dark:disabled:bg-surface-soft dark:disabled:text-ash
+        bg-transparent text-accent-red border-accent-red
+        hover:bg-accent-red-soft active:bg-accent-red-soft
+        disabled:text-ink/30
       `,
-      // Ghost: Transparent with subtle hover
       ghost: `
-        bg-transparent text-body
-        hover:bg-surface-soft/50 active:bg-surface-soft/70
-        disabled:text-ash
-        dark:text-body
-        dark:hover:bg-surface-soft/20 dark:active:bg-surface-soft/30
-        dark:disabled:text-ash
+        bg-transparent text-ink
+        hover:bg-white/20 active:bg-white/20
+        disabled:text-ink/30
       `,
-      // Outline: Transparent with border
       outline: `
-        bg-transparent text-body border border-hairline
-        hover:bg-surface-soft/50 active:bg-surface-soft/70
-        disabled:border-hairline disabled:text-ash
-        dark:text-body dark:border-hairline
-        dark:hover:bg-surface-soft/20 dark:active:bg-surface-soft/30
-        dark:disabled:border-hairline dark:disabled:text-ash
+        bg-transparent text-ink border border-line
+        hover:bg-white/20 active:bg-white/20
+        disabled:text-ink/30
       `,
     };
 
@@ -129,29 +104,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={isLoading}
         {...props}
       >
-        {isLoading && (
-          <svg
-            className="w-4 h-4 animate-spin"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            />
-          </svg>
-        )}
         {children}
       </button>
     );

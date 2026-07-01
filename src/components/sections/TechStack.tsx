@@ -1,12 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import useSWR from 'swr';
-import { staggerContainer } from '@/lib/motion';
-import GlassCard from '../ui/GlassCard';
-import SectionHeader from '../shared/SectionHeader';
+import SectionHeader from '@/components/shared/SectionHeader';
 import type { TechStackItem } from '@/lib/portfolio-data';
 
 interface TechStackProps {
@@ -15,147 +13,138 @@ interface TechStackProps {
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
+/** Maps tech names to their display category */
+const categoryMap: Record<string, string> = {
+  HTML5: 'Frontend',
+  CSS3: 'Frontend',
+  JavaScript: 'Frontend',
+  TypeScript: 'Frontend',
+  React: 'Frontend',
+  'Next.js': 'Frontend',
+  Tailwind: 'Frontend',
+  'Tailwind CSS': 'Frontend',
+  'Node.js': 'Backend & Tools',
+  Python: 'Backend & Tools',
+  Git: 'Backend & Tools',
+  GitHub: 'Backend & Tools',
+  Docker: 'Backend & Tools',
+  Supabase: 'Backend & Tools',
+  PostgreSQL: 'Backend & Tools',
+  'Godot Engine': 'Game Engines',
+  Unity: 'Game Engines',
+  'Unity Engine': 'Game Engines',
+  'C#': 'Game Engines',
+  'C++': 'Game Engines',
+  'Unreal Engine': 'Game Engines',
+};
+
+const defaultCategory = 'Lainnya';
+
+/** Category display order */
+const categoryOrder = ['Frontend', 'Backend & Tools', 'Game Engines', defaultCategory];
+
+/** Group an array of tech stack items by category */
+function groupByCategory(items: TechStackItem[]): Record<string, TechStackItem[]> {
+  const groups: Record<string, TechStackItem[]> = {};
+
+  for (const item of items) {
+    const category = categoryMap[item.name] ?? defaultCategory;
+    if (!groups[category]) groups[category] = [];
+    groups[category].push(item);
+  }
+
+  return groups;
+}
+
 const TechStack: React.FC<TechStackProps> = ({ initialData = [] }) => {
   const { data, error } = useSWR('/api/content/tech-stack', fetcher, {
     fallbackData: initialData && initialData.length > 0 ? { data: initialData } : undefined,
     revalidateOnFocus: false,
   });
 
-  const techStack = data?.data || [];
-  const isLoading = !data && !error;
+  const techStack: TechStackItem[] = data?.data || [];
 
-  // Split tech stack into two rows for animation
-  const row1 = techStack.slice(0, Math.ceil(techStack.length / 2));
-  const row2 = techStack.slice(Math.ceil(techStack.length / 2));
+  const groupedItems = useMemo(() => groupByCategory(techStack), [techStack]);
 
-  // Duplicating items for seamless infinite scroll
-  // We repeat items multiple times to ensure enough width for any screen size
-  const duplicatedRow1 = [...row1, ...row1, ...row1, ...row1];
-  const duplicatedRow2 = [...row2, ...row2, ...row2, ...row2];
+  /** Return categories in display order, skipping empty ones */
+  const orderedCategories = useMemo(
+    () => categoryOrder.filter((cat) => groupedItems[cat]?.length),
+    [groupedItems],
+  );
 
   return (
-    <section id="tech" className="py-20 relative overflow-hidden">
-      <div className="container mx-auto px-6 mb-12">
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          <SectionHeader 
-            title="Tech Stack" 
-            subtitle="Alat & teknologi yang saya gunakan" 
-            center={true}
-          />
-        </motion.div>
+    <section id="tech" className="py-20 md:py-32 relative overflow-hidden">
+      {/* Geo-ring subtle */}
+      <div className="geo-ring" style={{width: '40vw', height: '40vw', right: '-15%', top: '5%', opacity: 0.1}} />
+
+      <div className="container mx-auto px-6 relative z-10" style={{maxWidth: '960px'}}>
+        <SectionHeader title="Tech Stack" subtitle="Teknologi" sectionNumber="02" />
+
+        {techStack.length === 0 ? (
+          <div className="text-center py-12">
+            <p style={{fontFamily: "'Inter', sans-serif", color: 'var(--body)'}}>No tech stack items available</p>
+          </div>
+        ) : (
+          <div className="space-y-12">
+            {orderedCategories.map((category) => (
+              <div key={category}>
+                {/* Category micro-label head */}
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="micro-label">{category}</span>
+                  <div className="flex-1 h-px bg-line" />
+                </div>
+
+                {/* Items as agenda-style rows (like Cartesian agenda) */}
+                <div>
+                  {groupedItems[category].map((item: TechStackItem, index: number) => (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.05 }}
+                      className="flex items-center gap-4 md:gap-6 py-3 md:py-4 border-b border-line"
+                    >
+                      {/* Playfair numeral in taupe */}
+                      <span
+                        className="text-base md:text-lg w-8 md:w-10 shrink-0"
+                        style={{fontFamily: "var(--font-display)", color: 'var(--accent)'}}
+                      >
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+
+                      {/* Icon */}
+                      {item.icon ? (
+                        <div className="w-8 h-8 border border-line rounded-full flex items-center justify-center shrink-0">
+                          <Image
+                            src={item.icon}
+                            alt={item.name}
+                            width={16}
+                            height={16}
+                            className={`object-contain ${item.name === 'Next.js' ? 'dark:invert' : ''}`}
+                          />
+                        </div>
+                      ) : (
+                        <div className="card-icon shrink-0">
+                          <span>{item.name[0]}</span>
+                        </div>
+                      )}
+
+                      {/* Name in Playfair ink */}
+                      <span
+                        className="text-sm md:text-base"
+                        style={{fontFamily: "var(--font-display)", color: 'var(--ink)'}}
+                      >
+                        {item.name}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-
-      {techStack.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-body">No tech stack items available</p>
-        </div>
-      ) : (
-        <div className="space-y-12 py-4">
-          {/* Row 1: Scrolling Left */}
-          <div className="flex overflow-hidden group">
-            <motion.div 
-              className="flex gap-6 whitespace-nowrap"
-              animate={{
-                x: [0, -1500], 
-              }}
-              transition={{
-                x: {
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  duration: 30,
-                  ease: "linear",
-                },
-              }}
-              style={{ width: 'max-content' }}
-            >
-              {duplicatedRow1.map((skill: TechStackItem, idx: number) => (
-                <div key={`${skill.id || skill.name}-${idx}`} className="py-4 w-[180px] md:w-[220px] shrink-0">
-                  <GlassCard 
-                    className="p-6 h-full flex flex-col items-center gap-4 text-center group/card transition-all duration-300 hover:scale-[1.05] border-white/5 dark:border-white/5 shadow-soft-light dark:shadow-primary/10 shadow-lg backdrop-blur-md"
-                  >
-                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center transition-all duration-300 group-hover/card:bg-primary/20">
-                      {skill.icon ? (
-                        <div className="relative w-10 h-10">
-                          <Image 
-                            src={skill.icon} 
-                            alt={skill.name} 
-                            fill
-                            className={`object-contain transition-transform duration-500 group-hover/card:scale-110 ${skill.name === 'Next.js' ? 'dark:invert' : ''}`}
-                            loading="lazy"
-                            quality={80}
-                          />
-                        </div>
-                      ) : (
-                        <span className="text-primary text-2xl font-bold">
-                          {skill.name.charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="font-body-strong text-body-md text-body dark:text-body group-hover/card:text-primary transition-colors">
-                      {skill.name}
-                    </h3>
-                  </GlassCard>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Row 2: Scrolling Right */}
-          <div className="flex overflow-hidden group">
-            <motion.div 
-              className="flex gap-6 whitespace-nowrap"
-              initial={{ x: -1500 }}
-              animate={{
-                x: [-1500, 0], 
-              }}
-              transition={{
-                x: {
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  duration: 30,
-                  ease: "linear",
-                },
-              }}
-              style={{ width: 'max-content' }}
-            >
-              {duplicatedRow2.map((skill: TechStackItem, idx: number) => (
-                <div key={`${skill.id || skill.name}-${idx}`} className="py-4 w-[180px] md:w-[220px] shrink-0">
-                  <GlassCard 
-                    className="p-6 h-full flex flex-col items-center gap-4 text-center group/card transition-all duration-300 hover:scale-[1.05] border-white/5 dark:border-white/5 shadow-soft-light dark:shadow-primary/10 shadow-lg backdrop-blur-md"
-                  >
-                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center transition-all duration-300 group-hover/card:bg-primary/20">
-                      {skill.icon ? (
-                        <div className="relative w-10 h-10">
-                          <Image 
-                            src={skill.icon} 
-                            alt={skill.name} 
-                            fill
-                            className={`object-contain transition-transform duration-500 group-hover/card:scale-110 ${skill.name === 'Next.js' ? 'dark:invert' : ''}`}
-                            loading="lazy"
-                            quality={80}
-                          />
-                        </div>
-                      ) : (
-                        <span className="text-primary text-2xl font-bold">
-                          {skill.name.charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="font-body-strong text-body-md text-body dark:text-body group-hover/card:text-primary transition-colors">
-                      {skill.name}
-                    </h3>
-                  </GlassCard>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </div>
-      )}
     </section>
   );
 };

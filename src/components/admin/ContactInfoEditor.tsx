@@ -29,6 +29,7 @@ import { Button } from '@/components/ui/Button';
 import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { useToast } from '@/hooks/useToast';
 import { Breadcrumb } from '@/components/admin/Breadcrumb';
 import Badge from '@/components/ui/Badge';
 import type { ContactInfo } from '@/types';
@@ -70,6 +71,7 @@ interface VersionHistoryRecord {
 
 export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
   const router = useRouter();
+  const toast = useToast();
   const [formData, setFormData] = useState<ContactInfoFormData>({
     githubUrl: initialData?.githubUrl || '',
     linkedinUrl: initialData?.linkedinUrl || '',
@@ -229,6 +231,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
       }
 
       setSuccessMessage('Contact information updated successfully!');
+      toast.success('Contact information updated successfully!');
       setHasChanges(false);
 
       await fetch('/api/revalidate', { method: 'POST', credentials: 'include' }).catch(() => {});
@@ -238,7 +241,9 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
       }, 2000);
     } catch (error) {
       console.error('Error saving contact info:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Failed to save contact information');
+      const msg = error instanceof Error ? error.message : 'Failed to save contact information';
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -246,7 +251,9 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
 
   const handleTestLink = (url: string, platform: string) => {
     if (!url) {
-      setErrorMessage(`${platform} URL is not set`);
+      const msg = `${platform} URL is not set`;
+      setErrorMessage(msg);
+      toast.warning(msg);
       setTimeout(() => setErrorMessage(null), 3000);
       return;
     }
@@ -301,10 +308,13 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
         await fetchVersionHistory();
         
         setSuccessMessage('Version restored successfully!');
+        toast.success('Version restored successfully!');
         setTimeout(() => setSuccessMessage(null), 3000);
       } catch (error) {
         console.error('Error restoring version:', error);
-        setErrorMessage(error instanceof Error ? error.message : 'Failed to restore version');
+        const msg = error instanceof Error ? error.message : 'Failed to restore version';
+        setErrorMessage(msg);
+        toast.error(msg);
       } finally {
         setIsLoading(false);
       }

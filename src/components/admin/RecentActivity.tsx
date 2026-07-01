@@ -96,12 +96,12 @@ export function RecentActivity() {
 
   if (logs.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 border-2 border-dashed border-hairline rounded-2xl">
-        <div className="p-4 bg-surface-soft dark:bg-surface-soft rounded-full mb-4">
+      <div className="flex flex-col items-center justify-center py-12 border-2 border-dashed border-line">
+        <div className="p-4 bg-surface-soft mb-4">
           <FileText className="w-8 h-8 text-mute" />
         </div>
-        <p className="text-xl font-bold text-ink dark:text-ink">No recent activity yet</p>
-        <p className="text-body dark:text-body mt-2 text-center max-w-xs">
+        <p className="text-xl font-bold text-ink">No recent activity yet</p>
+        <p className="text-body mt-2 text-center max-w-xs">
           Your activity log will appear here as you make changes to your portfolio.
         </p>
       </div>
@@ -110,15 +110,15 @@ export function RecentActivity() {
 
   return (
     <div className="space-y-4">
-      <div className="divide-y divide-hairline">
+      <div className="divide-y divide-line">
         {logs.map((log) => (
-          <div key={log.id} className="py-4 flex items-center justify-between group hover:bg-surface-soft/50 px-2 rounded-xl transition-colors">
+          <div key={log.id} className="py-4 flex items-center justify-between group hover:bg-surface-soft/50 px-2">
             <div className="flex items-center gap-4">
-              <div className="p-2.5 bg-surface-soft dark:bg-surface-soft rounded-xl">
+              <div className="p-2.5 bg-surface-soft">
                 {getActionIcon(log.action)}
               </div>
               <div>
-                <p className="text-ink dark:text-ink font-bold">
+                <p className="text-ink font-bold">
                   {log.action.charAt(0) + log.action.slice(1).toLowerCase()} {getEntityLabel(log.entityType)}
                 </p>
                 <div className="flex items-center gap-2 mt-1">
@@ -132,7 +132,7 @@ export function RecentActivity() {
             </div>
             <Link 
               href="/admin/activity-log"
-              className="p-2 text-mute hover:text-primary transition-colors rounded-lg group-hover:translate-x-1 duration-300"
+              className="p-2 text-mute hover:text-primary"
             >
               <ChevronRight className="w-5 h-5" />
             </Link>
@@ -142,7 +142,7 @@ export function RecentActivity() {
       
       <Link 
         href="/admin/activity-log"
-        className="flex items-center justify-center w-full py-3 mt-4 text-sm font-bold text-primary hover:bg-primary/5 rounded-xl transition-colors border border-primary/10"
+        className="flex items-center justify-center w-full py-3 mt-4 text-sm font-bold text-primary hover:bg-primary/5 border border-primary/10"
       >
         View All Activity
       </Link>

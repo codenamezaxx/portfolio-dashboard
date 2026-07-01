@@ -3,11 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import Typewriter from 'typewriter-effect';
-import { FileSearchCorner, MousePointer2, ArrowRight } from 'lucide-react';
+import { FileSearchCorner, ArrowRight } from 'lucide-react';
 import { LinkedinIcon, InstagramIcon, GithubIcon } from '@/components/ui/Icons';
 import { fadeInUp, staggerContainer } from '@/lib/motion';
-import Button from '../ui/Button';
 import type { Profile, ContactInfo } from '@/lib/portfolio-data';
 
 interface HeroProps {
@@ -16,17 +14,14 @@ interface HeroProps {
 }
 
 /**
- * Hero Component
- * Main landing section with introduction, call-to-action buttons, and profile image
- * Features:
- * - Optimized for both desktop (hover) and mobile (tap toggle)
- * - Uses Framer Motion for smooth animations
- * - Responsive layout for all screen sizes
+ * Hero Component — Biennale Yellow editorial cover-spread aesthetic.
+ * Typography-driven, flat surfaces, single ink color, no rounded corners.
  */
 const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [liveResumeUrl, setLiveResumeUrl] = useState<string | null>(null);
-  const [isHeroActive, setIsHeroActive] = useState(false);
+  const [displayedRole, setDisplayedRole] = useState('');
+  const [isPaused, setIsPaused] = useState(false);
 
   const profileData = profile || {
     name: '',
@@ -36,11 +31,6 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
     hero_image_url: ''
   };
   const contactData = contactInfo || {};
-
-  // Dynamically split roles for typewriter effect
-  const rolesArray = profileData.role 
-    ? profileData.role.split(' | ').map(role => role.trim()) 
-    : ['Front-End Developer', 'Network Engineer'];
 
   // Use prop value initially, but we'll fetch a fresh one to avoid ISR cache issues
   const resumeUrl = liveResumeUrl || profileData.resume_url;
@@ -63,12 +53,53 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
     fetchResumeUrl();
   }, []);
 
-  const handleProjectClick = () => {
-    const projectSection = document.getElementById('projects');
-    if (projectSection) {
-      projectSection.scrollIntoView({ behavior: 'smooth'} )
-    }
-  }
+  // Roles array (split by |)
+  const roles = React.useMemo(() =>
+    (profileData.role || 'Front-End Developer | Network Engineer').split('|').map(r => r.trim()),
+    [profileData.role]
+  );
+
+  // Cycling typewriter: type → pause → erase → next role
+  useEffect(() => {
+    let currentIndex = 0;
+    let roleIdx = 0;
+    let timer: ReturnType<typeof setTimeout>;
+
+    const typeNext = () => {
+      const role = roles[roleIdx];
+      if (currentIndex < role.length) {
+        setDisplayedRole(role.slice(0, currentIndex + 1));
+        currentIndex++;
+        setIsPaused(false);
+        timer = setTimeout(typeNext, 45 + Math.random() * 35);
+      } else {
+        // Done typing — pause then erase
+        setIsPaused(true);
+        timer = setTimeout(erasePrev, 2000);
+      }
+    };
+
+    const erasePrev = () => {
+      const role = roles[roleIdx];
+      if (currentIndex > 0) {
+        setDisplayedRole(role.slice(0, currentIndex - 1));
+        currentIndex--;
+        setIsPaused(false);
+        timer = setTimeout(erasePrev, 25 + Math.random() * 15);
+      } else {
+        // Done erasing — move to next role
+        setIsPaused(true);
+        roleIdx = (roleIdx + 1) % roles.length;
+        timer = setTimeout(typeNext, 400);
+      }
+    };
+
+    // Initial delay before first type
+    timer = setTimeout(typeNext, 700);
+
+    return () => clearTimeout(timer);
+  }, [roles]);
+
 
   const handleViewResume = async () => {
     if (!resumeUrl) {
@@ -89,187 +120,147 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center pt-28 pb-10 overflow-hidden">
+    <section id="hero" className="relative min-h-screen flex items-center justify-center pt-16 pb-12 overflow-hidden">
+      {/* Vertical line — drafting alignment guide */}
+      <div className="vline" style={{left: '5vw'}} />
 
-      {/* Background Decorative Elements for Depth */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/5 dark:bg-amber-500/5 rounded-full blur-[200px] opacity-[0.05] dark:opacity-[0.04] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full blur-[120px] opacity-[0.04] dark:opacity-[0.03] pointer-events-none" />
+      {/* Geo-ring — compass decoration right side */}
+      <div className="geo-ring" style={{width: '46vw', height: '46vw', right: '-8vw', top: '50%', transform: 'translateY(-50%)', opacity: 0.5}}>
+        <div className="geo-ring dashed" style={{inset: '14%', position: 'absolute', border: '1px dashed var(--line)', borderRadius: '50%', opacity: 0.7}} />
+      </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+      <div className="container mx-auto px-6 relative z-10" style={{maxWidth: '1280px'}}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
-          {/* Left Column: Text Content */}
+          {/* Left Column */}
           <motion.div
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
-            className="order-2 lg:order-1 flex flex-col items-start text-left w-full"
+            className="order-2 lg:order-1 flex flex-col items-start text-left w-full space-y-6 max-w-xl"
           >
-            {/* Main Typography */}
-              {profileData.status_label && (
-                <motion.div variants={fadeInUp}>
-                  <span
-                    className="inline-block py-1 px-3 rounded-full text-sm font-medium mb-6"
-                    style={{
-                      backgroundColor: 'var(--color-accent-glow, rgba(184, 134, 11, 0.12))',
-                      border: '1px solid var(--color-primary)',
-                      color: 'var(--color-primary)'
-                    }}
-                  >
-                    {profileData.status_label}
-                  </span>
-                </motion.div>
-              )}
+            {/* Label eyebrow */}
+            {profileData.status_label && (
+              <motion.span variants={fadeInUp} className="label">
+                {profileData.status_label}
+              </motion.span>
+            )}
 
-            <motion.div
+            {/* Name as Playfair h1 */}
+            <motion.h1
               variants={fadeInUp}
-              className="text-4xl md:text-5xl font-black tracking-tighter mb-4 leading-[1.1] min-h-[1.2em] flex flex-wrap gap-x-3"
+              className="text-4xl md:text-6xl lg:text-7xl leading-[1.06] max-w-lg"
+              style={{fontFamily: "serif", fontWeight: 400, color: "var(--ink)"}}
             >
-              <h1>Hi, I'm</h1>
-              <h1 className="text-gradient">
-                <Typewriter
-                  onInit={(typewriter) => {
-                    typewriter
-                      .typeString(profileData.name)
-                      .start();
-                  }}
-                  options={{
-                    delay: 75,
-                    cursor: ''
-                  }}
-                />
-              </h1>
-            </motion.div>
+              Hi, I&apos;m <em style={{fontStyle: 'italic'}}>{profileData.name}</em>
+            </motion.h1>
 
-            <motion.div
-              variants={fadeInUp}
-              className="text-xl md:text-2xl font-normal font-mono mb-6 leading-snug h-[1.5em]"
-              style={{ color: 'var(--color-mute)' }}
-            >
-              <Typewriter
-                key={profileData.role} // Key ensures re-run if data changes
-                options={{
-                  strings: rolesArray,
-                  autoStart: true,
-                  loop: true,
-                  delay: 75,
-                  cursor: "_"
-                }}
-              />
-            </motion.div>
-
-            {/* Tagline */}
+            {/* Role subtitle — typewriter */}
             <motion.p
               variants={fadeInUp}
-              className="text-sm md:text-base mb-10 leading-relaxed w-full max-w-[100%]"
-              style={{
-                color: 'var(--color-mute)',
-                wordBreak: 'normal',
-                overflowWrap: 'anywhere'
-              }}
+              className="text-lg md:text-2xl leading-relaxed max-w-md min-h-[1.6em]"
+              style={{fontFamily: "monospace", color: "var(--body)", lineHeight: 1.6}}
             >
-              {profileData.tagline}
+              {displayedRole}
+              {!isPaused && <span style={{color: 'var(--accent)', animation: 'blink 0.8s step-end infinite'}}>_</span>}
             </motion.p>
 
-            {/* Actions */}
-            <motion.div variants={fadeInUp} className="flex flex-wrap justify-start items-center gap-5 mb-12 relative z-10">
-              <Button
-                variant='primary'
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleProjectClick();
-                }}
-                className='py-6 px-7 text-md md:text-lg font-medium dark:shadow-primary/20 shadow-lg hover:scale-[1.05] cursor-pointer'
-                >
-                  Lihat Proyek <ArrowRight className='w-4 h-4' />
-              </Button>
-              <Button
-                variant="outline"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleViewResume();
-                }}
+            {/* Tagline */}
+            {profileData.tagline && (
+              <motion.p
+                variants={fadeInUp}
+                className="text-sm leading-relaxed max-w-md"
+                style={{fontFamily: "'Inter', sans-serif", color: "var(--body)", lineHeight: 1.6}}
+              >
+                {profileData.tagline}
+              </motion.p>
+            )}
+
+            {/* Horizontal accent — the one ink-black rule */}
+            <motion.div variants={fadeInUp} className="haccent my-4" />
+
+            {/* Action links */}
+            <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 pt-2">
+              <a
+                href="#projects"
+                onClick={(e) => { e.preventDefault(); document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); }}
+                className="inline-flex items-center gap-2 px-6 py-3 border border-line bg-foreground text-background hover:bg-foreground/70 transition-colors text-sm"
+                style={{fontFamily: "'Inter', sans-serif", fontWeight: 500}}
+              >
+                Lihat Proyek <ArrowRight className="w-4 h-4" />
+              </a>
+              <button
+                onClick={handleViewResume}
                 disabled={isActionLoading || !resumeUrl}
-                className="py-6 px-7 text-md md:text-lg dark:shadow-primary/10 shadow-lg hover:scale-[1.05] cursor-pointer"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-line text-ink hover:bg-white/20 transition-colors text-sm disabled:opacity-30"
+                style={{fontFamily: "'Inter', sans-serif", fontWeight: 500}}
               >
                 {isActionLoading ? 'Memuat...' : 'Lihat CV'} <FileSearchCorner className="w-4 h-4" />
-              </Button>
-            </motion.div>
-
-            {/* Social Proof / Links */}
-            <motion.div variants={fadeInUp} className="flex items-center gap-6 pt-8 w-full justify-start" style={{ borderTop: '1px solid var(--color-mute)' }}>
-              <a href={contactData.instagram_url || '#'} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:scale-[1.05] transition-all duration-200" style={{ color: 'var(--color-mute)' }}>
-                <InstagramIcon className="w-5 h-5" />
-              </a>
-              <a href={contactData.github_url || '#'} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:scale-[1.05] transition-all duration-200" style={{ color: 'var(--color-mute)' }}>
-                <GithubIcon className="w-5 h-5" />
-              </a>
-              <a href={contactData.linkedin_url || '#'} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:scale-[1.05] transition-all duration-200" style={{ color: 'var(--color-mute)' }}>
-                <LinkedinIcon className="w-5 h-5" />
-              </a>
-              <div className="h-4 w-px" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.3 }} />
-              <span className="text-sm" style={{ color: 'var(--color-mute)' }}>Jawa Timur, Indonesia</span>
+              </button>
             </motion.div>
           </motion.div>
 
-          {/* Right Column: Profile Image */}
+          {/* Right Column: Image + Meta */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 0.90 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="order-1 lg:order-2 relative flex w-auto justify-center lg:justify-end mb-8 lg:mb-0"
+            className="order-1 lg:order-2 flex flex-col items-center lg:items-end mb-8 lg:mb-0"
           >
-            {/* Glowing Backdrop */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[var(--color-accent)]/10 opacity-[0.07] dark:opacity-[0.1] rounded-full blur-[80px] pointer-events-none" />
-
-            {/* Glass Frame Container */}
-            <motion.div
-              className="relative z-10 p-3 backdrop-blur-xl rounded-[2.5rem] shadow-soft-light dark:shadow-primary/10 shadow-2xl backdrop-blur-md w-full max-w-[320px] lg:max-w-md mx-auto lg:ml-auto lg:mr-0 cursor-pointer overflow-hidden group"
-              style={{
-                border: '1px solid rgba(184, 134, 11, 0.08)',
-              }}
-              initial={{ rotate: 2 }}
-              animate={{ rotate: isHeroActive ? 0 : 2 }}
-              onMouseEnter={() => setIsHeroActive(true)}
-              onMouseLeave={() => setIsHeroActive(false)}
-              onClick={() => setIsHeroActive(!isHeroActive)}
-              transition={{ duration: 0.5 }}
-            >
-              {/* Inner Image Container */}
-              <div className="relative rounded-[2rem] overflow-hidden aspect-[4/5]">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
-
-                {/* Image Component with Next.js Image for optimization */}
+            <div className="relative w-full max-w-70 lg:max-w-sm mx-auto lg:ml-auto lg:mr-0">
+              <div className="relative bg-backdrop backdrop:backdrop-blur-2xl aspect-3/4 border-b-5 border-line">
                 <Image
                   src={profileData.hero_image_url || '/hero.jpg'}
                   alt={profileData.name}
                   fill
-                  className={`object-cover transition-all duration-700 ${
-                    isHeroActive ? 'scale-105' : 'scale-100'
-                  }`}
+                  className="object-cover"
                   priority
                   quality={90}
                 />
               </div>
-            </motion.div>
+            </div>
+
+            {/* Meta row (Cartesian cover style) */}
+            <div className="flex gap-8 md:gap-16 mt-8 lg:mt-10">
+              <div>
+                <div className="text-lg md:text-xl" style={{fontFamily: "var(--font-display)", color: "var(--ink)"}}>
+                  Jawa Timur, Indonesia
+                </div>
+                <div className="micro-label mt-1">Lokasi</div>
+              </div>
+              <div>
+                <div className="text-lg md:text-xl" style={{fontFamily: "var(--font-display)", color: "var(--ink)"}}>
+                  {new Date().getFullYear() - 2022}+
+                </div>
+                <div className="micro-label mt-1">Tahun</div>
+              </div>
+            </div>
+
+            {/* Social links — just taupe text links */}
+            <div className="flex items-center gap-6 mt-8">
+              {contactData.github_url && (
+                <a href={contactData.github_url} target="_blank" rel="noopener noreferrer" className="micro-label hover:opacity-60 transition-opacity">
+                  <GithubIcon className="w-4 h-4 inline-block mr-1" style={{color: 'var(--accent)'}} />
+                  GitHub
+                </a>
+              )}
+              {contactData.linkedin_url && (
+                <a href={contactData.linkedin_url} target="_blank" rel="noopener noreferrer" className="micro-label hover:opacity-60 transition-opacity">
+                  <LinkedinIcon className="w-4 h-4 inline-block mr-1" style={{color: 'var(--accent)'}} />
+                  LinkedIn
+                </a>
+              )}
+              {contactData.instagram_url && (
+                <a href={contactData.instagram_url} target="_blank" rel="noopener noreferrer" className="micro-label hover:opacity-60 transition-opacity">
+                  <InstagramIcon className="w-4 h-4 inline-block mr-1" style={{color: 'var(--accent)'}} />
+                  Instagram
+                </a>
+              )}
+            </div>
           </motion.div>
 
         </div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 2, duration: 1, repeat: Infinity, repeatType: "reverse" }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 hidden md:flex"
-        style={{ color: 'var(--color-mute)' }}
-      >
-        <span className="text-xs uppercase tracking-widest">Scroll</span>
-        <MousePointer2 className="w-5 h-5" />
-      </motion.div>
     </section>
   );
 };

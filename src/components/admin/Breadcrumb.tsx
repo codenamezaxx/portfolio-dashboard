@@ -66,13 +66,13 @@ export function Breadcrumb() {
     <nav className="flex items-center gap-2 text-sm">
       {items.map((item, index) => (
         <div key={item.href} className="flex items-center gap-2">
-          {index > 0 && <span className="text-mute dark:text-mute">/</span>}
+          {index > 0 && <span className="text-mute">/</span>}
           {index === items.length - 1 ? (
-            <span className="text-ink dark:text-ink font-medium">{item.label}</span>
+            <span className="text-ink font-medium">{item.label}</span>
           ) : (
             <Link
               href={item.href}
-              className="text-link-blue dark:text-link-blue hover:text-primary dark:hover:text-primary transition-colors"
+              className="text-link-blue hover:text-primary"
             >
               {item.label}
             </Link>

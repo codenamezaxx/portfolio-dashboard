@@ -14,7 +14,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Modal } from '@/components/ui/Modal';
-import { Button } from '@/components/ui/Button';
+
 import { TextInput } from '@/components/ui/TextInput';
 import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
@@ -186,28 +186,28 @@ export function BackupManager() {
             <Database className="w-8 h-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl md:text-4xl font-black text-ink dark:text-ink tracking-tight">Backup Management</h1>
-            <p className="text-body dark:text-body font-medium mt-1">Create and restore database backups</p>
+            <h1 className="text-3xl md:text-4xl font-black text-ink  tracking-tight">Backup Management</h1>
+            <p className="text-body  font-medium mt-1">Create and restore database backups</p>
           </div>
         </div>
-        <Button onClick={() => setShowCreateModal(true)} disabled={creating} className="shadow-lg shadow-primary/20">
+        <button onClick={() => setShowCreateModal(true)} disabled={creating} className="shadow-lg shadow-primary/20">
           <Plus className="w-4 h-4 mr-2" /> {creating ? 'Creating...' : 'Create Backup'}
-        </Button>
+        </button>
       </div>
 
       {successMessage && <FormSuccess message={successMessage} />}
       {error && <FormError message={error} />}
 
       {backups.length === 0 ? (
-        <div className="text-center py-12 bg-surface-card dark:bg-surface-card border-2 border-dashed border-hairline rounded-2xl">
-          <p className="text-mute dark:text-mute mb-4">No backups found</p>
-          <Button onClick={() => setShowCreateModal(true)}>Create First Backup</Button>
+        <div className="text-center py-12 bg-surface-card  border-2 border-dashed border-line rounded-2xl">
+          <p className="text-mute  mb-4">No backups found</p>
+          <button onClick={() => setShowCreateModal(true)}>Create First Backup</button>
         </div>
       ) : (
-        <div className="bg-surface-card dark:bg-surface-card rounded-2xl shadow-md overflow-hidden border border-hairline">
+        <div className="bg-surface-card  rounded-2xl shadow-md overflow-hidden border border-line">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-hairline">
-              <thead className="bg-surface-soft dark:bg-surface-soft">
+            <table className="min-w-full divide-y divide-line">
+              <thead className="bg-surface-soft ">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-black text-mute uppercase tracking-wider">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-black text-mute uppercase tracking-wider">Created At</th>
@@ -215,10 +215,10 @@ export function BackupManager() {
                 <th className="px-6 py-3 text-right text-xs font-black text-mute uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-hairline">
+            <tbody className="divide-y divide-line">
               {backups.map((backup) => (
                 <tr key={backup.id} className="hover:bg-surface-soft dark:hover:bg-surface-soft transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-ink dark:text-ink">{backup.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-ink ">{backup.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-body">{new Date(backup.createdAt).toLocaleString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-body">{backup.createdBy}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
@@ -263,8 +263,8 @@ export function BackupManager() {
             className="h-11"
           />
           <div className="flex justify-end space-x-2 pt-4">
-            <Button variant="ghost" onClick={() => setShowCreateModal(false)} disabled={creating}>Cancel</Button>
-            <Button onClick={handleCreateBackup} disabled={creating}>{creating ? 'Creating...' : 'Create'}</Button>
+            <button onClick={() => setShowCreateModal(false)} disabled={creating}>Cancel</button>
+            <button onClick={handleCreateBackup} disabled={creating}>{creating ? 'Creating...' : 'Create'}</button>
           </div>
         </div>
       </Modal>
@@ -283,10 +283,10 @@ export function BackupManager() {
             Are you sure you want to restore from backup: <strong>{selectedBackup?.name}</strong>?
           </p>
           <div className="flex justify-end space-x-2 pt-4">
-            <Button variant="ghost" onClick={() => setShowRestoreModal(false)} disabled={restoring !== null}>Cancel</Button>
-            <Button variant="danger" onClick={handleRestoreBackup} disabled={restoring !== null}>
+            <button onClick={() => setShowRestoreModal(false)} disabled={restoring !== null}>Cancel</button>
+            <button onClick={handleRestoreBackup} disabled={restoring !== null}>
               {restoring ? 'Restoring...' : 'Restore'}
-            </Button>
+            </button>
           </div>
         </div>
       </Modal>
@@ -305,10 +305,10 @@ export function BackupManager() {
             </div>
           </div>
           <div className="flex justify-end space-x-2 pt-4">
-            <Button variant="ghost" onClick={() => setShowDeleteModal(false)} disabled={deleting !== null}>Cancel</Button>
-            <Button variant="danger" onClick={handleDeleteBackup} disabled={deleting !== null}>
+            <button onClick={() => setShowDeleteModal(false)} disabled={deleting !== null}>Cancel</button>
+            <button onClick={handleDeleteBackup} disabled={deleting !== null}>
               {deleting ? 'Deleting...' : 'Delete Backup'}
-            </Button>
+            </button>
           </div>
         </div>
       </Modal>
@@ -343,7 +343,7 @@ export function BackupManager() {
             </div>
           )}
           <div className="flex justify-end pt-4">
-            <Button onClick={() => setShowVerifyModal(false)}>Close</Button>
+            <button onClick={() => setShowVerifyModal(false)}>Close</button>
           </div>
         </div>
       </Modal>

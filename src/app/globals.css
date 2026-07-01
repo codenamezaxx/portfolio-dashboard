@@ -26,215 +26,103 @@
 }
 
 :root {
-  /* Canvas & Surfaces - Light Mode */
-  --background: #fffdfb;
-  --surface-soft: #F5EBE0;
-  --surface-card: #ffffff;
-  --surface-doc: #fcfcfa;
-  --surface-dark: #23251d;
+  /* Canvas & Surfaces - Light Mode (Cartesian warm stone) */
+  --background: #F5F0E6;
+  --surface-card: rgba(255, 255, 255, 0.3);
+  --surface-soft: #EDE8E0;
 
-  /* Brand & Accent - Gold Accent */
-  --primary: #c27508;
-  /* Gold Accent */
-  --primary-pressed: #ae6a0a;
-  /* Gold Pressed */
-  --primary-active: #7A5506;
-  /* Gold Active */
-  --on-primary: #ffffff;
+  /* Brand & Accent */
+  --primary: #8A8178;
+  --primary-pressed: #6B655E;
+  --on-primary: #F5F0E6;
 
-  /* Text - Light Mode */
-  --foreground: #4A4A4A;
-  --body: #4A4A4A;
-  --charcoal: #333333;
-  --mute: #8B7355;
-  --ash: #9b9c92;
-  --stone: #b6b7af;
+  /* Text */
+  --foreground: #1A1A1A;
+  --body: #5A5A5A;
+  --mute: #8A8178;
+  --ink: #1A1A1A;
+  --gray: #5A5A5A;
+  --accent: #8A8178;
 
-  /* Borders & Dividers - Light Mode */
-  --hairline: #e5cdb3;
-  --hairline-soft: #f0e1d0;
+  /* Borders — universal taupe */
+  --hairline: #B8B0A4;
+  --hairline-soft: #CEC6BA;
   --border: var(--hairline);
-  --card: var(--surface-card);
-  /* Alias for generic border */
+  --line: #B8B0A4;
 
-  /* Semantic Accents - Light Mode */
-  --link-blue: #1d4ed8;
-  --link-teal: #1078a3;
-  --accent-blue: #2c84e0;
-  --accent-blue-soft: #dceaf6;
-  --accent-red: #cd4239;
-  --accent-red-soft: #f7d6d3;
-  --accent-green: #2c8c66;
-  --accent-green-soft: #d9eddf;
-  --accent-purple: #7c44a6;
-  --accent-purple-soft: #e7d8ee;
+  /* Semantic */
+  --accent-red: #C46A5A;
+  --accent-red-soft: #E8D5D0;
+  --accent-blue: #7A8A9A;
+  --accent-blue-soft: #D5DCE5;
+  --accent-green: #6B8A7A;
+  --accent-green-soft: #D5E5DC;
 
-  /* Legacy Accent (for backward compatibility) */
-  --accent: #B8860B;
-  /* Maps to primary gold */
-
-  /* Radii Scale */
+  /* Radii — ALL 0 except circles */
   --radius-none: 0px;
-  --radius-xs: 2px;
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-full: 9999px;
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-full: 9999px;  /* Keep for circles */
 
   /* Typography Fallbacks */
-  --font-sans: var(--font-sans), '"Space Grotesk"', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-plex: var(--font-ibm-plex), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans), 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), 'Playfair Display', Georgia, serif;
+  --font-mono: var(--font-source-code), ui-monospace, monospace;
 }
 
-/* ============================================================
-   Dark Mode Color Overrides
-   ============================================================ */
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    /* Canvas & Surfaces - Dark Mode */
-    --background: #17171a;
-    --surface-soft: #242429;
-    --surface-card: #202025;
-    --surface-doc: #1d1d20;
-    --surface-dark: #0d0d0f;
-
-    /* Brand & Accent - Gold Accent (same as light) */
-    --primary: #ebb042;
-    /* Gold Accent */
-    --primary-pressed: #de9714;
-    /* Gold Pressed */
-    --primary-active: #7A5506;
-    /* Gold Active */
-    --on-primary: #1F1F1F;
-
-    /* Text - Dark Mode */
-    --foreground: #F5F5F5;
-    --body: #F5F5F5;
-    --charcoal: #c0c0bc;
-    --mute: #B0B0B0;
-    --ash: #6a6a66;
-    --stone: #5a5a56;
-
-    /* Borders & Dividers - Dark Mode */
-    --hairline: #3a3a3a;
-    --hairline-soft: #2a2a2a;
-    --border: var(--hairline);
-    /* Alias for generic border */
-
-    /* Semantic Accents - Dark Mode */
-    --link-blue: #5ba3ff;
-    --link-teal: #4db8d8;
-    --accent-blue: #5ba3ff;
-    --accent-blue-soft: #1a3a52;
-    --accent-red: #ff6b5b;
-    --accent-red-soft: #4a2a28;
-    --accent-green: #5bcc8a;
-    --accent-green-soft: #2a4a38;
-    --accent-purple: #b88aff;
-    --accent-purple-soft: #4a3a5a;
-  }
-}
-
-/* Dark mode class strategy for explicit theme switching */
 .dark {
-  /* Canvas & Surfaces - Dark Mode */
-  --background: #1d1d20;
-  --surface-soft: #242429;
-  --surface-card: #202025;
-  --surface-doc: #1d1d20;
-  --surface-dark: #0d0d0f;
+  --background: #1A1A1A;
+  --surface-card: rgba(245, 240, 230, 0.08);
+  --surface-soft: #222222;
 
-  /* Brand & Accent - Gold Accent (same as light) */
-  --primary: #e0a73b;
-  /* Gold Accent */
-  --primary-pressed: #be800e;
-  /* Gold Pressed */
-  --primary-active: #7A5506;
-  /* Gold Active */
-  --on-primary: #1F1F1F;
+  --primary: #8A8178;
+  --primary-pressed: #9E978E;
+  --on-primary: #1A1A1A;
 
-  /* Text - Dark Mode */
-  --foreground: #F5F5F5;
-  --body: #F5F5F5;
-  --charcoal: #c0c0bc;
-  --mute: #B0B0B0;
-  --ash: #6a6a66;
-  --stone: #5a5a56;
+  --foreground: #EDE8E0;
+  --body: #C4BFB5;
+  --mute: #8A8178;
+  --ink: #EDE8E0;
+  --gray: #C4BFB5;
+  --accent: #9E978E;
 
-  /* Borders & Dividers - Dark Mode */
-  --hairline: #3a3a3a;
-  --hairline-soft: #2a2a2a;
+  --hairline: #5A5A5A;
+  --hairline-soft: #4A4A4A;
   --border: var(--hairline);
-  /* Alias for generic border */
+  --line: #5A5A5A;
 
-  /* Semantic Accents - Dark Mode */
-  --link-blue: #5ba3ff;
-  --link-teal: #4db8d8;
-  --accent-blue: #5ba3ff;
-  --accent-blue-soft: #1a3a52;
-  --accent-red: #ff6b5b;
-  --accent-red-soft: #4a2a28;
-  --accent-green: #5bcc8a;
-  --accent-green-soft: #2a4a38;
-  --accent-purple: #b88aff;
-  --accent-purple-soft: #4a3a5a;
+  --accent-red: #C46A5A;
+  --accent-red-soft: #3A2A28;
+  --accent-blue: #7A8A9A;
+  --accent-blue-soft: #2A2A3A;
+  --accent-green: #6B8A7A;
+  --accent-green-soft: #2A3A2A;
 }
 
 @theme inline {
-  /* Colors - Canvas & Surfaces */
   --color-background: var(--background);
   --color-surface-soft: var(--surface-soft);
   --color-surface-card: var(--surface-card);
-  --color-surface-doc: var(--surface-doc);
-  --color-surface-dark: var(--surface-dark);
-
-  /* Colors - Primary (Gold Accent) */
   --color-primary: var(--primary);
   --color-primary-pressed: var(--primary-pressed);
-  --color-primary-active: var(--primary-active);
   --color-on-primary: var(--on-primary);
-
-  /* Colors - Text */
   --color-foreground: var(--foreground);
   --color-body: var(--body);
-  --color-charcoal: var(--charcoal);
   --color-mute: var(--mute);
-  --color-ash: var(--ash);
-  --color-stone: var(--stone);
-
-  /* Colors - Borders */
+  --color-ink: var(--ink);
+  --color-gray: var(--gray);
+  --color-accent: var(--accent);
   --color-hairline: var(--hairline);
   --color-hairline-soft: var(--hairline-soft);
   --color-border: var(--border);
-
-  /* Colors - Semantic Accents */
-  --color-link-blue: var(--link-blue);
-  --color-link-teal: var(--link-teal);
-  --color-accent-blue: var(--accent-blue);
-  --color-accent-blue-soft: var(--accent-blue-soft);
+  --color-line: var(--line);
   --color-accent-red: var(--accent-red);
   --color-accent-red-soft: var(--accent-red-soft);
-  --color-accent-green: var(--accent-green);
-  --color-accent-green-soft: var(--accent-green-soft);
-  --color-accent-purple: var(--accent-purple);
-  --color-accent-purple-soft: var(--accent-purple-soft);
-
-  /* Legacy Accent Color */
-  --color-accent: var(--accent);
-
-  /* Typography */
   --font-sans: var(--font-sans);
-  --font-plex: var(--font-plex);
-  --font-mono: var(--font-source-code, ui-monospace, monospace);
-
-  /* Border Radius */
-  --radius-none: var(--radius-none);
-  --radius-xs: var(--radius-xs);
-  --radius-sm: var(--radius-sm);
-  --radius-md: var(--radius-md);
-  --radius-lg: var(--radius-lg);
-  --radius-full: var(--radius-full);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
 }
 
 /* ============================================================
@@ -245,219 +133,39 @@ html {
   scroll-behavior: smooth;
 }
 
-.text-gradient {
-  background: linear-gradient(to right, var(--color-primary), #CD853F, #e27420);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
 body {
   background-color: var(--background);
   color: var(--body);
-  font-family: var(--font-plex);
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.6;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Typography Hierarchy */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: 700;
-  line-height: 1.4;
-  font-family: var(--font-sans);
-}
-
-/* Display XL: 36px, weight 700, line-height 1.5 */
-.display-xl {
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-/* Display LG: 24px, weight 800, line-height 1.33, letter-spacing -0.6px */
-.display-lg {
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 1.33;
-  letter-spacing: -0.6px;
-}
-
-/* Heading LG: 21px, weight 700, line-height 1.4, letter-spacing -0.5px */
-.heading-lg {
-  font-size: 21px;
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: -0.5px;
-}
-
-/* Heading MD: 20px, weight 700, line-height 1.4 */
-.heading-md {
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.4;
-}
-
-/* Heading SM: 18px, weight 700, line-height 1.5 */
-.heading-sm {
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-/* Body MD: 16px, weight 400, line-height 1.5 */
-.body-md {
-  font-size: 16px;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
   font-weight: 400;
-  line-height: 1.5;
-}
-
-/* Body Strong: 16px, weight 600, line-height 1.5 */
-.body-strong {
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-/* Body SM: 15px, weight 400, line-height 1.71 */
-.body-sm {
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.71;
-}
-
-/* Body XS: 14px, weight 500, line-height 1.43 */
-.body-xs {
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.43;
-}
-
-/* Button MD: 14px, weight 700, line-height 1.5 */
-.button-md {
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-/* Code: 14px, weight 400, line-height 1.43 */
-.code {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.43;
-  font-family: var(--font-mono);
-}
-
-/* Eyebrow Labels */
-.eyebrow {
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--mute);
-  letter-spacing: 0;
-  margin-bottom: 8px;
+  color: var(--ink);
 }
 
 /* ============================================================
    Component Utilities
    ============================================================ */
 
-/* Buttons */
-.btn-primary {
-  background-color: var(--primary);
-  color: var(--on-primary);
-  font-weight: 700;
-  font-size: 14px;
-  padding: 8px 16px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
-  cursor: pointer;
-  border: none;
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-pressed);
-}
-
-.btn-primary:active {
-  background-color: var(--primary-active);
-}
-
-.btn-primary:disabled {
-  background-color: var(--surface-soft);
-  color: var(--ash);
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background-color: var(--surface-soft);
-  color: var(--foreground);
-  font-weight: 700;
-  font-size: 14px;
-  padding: 8px 16px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
-  cursor: pointer;
-  border: none;
-}
-
-.btn-secondary:hover {
-  background-color: rgba(229, 231, 224, 0.8);
-}
-
-.btn-secondary:disabled {
-  background-color: var(--surface-soft);
-  color: var(--ash);
-  cursor: not-allowed;
-}
-
-.btn-tertiary {
-  background-color: transparent;
-  color: var(--foreground);
-  font-weight: 700;
-  font-size: 14px;
-  padding: 8px 16px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
-  cursor: pointer;
-  border: none;
-}
-
-.btn-tertiary:hover {
-  background-color: rgba(229, 231, 224, 0.5);
-}
-
 /* Inputs */
 .input {
   background-color: var(--surface-card);
   color: var(--foreground);
   border: 1px solid var(--hairline);
-  border-radius: var(--radius-md);
+  border-radius: 0px;
   padding: 8px 12px;
   height: 36px;
   width: 100%;
   font-size: 16px;
-  font-family: var(--font-plex);
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   transition: background-color 250ms ease-in-out, color 250ms ease-in-out, border-color 250ms ease-in-out;
 }
 
@@ -467,8 +175,7 @@ h6 {
 
 .input:focus {
   outline: none;
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 2px rgba(44, 132, 224, 0.2);
+  border-color: var(--primary);
 }
 
 /* ============================================================
@@ -485,11 +192,10 @@ h6 {
 
 ::-webkit-scrollbar-thumb {
   background: var(--hairline);
-  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--stone);
+  background: var(--hairline);
 }
 
 /* ============================================================
@@ -505,69 +211,131 @@ h6 {
   scrollbar-width: none;
 }
 
-.mask-fade-right {
-  mask-image: linear-gradient(to right, black 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
-}
-
-.radial-gradient-mask {
-  background: radial-gradient(circle at 50% 50%, rgba(184, 134, 11, 0.05) 0%, transparent 70%);
-}
-
-.dark .radial-gradient-mask {
-  background: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
-}
-
 /* ============================================================
-   Marquee / Infinite Scroll Animation
+   Cartesian — Atmosphere & Utilities
    ============================================================ */
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
 
-  to {
-    transform: translateX(-50%);
-  }
+/* Geo-ring: compass-drafted geometric circle decoration */
+.geo-ring {
+  position: absolute;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.animate-marquee {
-  /* Override the global theme transition so it doesn't interfere */
-  transition-property: none !important;
-  animation: marquee 20s linear infinite;
-  will-change: transform;
+.geo-ring.dashed {
+  border-style: dashed;
 }
 
-.animate-marquee:hover {
-  animation-play-state: paused;
+/* Vertical line — drafting alignment guide */
+.vline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--line);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* ============================================================
-   Ambient Blob Animation
-   ============================================================ */
-@keyframes blob {
-  0% {
-    transform: translate(0px, 0px) scale(1);
-  }
-  33% {
-    transform: translate(30px, -50px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-  100% {
-    transform: translate(0px, 0px) scale(1);
-  }
+/* Horizontal accent — the ONE ink-black rule, used sparingly */
+.haccent {
+  height: 1px;
+  background: var(--ink);
+  border: none;
+  width: 20vw;
+  max-width: 280px;
 }
 
-.animate-blob {
-  animation: blob 7s infinite;
+/* Label — Inter 500, uppercase, 3px tracking, taupe */
+.label {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 13px;
+  color: var(--accent);
 }
 
-.animation-delay-2000 {
-  animation-delay: 2s;
+/* Micro — Inter 400, uppercase, 2px tracking, taupe */
+.micro-label {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+  color: var(--accent);
 }
 
-.animation-delay-4000 {
-  animation-delay: 4s;
+/* Display serif — Playfair Display 400, sentence case */
+.display-serif {
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--ink);
 }
+
+/* Card icon ring (circular) */
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  color: var(--accent);
+  font-size: 16px;
+}
+
+/* Image placeholder (crossed X mark) */
+.img-placeholder {
+  aspect-ratio: 4/3;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.img-placeholder::before,
+.img-placeholder::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  height: 1px;
+  background: var(--line);
+  transform-origin: center;
+}
+
+.img-placeholder::before {
+  transform: translate(-50%, -50%) rotate(30deg);
+}
+
+.img-placeholder::after {
+  transform: translate(-50%, -50%) rotate(-30deg);
+}
+
+.img-placeholder span {
+  position: relative;
+  z-index: 2;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 11px;
+  color: var(--accent);
+  background: var(--surface-soft);
+  padding: 6px 10px;
+}
+
+/* Typewriter cursor blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+

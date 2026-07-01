@@ -62,30 +62,30 @@ export function SyncStatus() {
   }, [checkConnection]);
 
   return (
-    <div className="h-full flex flex-col p-6 bg-[var(--surface-card)] border border-hairline rounded-xl shadow-xl dark:shadow-primary/10 text-white">
+    <div className="h-full flex flex-col p-6 bg-surface-card border border-line text-white">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl text-foreground font-bold flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${apiStatus === 'online' ? 'bg-accent-green animate-pulse' : apiStatus === 'offline' ? 'bg-accent-red' : 'bg-mute animate-pulse'}`} />
+          <div className={`w-2 h-2 ${apiStatus === 'online' ? 'bg-accent-green' : apiStatus === 'offline' ? 'bg-accent-red' : 'bg-mute'}`} />
           Quick Status
         </h3>
         <button 
           onClick={checkConnection}
           disabled={isRefreshing}
-          className="p-1.5 text-foreground hover:bg-white/10 rounded-full transition-colors disabled:opacity-50"
+          className="p-1.5 text-foreground hover:bg-white/10 disabled:opacity-50"
           title="Refresh connection"
         >
-          <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          <RefreshCw className="w-4 h-4" />
         </button>
       </div>
 
       <div className="flex-1 space-y-4">
         {/* Last Update Card */}
-        <div className="p-4 bg-[var(--surface-soft)] rounded-lg border border-white/10 group hover:border-white/20 transition-colors">
+        <div className="p-4 bg-surface-soft border border-line">
           <p className="text-xs text-mute uppercase font-bold tracking-wider mb-1">Last Sync Check</p>
           <div className="flex items-center justify-between">
             <p className="text-[var(--foreground)] text-lg font-bold tabular-nums">
               {apiStatus === 'loading' && lastUpdate === '-' ? (
-                <span className="inline-block w-24 h-6 bg-white/10 rounded animate-pulse" />
+                <span className="inline-block w-24 h-6 bg-white/10" />
               ) : (
                 lastUpdate
               )}
@@ -94,7 +94,7 @@ export function SyncStatus() {
         </div>
 
         {/* API Status Card */}
-        <div className="p-4 bg-[var(--surface-soft)] rounded-lg border border-white/10 group hover:border-white/20 transition-colors">
+        <div className="p-4 bg-surface-soft border border-line">
           <p className="text-xs text-mute uppercase font-bold tracking-wider mb-1">Database Connectivity</p>
           <div className="flex items-center gap-2">
             {apiStatus === 'online' && (
@@ -111,7 +111,7 @@ export function SyncStatus() {
             )}
             {apiStatus === 'loading' && (
               <>
-                <div className="w-5 h-5 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+                <div className="w-5 h-5 border-2 border-white/20 border-t-white" />
                 <p className="text-lg font-bold text-white/50">Memeriksa...</p>
               </>
             )}
@@ -121,7 +121,7 @@ export function SyncStatus() {
 
       <Link 
         href="/admin/projects" 
-        className="mt-8 flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-primary-pressed text-on-primary rounded-lg font-bold transition-all shadow-lg hover:shadow-primary/20"
+        className="mt-8 flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-primary-pressed text-on-primary font-bold"
       >
         <Plus className="w-5 h-5" />
         Add New Project

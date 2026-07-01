@@ -15,6 +15,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLogout } from '@/lib/useLogout';
+import { useToast } from '@/hooks/useToast';
 import Swal from 'sweetalert2';
 import { Modal, Button } from '@/components/ui';
 import { 
@@ -34,6 +35,7 @@ interface ProfileSettingsProps {
 
 export function ProfileSettings({ user }: ProfileSettingsProps) {
   const router = useRouter();
+  const toast = useToast();
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showResumeUpload, setShowResumeUpload] = useState(false);
   const [passwordForm, setPasswordForm] = useState({
@@ -51,6 +53,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
 
     // Validation
     if (!passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
+      toast.warning('Semua field password wajib diisi');
       await Swal.fire({
         icon: 'warning',
         title: 'Oops!',
@@ -61,6 +64,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
     }
 
     if (passwordForm.newPassword.length < 8) {
+      toast.warning('Password baru minimal 8 karakter');
       await Swal.fire({
         icon: 'warning',
         title: 'Terlalu Pendek',
@@ -71,6 +75,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
     }
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast.error('Konfirmasi password tidak sesuai');
       await Swal.fire({
         icon: 'error',
         title: 'Tidak Cocok',
@@ -105,6 +110,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
       });
 
       if (response.ok) {
+        toast.success('Password berhasil diubah');
         await Swal.fire({
           icon: 'success',
           title: 'Berhasil!',
@@ -117,6 +123,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
         throw new Error(data.error || 'Gagal mengubah password');
       }
     } catch (error: any) {
+      toast.error(error.message);
       await Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -165,6 +172,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
         window.dispatchEvent(new CustomEvent('cv-uploaded'));
       }
 
+      toast.success('Resume berhasil diperbarui');
       await Swal.fire({
         icon: 'success',
         title: 'Berhasil!',
@@ -175,6 +183,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
       setResumeFile(null);
       router.refresh();
     } catch (error: any) {
+      toast.error(error.message);
       await Swal.fire({
         icon: 'error',
         title: 'Gagal',
@@ -206,8 +215,8 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-surface-card dark:bg-surface-card border border-hairline dark:border-hairline rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-lg">
-        <h3 className="text-xs font-black text-mute dark:text-mute uppercase tracking-[0.2em] mb-6 border-b border-hairline pb-2 flex items-center gap-2">
+      <div className="bg-surface-card border border-line p-6">
+        <h3 className="text-xs font-black text-mute uppercase tracking-[0.2em] mb-6 border-b border-line pb-2 flex items-center gap-2">
           Account Settings
         </h3>
 
@@ -216,22 +225,22 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
             const Content = (
               <div className="flex items-center justify-between group">
                 <div className="flex items-center gap-4">
-                  <div className={`p-2.5 rounded-lg ${item.bg} ${item.color} border border-transparent group-hover:border-current transition-all`}>
+                  <div className={`p-2.5 ${item.bg} ${item.color} border border-transparent`}>
                     <item.icon className="w-5 h-5" />
                   </div>
-                  <span className="font-bold text-ink dark:text-ink text-sm">{item.label}</span>
+                  <span className="font-bold text-ink text-sm">{item.label}</span>
                 </div>
-                <ChevronRight className="w-5 h-5 text-mute opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                <ChevronRight className="w-5 h-5 text-mute opacity-0 group-hover:opacity-100" />
               </div>
             );
             return (
-              <button key={item.label} onClick={item.onClick} className="w-full text-left p-2 rounded-xl hover:bg-surface-soft dark:hover:bg-surface-soft transition-colors cursor-pointer">
+              <button key={item.label} onClick={item.onClick} className="w-full text-left p-2 hover:bg-surface-soft cursor-pointer">
                 {Content}
               </button>
             );
           })}
 
-          <div className="pt-4 mt-4 border-t border-hairline">
+          <div className="pt-4 mt-4 border-t border-line">
             <button
               onClick={() => {
                 Swal.fire({
@@ -248,21 +257,21 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
                    }
                 });
               }}
-              className="w-full p-4 rounded-xl bg-accent-red-soft/20 hover:bg-accent-red-soft/40 border border-accent-red/10 hover:border-accent-red/30 transition-all flex items-center justify-between group cursor-pointer"
+              className="w-full p-4 bg-accent-red-soft/20 hover:bg-accent-red-soft/40 border border-accent-red/10 hover:border-accent-red/30 flex items-center justify-between group cursor-pointer"
             >
               <div className="flex items-center gap-4">
-                <div className="p-2.5 rounded-lg bg-accent-red-soft text-accent-red">
+                <div className="p-2.5 bg-accent-red-soft text-accent-red">
                   <LogOut className="w-5 h-5" />
                 </div>
                 <span className="font-bold text-accent-red">{isLoggingOut ? 'Logging out...' : 'Logout Session'}</span>
               </div>
-              <ChevronRight className="w-5 h-5 text-accent-red opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+              <ChevronRight className="w-5 h-5 text-accent-red opacity-0 group-hover:opacity-100" />
             </button>
           </div>
         </div>
       </div>
 
-      <div className="p-5 rounded-2xl bg-primary/5 border border-primary/10 flex gap-4">
+      <div className="p-5 bg-primary/5 border border-primary/10 flex gap-4">
         <Info className="w-6 h-6 text-primary flex-shrink-0" />
         <p className="text-xs text-body leading-relaxed">
           <span className="font-black text-primary uppercase tracking-wider block mb-1">Security Tip</span>
@@ -273,15 +282,15 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
       {/* Modals with modern styling */}
       <Modal isOpen={showResumeUpload} onClose={() => setShowResumeUpload(false)} title="Update Resume/CV">
         <form onSubmit={handleResumeUpload} className="space-y-6">
-          <div className="p-8 border-2 border-dashed border-hairline rounded-2xl hover:border-primary transition-colors group text-center cursor-pointer relative">
+          <div className="p-8 border-2 border-dashed border-line hover:border-primary group text-center cursor-pointer relative">
             <input
               type="file"
               accept=".pdf"
               onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
               className="absolute inset-0 opacity-0 cursor-pointer"
             />
-            <FileText className="w-12 h-12 text-mute group-hover:text-primary mx-auto mb-4 transition-colors" />
-            <p className="text-sm font-bold text-ink dark:text-ink">{resumeFile ? resumeFile.name : 'Pilih file PDF Resume'}</p>
+            <FileText className="w-12 h-12 text-mute mx-auto mb-4" />
+            <p className="text-sm font-bold text-ink">{resumeFile ? resumeFile.name : 'Pilih file PDF Resume'}</p>
             <p className="text-xs text-mute mt-2">Maksimal ukuran file 5MB</p>
           </div>
           <div className="flex gap-3">
@@ -300,7 +309,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
               </label>
               <input
                 type="password"
-                className="w-full px-4 py-3 bg-surface-soft border border-hairline rounded-xl focus:border-primary outline-none transition-all"
+                className="w-full px-4 py-3 bg-surface-soft border border-line focus:border-primary outline-none"
                 placeholder={`Masukkan ${field.toLowerCase()}...`}
                 value={(passwordForm as any)[field]}
                 onChange={(e) => setPasswordForm({ ...passwordForm, [field]: e.target.value })}

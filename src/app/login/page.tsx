@@ -20,12 +20,14 @@ import { loginSchema, type LoginInput } from '@/lib/validation';
 import type { ApiError } from '@/types';
 import { Mail, Lock, ArrowLeft } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeProvider';
-import GlassCard from '@/components/ui/GlassCard';
+import { useToast } from '@/hooks/useToast';
+import Card from '@/components/ui/Card';
 import ThemeToggleButton from '@/components/ui/ThemeToggleButton';
 
 export default function LoginPage() {
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
+  const toast = useToast();
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -94,11 +96,15 @@ export default function LoginPage() {
         if (apiError.details) {
           setFieldErrors(apiError.details);
         } else {
-          setError(apiError.error || 'Login failed. Please try again.');
+          const errorMsg = apiError.error || 'Login failed. Please try again.';
+          setError(errorMsg);
+          toast.error(errorMsg);
         }
         setIsLoading(false);
         return;
       }
+
+      toast.success('Login successful! Welcome back.');
 
       // Successful login - use window.location for full page reload
       // This ensures the session cookie is properly available before the admin page loads
@@ -110,7 +116,9 @@ export default function LoginPage() {
       }, 100);
     } catch (err) {
       console.error('Login error:', err);
-      setError('An unexpected error occurred. Please try again.');
+      const msg = 'An unexpected error occurred. Please try again.';
+      setError(msg);
+      toast.error(msg);
       setIsLoading(false);
     }
   };
@@ -134,7 +142,7 @@ export default function LoginPage() {
       </div>
 
       <div className="relative z-10 w-full max-w-md">
-        <GlassCard className="p-8 shadow-2xl backdrop-blur-md border border-white/10">
+        <Card className="p-8 shadow-2xl backdrop-blur-md border border-white/10">
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-ink mb-2">Admin Login</h1>
@@ -220,7 +228,7 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-        </GlassCard>
+        </Card>
       </div>
     </main>
   );

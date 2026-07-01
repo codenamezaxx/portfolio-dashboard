@@ -9,8 +9,7 @@
 
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { RefreshCw, FileText, CloudCheck, AlertCircle, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import GlassCard from '@/components/ui/GlassCard';
+import Card from '@/components/ui/Card';
 
 // Lazy load PDFPreview to avoid server-side rendering issues
 const PDFPreview = lazy(() =>
@@ -68,75 +67,71 @@ export function CVPreviewSection() {
   }, []);
 
   return (
-    <GlassCard className="overflow-hidden border-none shadow-2xl">
+    <Card className="overflow-hidden border-none">
       <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/5">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-primary/20 text-primary">
+          <div className="p-2 bg-primary/20 text-primary">
             <FileText size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-ink dark:text-ink leading-tight">
+            <h3 className="text-lg font-bold text-ink leading-tight">
               CV / Resume Preview
             </h3>
-            <p className="text-xs text-mute dark:text-mute">Live document preview from storage</p>
+            <p className="text-xs text-mute">Live document preview from storage</p>
           </div>
         </div>
         
         {resumeUrl && (
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={fetchResumeInfo}
             disabled={isLoading}
-            className="hover:bg-primary/10 text-primary gap-2"
+            className="text-primary gap-2"
           >
-            <RefreshCw size={14} className={isLoading ? 'animate-spin' : ''} />
+            <RefreshCw size={14} />
             <span className="hidden sm:inline">Sync</span>
-          </Button>
+          </button>
         )}
       </div>
 
       <div className="p-6">
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-20 bg-surface-doc/30 dark:bg-surface-doc/5 rounded-xl border border-dashed border-hairline">
-            <Loader2 className="w-10 h-10 text-primary animate-spin mb-4 opacity-50" />
-            <p className="text-mute dark:text-mute font-medium text-sm animate-pulse">Initializing Previewer...</p>
+          <div className="flex flex-col items-center justify-center py-20 bg-surface-doc/30 border border-dashed border-line">
+            <Loader2 className="w-10 h-10 text-primary mb-4 opacity-50" />
+            <p className="text-mute font-medium text-sm">Initializing Previewer...</p>
           </div>
         ) : error ? (
-          <div className="p-6 bg-accent-red/5 border border-accent-red/20 rounded-xl text-center">
-            <div className="w-12 h-12 bg-accent-red/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="p-6 bg-accent-red/5 border border-accent-red/20 text-center">
+            <div className="w-12 h-12 bg-accent-red/10 flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="text-accent-red" size={24} />
             </div>
             <h4 className="text-ink font-semibold mb-1 text-sm">Preview Failed</h4>
-            <p className="text-xs text-mute dark:text-mute mb-4">{error}</p>
-            <Button
+            <p className="text-xs text-mute mb-4">{error}</p>
+            <button
               onClick={fetchResumeInfo}
-              variant="outline"
-              size="sm"
-              className="border-accent-red/30 text-accent-red hover:bg-accent-red/10"
+              className="border-accent-red/30 text-accent-red"
             >
               Retry Connection
-            </Button>
+            </button>
           </div>
         ) : !resumeUrl ? (
-          <div className="p-12 border-2 border-dashed border-hairline dark:border-hairline rounded-xl text-center bg-surface-doc/20">
-            <div className="w-16 h-16 bg-surface-card rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm border border-hairline">
+          <div className="p-12 border-2 border-dashed border-line text-center bg-surface-doc/20">
+            <div className="w-16 h-16 bg-surface-card flex items-center justify-center mx-auto mb-6 border border-line">
               <FileText className="text-mute" size={32} />
             </div>
-            <h4 className="text-base font-bold text-ink dark:text-ink mb-2">
+            <h4 className="text-base font-bold text-ink mb-2">
               No CV Document Found
             </h4>
-            <p className="text-sm text-mute dark:text-mute mb-6 max-w-xs mx-auto">
+            <p className="text-sm text-mute mb-6 max-w-xs mx-auto">
               Ready to showcase your journey? Upload your professional resume in the settings panel to enable this preview.
             </p>
           </div>
         ) : (
-          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-700">
-            <div className="relative group rounded-xl overflow-hidden bg-surface-card shadow-inner p-4">
+          <div className="space-y-6">
+            <div className="relative overflow-hidden bg-surface-card p-4">
               <Suspense
                 fallback={
-                  <div className="flex flex-col items-center justify-center h-[500px] bg-surface-doc dark:bg-surface-doc/10">
-                    <Loader2 className="w-8 h-8 text-primary animate-spin mb-3" />
+                  <div className="flex flex-col items-center justify-center h-[500px] bg-surface-doc">
+                    <Loader2 className="w-8 h-8 text-primary mb-3" />
                     <p className="text-xs text-mute font-medium">Rendering PDF content...</p>
                   </div>
                 }
@@ -154,7 +149,7 @@ export function CVPreviewSection() {
             </div>
 
             <div className="flex items-center gap-3 px-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-green/10 text-accent-green">
+              <div className="flex h-8 w-8 items-center justify-center bg-accent-green/10 text-accent-green">
                 <CloudCheck size={16} />
               </div>
               <div>
@@ -165,6 +160,6 @@ export function CVPreviewSection() {
           </div>
         )}
       </div>
-    </GlassCard>
+    </Card>
   );
 }
