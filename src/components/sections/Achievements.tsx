@@ -29,19 +29,19 @@ const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) =>
     .slice(0, 6);
 
   return (
-    <section id="certificates" className="py-20 md:px-8 relative">
-      <div className="container mx-auto px-6">
+    <section id="certificates" className="py-20 md:py-32 relative overflow-hidden">
+      <div className="container mx-auto px-6 relative z-10" style={{maxWidth: '960px'}}>
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="max-w-7xl mx-auto"
         >
           <SectionHeader 
             title="Pelatihan & Penghargaan" 
             subtitle="Sertifikat & highlights"
-            sectionNumber="05"
+            sectionNumber="04"
+            hideLine
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">

@@ -78,7 +78,7 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          <SectionHeader title="Hubungi Saya" subtitle="Kontak" sectionNumber="04" center />
+          <SectionHeader title="Hubungi Saya" subtitle="Kontak" sectionNumber="05" hideLine />
 
           {/* Opening */}
           <motion.p

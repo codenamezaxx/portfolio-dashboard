@@ -27,14 +27,14 @@ const Projects: React.FC<ProjectsProps> = ({ items = [] }) => {
       {/* Geo-ring */}
       <div className="geo-ring" style={{width: '35vw', height: '35vw', left: '-10%', bottom: '5%', opacity: 0.1}} />
 
-      <div className="container mx-auto px-6 relative z-10" style={{maxWidth: '1100px'}}>
+      <div className="container mx-auto px-6 relative z-10" style={{maxWidth: '960px'}}>
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          <SectionHeader title="Projek Pilihan" subtitle="Portfolio" sectionNumber="03" center />
+          <SectionHeader title="Projek Pilihan" subtitle="Portfolio" sectionNumber="03" hideLine />
 
           {featuredProjects.map((project, i) => (
             <motion.div

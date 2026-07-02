@@ -9,15 +9,16 @@ interface SectionHeaderProps {
   description?: string;
   center?: boolean;
   sectionNumber?: string;
+  hideLine?: boolean;
 }
 
-const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description, subtitle, center = false, sectionNumber }) => {
+const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description, subtitle, center = false, sectionNumber, hideLine = false }) => {
   return (
     <div className={`mb-16 ${center ? 'text-center' : ''}`}>
       {/* Section header with number + title + spacer + label (Cartesian style) */}
       <div className="flex items-baseline gap-6 mb-6">
         {sectionNumber && (
-          <span className="display-serif text-xl md:text-2xl" style={{color: 'var(--accent)'}}>
+          <span className="display-serif text-xl md:text-2xl" style={{color: 'var(--accent-red)'}}>
             {sectionNumber}
           </span>
         )}
@@ -28,10 +29,11 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description, subti
         >
           {title}
         </motion.h2>
-        {!center && <div className="flex-1 h-px bg-line self-center" />}
+        {!center && !hideLine && <div className="flex-1 h-px bg-line self-center" />}
         <motion.span
           variants={fadeInUp}
           className="label hidden md:block"
+          style={{color: 'var(--accent-red)'}}
         >
           {subtitle}
         </motion.span>
