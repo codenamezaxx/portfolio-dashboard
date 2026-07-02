@@ -10,12 +10,12 @@
 
 'use client';
 
+import "@aejkatappaja/phantom-ui";
 import { useState, useEffect, useMemo } from 'react';
 import { TextInput } from '@/components/ui/TextInput';
 import { Select } from '@/components/ui/Select';
 import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useToast } from '@/hooks/useToast';
 import { Modal } from '@/components/ui/Modal';
 import { PDFUpload } from '@/components/ui/PDFUpload';
@@ -276,9 +276,7 @@ export function AchievementManager() {
     }
   };
 
-  if (isFetching) return <div className="flex justify-center p-12"><LoadingSpinner /></div>;
-
-  return (
+  return (<phantom-ui loading={isFetching}>
     <div className="space-y-8 pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
@@ -451,7 +449,7 @@ export function AchievementManager() {
             <TextInput 
               label="Achievement Title" 
               name="achievement-title"
-              placeholder="e.g. Meta Front-End Developer" 
+              placeholder="e.g. Meta Fullstack Developer" 
               value={editingAchievement?.title || ''} 
               onChange={e => setEditingAchievement(prev => prev ? { ...prev, title: e.target.value } : null)}
               error={formErrors.title}
@@ -582,6 +580,6 @@ export function AchievementManager() {
           </div>
         </div>
       </Modal>
-    </div>
+    </div></phantom-ui>
   );
 }

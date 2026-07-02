@@ -29,7 +29,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description, subti
         >
           {title}
         </motion.h2>
-        {!center && !hideLine && <div className="flex-1 h-px bg-line self-center" />}
+        {!center && !hideLine && <div className="flex-1 mt-5 h-px self-center" style={{opacity: 0.7, backgroundColor: 'var(--accent-blue)'}} />}
         <motion.span
           variants={fadeInUp}
           className="label hidden md:block"

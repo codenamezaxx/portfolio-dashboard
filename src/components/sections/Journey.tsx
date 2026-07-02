@@ -43,8 +43,8 @@ const Journey: React.FC<JourneyProps> = ({ items = [] }) => {
                 <div className="flex flex-col md:flex-row md:items-start gap-3 md:gap-8">
                   {/* Year in accent/taupe */}
                   <span
-                    className="text-xs uppercase tracking-[2px] font-medium shrink-0 pt-0.5"
-                    style={{fontFamily: "'Inter', sans-serif", color: 'var(--accent)'}}
+                    className="text-xs uppercase tracking-[2px] font-medium shrink-0 pt-0.5 md:max-w-20"
+                    style={{fontFamily: "'Inter', sans-serif", color: 'var(--accent-red)'}}
                   >
                     {item.year}
                   </span>

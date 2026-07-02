@@ -78,7 +78,7 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          <SectionHeader title="Hubungi Saya" subtitle="Kontak" sectionNumber="05" hideLine />
+          <SectionHeader title="Hubungi Saya" subtitle="Kontak" sectionNumber="05"/>
 
           {/* Opening */}
           <motion.p
@@ -90,7 +90,7 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
           </motion.p>
 
           {/* Contact list — taupe hairline rows */}
-          <div className="max-w-lg mx-auto mb-16">
+          <div className="max-w-2xl mx-auto mb-16">
             {contactMethods.map((method, i) => {
               const IconComponent = method.icon;
               return (
@@ -103,7 +103,7 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
                   className={`flex items-center gap-4 py-5 border-t border-line hover:bg-white/20 transition-colors px-4 ${i === contactMethods.length - 1 ? 'border-b border-line' : ''}`}
                   aria-label={`Contact via ${method.label}`}
                 >
-                  <IconComponent className="w-5 h-5 shrink-0" style={{color: 'var(--accent)'}} aria-hidden="true" />
+                  <IconComponent className="w-5 h-5 shrink-0" style={{color: 'var(--accent-red)'}} aria-hidden="true" />
                   <div className="flex-1 min-w-0">
                     <span className="block micro-label text-xs">{method.label}</span>
                     <span className="block text-sm mt-0.5 truncate" style={{fontFamily: "'Inter', sans-serif", color: 'var(--body)'}}>

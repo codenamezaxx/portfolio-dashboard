@@ -42,22 +42,6 @@ export {
   type LoadingSpinnerProps,
 } from './LoadingSpinner';
 export {
-  SkeletonLoader,
-  type SkeletonLoaderProps,
-} from './SkeletonLoader';
-export {
-  SkeletonText,
-  type SkeletonTextProps,
-} from './SkeletonText';
-export {
-  SkeletonCard,
-  type SkeletonCardProps,
-} from './SkeletonCard';
-export {
-  SkeletonTableRow,
-  type SkeletonTableRowProps,
-} from './SkeletonTableRow';
-export {
   LoadingState,
   type LoadingStateProps,
 } from './LoadingState';

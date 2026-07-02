@@ -34,7 +34,7 @@ const Projects: React.FC<ProjectsProps> = ({ items = [] }) => {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          <SectionHeader title="Projek Pilihan" subtitle="Portfolio" sectionNumber="03" hideLine />
+          <SectionHeader title="Projek Pilihan" subtitle="Portfolio" sectionNumber="03" />
 
           {featuredProjects.map((project, i) => (
             <motion.div

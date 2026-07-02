@@ -7,6 +7,7 @@
 
 'use client';
 
+import "@aejkatappaja/phantom-ui";
 export const dynamic = 'force-dynamic';
 
 import { useSession } from '@/lib/useSession';
@@ -16,17 +17,6 @@ import { CVPreviewSection } from '@/components/admin/CVPreviewSection';
 
 export default function UserProfilePage() {
   const { user, isLoading, error } = useSession();
-
-  if (isLoading) {
-    return (
-      <main className="flex flex-1 flex-col items-center justify-center min-h-screen bg-canvas">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-4 border-surface-soft border-t-primary animate-spin" />
-          <p className="text-mute">Loading profile...</p>
-        </div>
-      </main>
-    );
-  }
 
   if (error || !user) {
     return (
@@ -39,7 +29,7 @@ export default function UserProfilePage() {
     );
   }
 
-  return (
+  return (<phantom-ui loading={isLoading}>
     <main className="flex flex-1 flex-col min-h-screen bg-canvas">
       <div className="max-w-6xl mx-auto w-full px-4 md:px-8 py-8 md:py-12">
         {/* Page Header */}
@@ -65,5 +55,6 @@ export default function UserProfilePage() {
         </div>
       </div>
     </main>
+  </phantom-ui>
   );
 }

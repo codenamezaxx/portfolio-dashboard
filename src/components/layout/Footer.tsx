@@ -48,7 +48,7 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
   ];
 
   return (
-    <footer className="relative bg-background pt-20 pb-12 overflow-hidden border-t border-line">
+    <footer className="relative bg-surface-card pt-20 pb-12 overflow-hidden border-t border-line">
       <div className="container mx-auto px-6 relative z-10" style={{maxWidth: '1100px'}}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-16">
           
@@ -58,13 +58,13 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
               {profile?.name}
             </h2>
             <p className="text-sm leading-relaxed" style={{fontFamily: "monospace", color: 'var(--body)', lineHeight: 1.6}}>
-              {profile?.role?.replace(/\s*\|\s*/g, ' · ')}
+              {profile?.role?.replace(/\s*\|\s*/g, '\n')}
             </p>
           </div>
 
           {/* Column 2: Links */}
           <div className="space-y-4">
-            <h3 className="label text-xs">Pintasan</h3>
+            <h3 className="label text-xs" style={{color: 'var(--accent-red)'}}>Pintasan</h3>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.label}>
@@ -78,7 +78,7 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
 
           {/* Column 3: Social */}
           <div className="space-y-4">
-            <h3 className="label text-xs">Terhubung</h3>
+            <h3 className="label text-xs" style={{color: 'var(--accent-red)'}}>Terhubung</h3>
             <ul className="space-y-2">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
@@ -102,8 +102,8 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
 
           {/* Column 4: Tech stack */}
           <div className="space-y-4">
-            <h3 className="label text-xs">Dibangun Dengan</h3>
-            <div className="flex flex-wrap gap-3" style={{fontFamily: "monospace", color: 'var(--body)'}}>
+            <h3 className="label text-xs" style={{color: 'var(--accent-red)'}}>Dibangun Dengan</h3>
+            <div className="uppercase flex flex-wrap gap-3" style={{fontFamily: "monospace", color: 'var(--body)'}}>
               <span className="bg-surface-card border border-line px-2 py-1">Next.js</span>
               <span className="bg-surface-card border border-line px-2 py-1">Tailwind CSS</span>
               <span className="bg-surface-card border border-line px-2 py-1">Framer Motion</span>
@@ -114,7 +114,7 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 border-t border-line flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4" style={{borderColor: 'var(--accent-blue)'}}>
           <p className="micro-label">&copy; {currentYear} codenamezaxx</p>
           <p className="micro-label">All Rights Reserved</p>
         </div>

@@ -7,6 +7,7 @@
 
 'use client';
 
+import "@aejkatappaja/phantom-ui";
 import { useSession } from '@/lib/useSession';
 import { useStatistics } from '@/lib/useStatistics';
 import { StatisticsWidget } from '@/components/admin/StatisticsWidget';
@@ -30,18 +31,7 @@ export default function AdminDashboard() {
   const { user, isLoading } = useSession();
   const { statistics, isLoading: statsLoading, error: statsError } = useStatistics();
 
-  if (isLoading) {
-    return (
-      <main className="flex flex-1 flex-col items-center justify-center min-h-screen bg-canvas">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-surface-soft border-t-primary animate-spin" />
-          <p className="text-mute font-bold text-sm uppercase tracking-wider">Loading dashboard...</p>
-        </div>
-      </main>
-    );
-  }
-
-  return (
+  return (<phantom-ui loading={isLoading}>
     <main className="flex flex-1 flex-col min-h-screen bg-canvas">
       {/* Main Content */}
       <div className="flex-1 w-full py-6 lg:py-8">
@@ -136,5 +126,6 @@ export default function AdminDashboard() {
         </div>
       </div>
     </main>
+  </phantom-ui>
   );
 }

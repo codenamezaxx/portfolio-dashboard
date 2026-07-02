@@ -22,6 +22,7 @@
 
 'use client';
 
+import "@aejkatappaja/phantom-ui";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { TextInput } from '@/components/ui/TextInput';
@@ -319,20 +320,12 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
     }
   };
 
-  if (isFetching) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
   const formatLastUpdated = (date: Date | null) => {
     if (!date || isNaN(date.getTime())) return 'Never';
     return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
   };
 
-  return (
+  return (<phantom-ui loading={isFetching}>
     <div className="space-y-8 pb-12">
       {/* Header & Breadcrumb */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -586,6 +579,6 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
           </div>
         )}
       </div>
-    </div>
+    </div></phantom-ui>
   );
 }

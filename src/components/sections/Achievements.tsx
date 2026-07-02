@@ -41,7 +41,6 @@ const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) =>
             title="Pelatihan & Penghargaan" 
             subtitle="Sertifikat & highlights"
             sectionNumber="04"
-            hideLine
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">

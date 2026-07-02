@@ -10,6 +10,7 @@
 
 'use client';
 
+import "@aejkatappaja/phantom-ui";
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -18,7 +19,6 @@ import { TextInput } from '@/components/ui/TextInput';
 import { TextArea } from '@/components/ui/TextArea';
 import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useToast } from '@/hooks/useToast';
 import { Breadcrumb } from '@/components/admin/Breadcrumb';
 import type { Profile } from '@/types';
@@ -223,15 +223,7 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
     }
   };
 
-  if (isFetching) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
-  return (
+  return (<phantom-ui loading={isFetching}>
     <div className="space-y-8 pb-20">
       {/* Breadcrumb Navigation & Last Updated */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -460,6 +452,6 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
           </div>
         </div>
       </div>
-    </div>
+    </div></phantom-ui>
   );
 }

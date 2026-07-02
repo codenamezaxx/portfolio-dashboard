@@ -7,6 +7,7 @@ import { ToastProvider } from '@/components/providers/ToastProvider';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import "@aejkatappaja/phantom-ui/ssr.css";
 
 const playfairDisplay = Playfair_Display({
   variable: '--font-display',
@@ -28,10 +29,10 @@ const sourceCodePro = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-  title: 'Zakky Ahmad El-Kholily | Junior Front-End Developer Portofolio',
+  title: 'Zakky Ahmad El-Kholily | Junior Fullstack Developer Portofolio',
   description:
-    'Portfolio of Zakky Ahmad El-Kholily — Junior Front-End Developer and Network Engineer from East Java, Indonesia. Showcasing projects, skills, and certifications.',
-  keywords: ['portfolio', 'web developer', 'it enthusiast', 'network engineer', 'front-end', 'React', 'Next.js', 'TypeScript'],
+    'Portfolio of Zakky Ahmad El-Kholily — Junior Fullstack Developer and Network Engineer from East Java, Indonesia. Showcasing projects, skills, and certifications.',
+  keywords: ['portfolio', 'web developer', 'it enthusiast', 'network engineer', 'Fullstack', 'React', 'Next.js', 'TypeScript'],
   authors: [{ name: 'Zakky Ahmad El-Kholily' }],
   icons: {
     icon: '/favicon.svg',
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Zakky Ahmad El-Kholily | Portfolio',
-    description: 'Junior Front-End Developer & Network Engineer',
+    description: 'Junior Fullstack Developer & Network Engineer',
     type: 'website',
     locale: 'id_ID',
     siteName: 'Zakky Portfolio',
@@ -48,7 +49,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Zakky Ahmad El-Kholily | Portfolio',
-    description: 'Junior Front-End Developer & Network Engineer',
+    description: 'Junior Fullstack Developer & Network Engineer',
     images: ['/hero.jpg'],
   },
 };
@@ -63,10 +64,10 @@ export default function RootLayout({
     '@type': 'Person',
     name: 'Zakky Ahmad El-Kholily',
     url: 'https://codenamezaxx.my.id',
-    jobTitle: 'Junior Front-End Developer',
+    jobTitle: 'Junior Fullstack Developer',
     alumniOf: 'SMK Muhammadiyah 1 Surabaya',
     gender: 'Male',
-    knowsAbout: ['Front-End Development', 'Network Engineering', 'React', 'Next.js', 'TypeScript'],
+    knowsAbout: ['Fullstack Development', 'Network Engineering', 'React', 'Next.js', 'TypeScript'],
     sameAs: [
       'https://github.com/codenamezaxx',
       'https://linkedin.com/in/codenamezaxx',

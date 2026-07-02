@@ -18,12 +18,12 @@ import type { Project, Achievement } from '@/types';
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'Zakky Ahmad El-Kholily | Junior Front-End Developer Portofolio',
-  description: 'Portfolio of Zakky Ahmad El-Kholily, a Junior Front-End Web Developer & Network Engineer from East Java, Indonesia. Showcasing projects, skills, and achievements.',
-  keywords: ['web developer', 'front-end', 'network engineer', 'it enthusiast', 'public speaker', 'react', 'typescript', 'portfolio'],
+  title: 'Zakky Ahmad El-Kholily | Junior Fullstack Developer Portofolio',
+  description: 'Portfolio of Zakky Ahmad El-Kholily, a Junior Fullstack Web Developer & Network Engineer from East Java, Indonesia. Showcasing projects, skills, and achievements.',
+  keywords: ['web developer', 'Fullstack', 'network engineer', 'it enthusiast', 'public speaker', 'react', 'typescript', 'portfolio'],
   openGraph: {
-    title: 'Zakky Ahmad El-Kholily | Junior Front-End Developer Portofolio',
-    description: 'Portfolio of Zakky Ahmad El-Kholily, a Junior Front-End Developer from East Java, Indonesia.',
+    title: 'Zakky Ahmad El-Kholily | Junior Fullstack Developer Portofolio',
+    description: 'Portfolio of Zakky Ahmad El-Kholily, a Junior Fullstack Developer from East Java, Indonesia.',
     type: 'website',
     url: 'https://codenamezaxx.my.id',
     images: [
@@ -37,8 +37,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Zakky Ahmad El-Kholily | Junior Front-End Developer & Network Engineer',
-    description: 'Portfolio of Zakky Ahmad El-Kholily, a Front-End Web Developer and Network Engineer from East Java, Indonesia.',
+    title: 'Zakky Ahmad El-Kholily | Junior Fullstack Developer & Network Engineer',
+    description: 'Portfolio of Zakky Ahmad El-Kholily, a Fullstack Web Developer and Network Engineer from East Java, Indonesia.',
     images: ['/hero.jpg']
   }
 };
@@ -78,13 +78,13 @@ export default async function Home() {
     name: 'Zakky Ahmad El Kholily',
     alternateName: 'codenamezaxx',
     url: 'https://codenamezaxx.my.id',
-    jobTitle: 'Junior Front-End Developer',
+    jobTitle: 'Junior Fullstack Developer',
     alumniOf: {
       '@type': 'EducationalOrganization',
       name: 'SMK MUDISA',
     },
     knowledgableAbout: [
-      'Front-End Web Development',
+      'Fullstack Web Development',
       'JavaScript',
       'React',
       'Next.js',

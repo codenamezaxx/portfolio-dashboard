@@ -55,7 +55,7 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
 
   // Roles array (split by |)
   const roles = React.useMemo(() =>
-    (profileData.role || 'Front-End Developer | Network Engineer').split('|').map(r => r.trim()),
+    (profileData.role || 'Fullstack Developer | Network Engineer').split('|').map(r => r.trim()),
     [profileData.role]
   );
 
@@ -122,11 +122,11 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center pt-16 pb-12 overflow-hidden">
       {/* Vertical line — drafting alignment guide */}
-      <div className="vline" style={{right: '5vw'}} />
+      <div className="vline" style={{right: '5vw', backgroundColor: 'var(--accent-blue)'}} />
 
       {/* Geo-ring — compass decoration right side */}
-      <div className="geo-ring" style={{width: '46vw', height: '46vw', left: '-2vw', top: '50%', transform: 'translateY(-50%)', opacity: 0.5}}>
-        <div className="geo-ring dashed" style={{inset: '14%', position: 'absolute', border: '1px dashed var(--line)', borderRadius: '50%', opacity: 0.7}} />
+      <div className="geo-ring" style={{width: '46vw', height: '46vw', left: '-2vw', top: '50%', transform: 'translateY(-50%)', opacity: 0.5, borderColor: 'var(--accent-blue)'}}>
+        <div className="geo-ring dashed" style={{inset: '14%', position: 'absolute', border: '1px dashed var(--line)', borderRadius: '50%', opacity: 0.6, borderColor: 'var(--accent-blue)'}} />
       </div>
 
       <div className="container mx-auto px-6 relative z-10" style={{maxWidth: '1280px'}}>
@@ -158,13 +158,17 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
                 <div className="text-lg" style={{fontFamily: "var(--font-display)", color: "var(--ink)"}}>
                   Jawa Timur, Indonesia
                 </div>
-                <div className="micro-label mt-1">Lokasi</div>
+                <div className="micro-label mt-1" style={{color: "var(--accent-red)"}}>
+                  Lokasi
+                </div>
               </div>
               <div>
                 <div className="text-lg" style={{fontFamily: "var(--font-display)", color: "var(--ink)"}}>
                   {new Date().getFullYear() - 2025}+ Tahun
                 </div>
-                <div className="micro-label mt-1">Pengalaman</div>
+                <div className="micro-label mt-1" style={{color: "var(--accent-red)"}}>
+                  Pengalaman
+                </div>
               </div>
             </div>
 
@@ -200,7 +204,7 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
           >
             {/* Label eyebrow */}
             {profileData.status_label && (
-              <motion.span variants={fadeInUp} className="label">
+              <motion.span variants={fadeInUp} className="label" style={{color: "var(--accent-red)"}}>
                 {profileData.status_label}
               </motion.span>
             )}
@@ -217,11 +221,11 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
             {/* Role subtitle — typewriter */}
             <motion.p
               variants={fadeInUp}
-              className="text-lg md:text-2xl leading-relaxed max-w-md min-h-[1.6em]"
-              style={{fontFamily: "monospace", color: "var(--body)", lineHeight: 1.6}}
+              className="text-lg md:text-2xl leading-loose max-w-md min-h-[1.6em]"
+              style={{fontFamily: "monospace", color: "var(--accent-red)", lineHeight: 1.6, letterSpacing: '1px'}}
             >
               {displayedRole}
-              {!isPaused && <span style={{color: 'var(--accent)', animation: 'blink 0.8s step-end infinite'}}>_</span>}
+              {!isPaused && <span style={{color: 'var(--accent-red)', animation: 'blink 0.8s step-end infinite'}}>_</span>}
             </motion.p>
 
             {/* Tagline */}

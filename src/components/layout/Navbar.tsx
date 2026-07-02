@@ -58,7 +58,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-background">
       {/* Hairline bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-line" />
+      <div className="absolute bottom-0 left-0 right-0 h-px" style={{backgroundColor: 'var(--hairline)'}} />
       
       <div className="container mx-auto px-6 h-16 flex items-center justify-between relative z-10" style={{maxWidth: '1280px'}}>
         {/* Logo in Playfair */}
@@ -77,10 +77,10 @@ const Navbar: React.FC = () => {
                 key={item.label}
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item.href)}
-                className="micro-label transition-opacity"
-                style={{opacity: isActive ? 1 : 0.5}}
-                onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                onMouseLeave={(e) => e.currentTarget.style.opacity = isActive ? '1' : '0.5'}
+                className="micro-label transition-colors"
+                style={{color: isActive ? 'var(--accent-red)' : 'var(--body)'}}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-red)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = isActive ? 'var(--accent-red)' : 'var(--body)'}
               >
                 {item.label}
               </a>

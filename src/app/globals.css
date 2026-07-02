@@ -51,9 +51,9 @@
   --line: #B8B0A4;
 
   /* Semantic */
-  --accent-red: #C46A5A;
-  --accent-red-soft: #E8D5D0;
-  --accent-blue: #7A8A9A;
+  --accent-red: #F8635F;
+  --accent-red-soft: #3A2A28;
+  --accent-blue: #7ECDC0;
   --accent-blue-soft: #D5DCE5;
   --accent-green: #6B8A7A;
   --accent-green-soft: #D5E5DC;
@@ -93,9 +93,9 @@
   --border: var(--hairline);
   --line: #5A5A5A;
 
-  --accent-red: #C46A5A;
+  --accent-red: #d76763;
   --accent-red-soft: #3A2A28;
-  --accent-blue: #7A8A9A;
+  --accent-blue: #5fb1a4;
   --accent-blue-soft: #2A2A3A;
   --accent-green: #6B8A7A;
   --accent-green-soft: #2A3A2A;
