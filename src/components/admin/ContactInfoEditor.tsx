@@ -30,7 +30,6 @@ import { FormSuccess } from '@/components/ui/FormSuccess';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useToast } from '@/hooks/useToast';
 import { Breadcrumb } from '@/components/admin/Breadcrumb';
-import Badge from '@/components/ui/Badge';
 import type { ContactInfo } from '@/types';
 import { contactInfoSchema } from '@/lib/validation';
 import { z } from 'zod';
