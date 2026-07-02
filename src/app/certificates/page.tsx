@@ -64,9 +64,9 @@ export default async function CertificatesPage() {
           <div className="flex items-center justify-between mb-12">
             <Link
               href="/#certificates"
-              className="group inline-flex items-center gap-2 text-mute hover:text-primary transition-all duration-300 text-sm font-bold bg-surface-soft/50 backdrop-blur-sm px-4 py-2 rounded-full border border-hairline hover:border-primary/30"
+              className="inline-flex items-center gap-1 text-mute hover:text-primary text-sm border border-line px-3 py-1.5"
             >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              <ArrowLeft className="w-3.5 h-3.5" />
               Kembali ke Beranda
             </Link>
             <ThemeToggleButton />
@@ -80,8 +80,8 @@ export default async function CertificatesPage() {
 
           <Suspense fallback={
             <div className="flex flex-col items-center justify-center py-20">
-              <Loader2 className="w-10 h-10 text-[var(--primary)] animate-spin mb-4" />
-              <p className="text-[var(--mute)]">Memuat sertifikat...</p>
+              <Loader2 className="w-10 h-10 text-accent animate-spin mb-4" />
+              <p className="text-mute">Memuat sertifikat...</p>
             </div>
           }>
             <CertificatesGallery achievements={achievements} />

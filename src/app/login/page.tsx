@@ -21,7 +21,6 @@ import type { ApiError } from '@/types';
 import { Mail, Lock, ArrowLeft } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeProvider';
 import { useToast } from '@/hooks/useToast';
-import Card from '@/components/ui/Card';
 import ThemeToggleButton from '@/components/ui/ThemeToggleButton';
 
 export default function LoginPage() {
@@ -131,9 +130,9 @@ export default function LoginPage() {
       <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-20">
         <Link 
           href="/" 
-          className="flex items-center gap-2 text-mute hover:text-primary transition-colors group"
+          className="flex items-center gap-1 text-mute hover:text-primary"
         >
-          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+          <ArrowLeft size={16} />
           <span className="font-medium hidden sm:inline">Kembali ke Beranda</span>
           <span className="font-medium sm:hidden">Kembali</span>
         </Link>
@@ -142,7 +141,7 @@ export default function LoginPage() {
       </div>
 
       <div className="relative z-10 w-full max-w-md">
-        <Card className="p-8 shadow-2xl backdrop-blur-md border border-white/10">
+        <div className="p-8 border border-line bg-surface-card">
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-ink mb-2">Admin Login</h1>
@@ -153,7 +152,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* General Error Message */}
             {error && (
-              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+              <div className="p-3 bg-red-500/10 border border-red-500/30">
                 <p className="text-red-400 text-sm">{error}</p>
               </div>
             )}
@@ -173,11 +172,11 @@ export default function LoginPage() {
                   onChange={handleInputChange}
                   disabled={isLoading}
                   placeholder="admin@example.com"
-                  className={`w-full pl-10 pr-4 py-2 rounded-lg border transition-colors ${
+                  className={`w-full pl-10 pr-4 py-2 border ${
                     fieldErrors.email
-                      ? 'border-red-500/50 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20'
-                      : 'border-hairline bg-surface-soft focus:border-primary focus:ring-primary/20'
-                  } focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed text-ink`}
+                      ? 'border-red-500/50 bg-red-500/5'
+                      : 'border-line bg-surface-soft'
+                  } disabled:opacity-50 disabled:cursor-not-allowed text-ink`}
                 />
               </div>
               {fieldErrors.email && (
@@ -200,11 +199,11 @@ export default function LoginPage() {
                   onChange={handleInputChange}
                   disabled={isLoading}
                   placeholder="••••••••"
-                  className={`w-full pl-10 pr-4 py-2 rounded-lg border transition-colors ${
+                  className={`w-full pl-10 pr-4 py-2 border ${
                     fieldErrors.password
-                      ? 'border-red-500/50 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20'
-                      : 'border-hairline bg-surface-soft focus:border-primary focus:ring-primary/20'
-                  } focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed text-ink`}
+                      ? 'border-red-500/50 bg-red-500/5'
+                      : 'border-line bg-surface-soft'
+                  } disabled:opacity-50 disabled:cursor-not-allowed text-ink`}
                 />
               </div>
               {fieldErrors.password && (
@@ -216,11 +215,11 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-4 py-2 bg-primary hover:bg-primary-dark disabled:bg-gray-500 disabled:cursor-not-allowed text-on-primary font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+              className="w-full px-4 py-2 bg-primary hover:bg-primary-dark disabled:bg-gray-500 disabled:cursor-not-allowed text-on-primary font-medium flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>
-                  <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white animate-spin" />
                   Signing in...
                 </>
               ) : (
@@ -228,7 +227,7 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-        </Card>
+        </div>
       </div>
     </main>
   );
