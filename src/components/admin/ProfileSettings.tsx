@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 import { useLogout } from '@/lib/useLogout';
 import { useToast } from '@/hooks/useToast';
 import Swal from 'sweetalert2';
-import { Modal, Button } from '@/components/ui';
+import { Modal } from '@/components/ui';
 import { 
   KeyRound, 
   FileText, 
@@ -223,14 +223,14 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
         <div className="space-y-3">
           {settingsItems.map((item) => {
             const Content = (
-              <div className="flex items-center justify-between group">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className={`p-2.5 ${item.bg} ${item.color} border border-transparent`}>
                     <item.icon className="w-5 h-5" />
                   </div>
                   <span className="font-bold text-ink text-sm">{item.label}</span>
                 </div>
-                <ChevronRight className="w-5 h-5 text-mute opacity-0 group-hover:opacity-100" />
+                <ChevronRight className="w-5 h-5 text-mute" />
               </div>
             );
             return (
@@ -257,7 +257,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
                    }
                 });
               }}
-              className="w-full p-4 bg-accent-red-soft/20 hover:bg-accent-red-soft/40 border border-accent-red/10 hover:border-accent-red/30 flex items-center justify-between group cursor-pointer"
+              className="w-full p-4 bg-accent-red-soft/20 hover:bg-accent-red-soft/40 border border-accent-red/10 hover:border-accent-red/30 flex items-center justify-between cursor-pointer"
             >
               <div className="flex items-center gap-4">
                 <div className="p-2.5 bg-accent-red-soft text-accent-red">
@@ -265,7 +265,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
                 </div>
                 <span className="font-bold text-accent-red">{isLoggingOut ? 'Logging out...' : 'Logout Session'}</span>
               </div>
-              <ChevronRight className="w-5 h-5 text-accent-red opacity-0 group-hover:opacity-100" />
+              <ChevronRight className="w-5 h-5 text-accent-red" />
             </button>
           </div>
         </div>
@@ -294,8 +294,8 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
             <p className="text-xs text-mute mt-2">Maksimal ukuran file 5MB</p>
           </div>
           <div className="flex gap-3">
-            <Button type="submit" disabled={!resumeFile} className="flex-1">Upload Resume</Button>
-            <Button type="button" variant="secondary" onClick={() => setShowResumeUpload(false)} className="flex-1">Batal</Button>
+            <button type="submit" disabled={!resumeFile} className="flex-1">Upload Resume</button>
+            <button type="button" onClick={() => setShowResumeUpload(false)} className="flex-1">Batal</button>
           </div>
         </form>
       </Modal>
@@ -317,8 +317,8 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
             </div>
           ))}
           <div className="flex gap-3 pt-4">
-            <Button type="submit" className="flex-1">Simpan Password</Button>
-            <Button type="button" variant="secondary" onClick={() => setShowChangePassword(false)} className="flex-1">Batal</Button>
+            <button type="submit" className="flex-1">Simpan Password</button>
+            <button type="button" onClick={() => setShowChangePassword(false)} className="flex-1">Batal</button>
           </div>
         </form>
       </Modal>

@@ -267,7 +267,7 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
           {errorMessage && <FormError message={errorMessage} />}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="bg-primary/5 dark:bg-white/5 border border-primary/10 border-line p-6 md:p-8 space-y-6">
+            <div className="bg-primary/5 border border-primary/10 border-line p-6 md:p-8 space-y-6">
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles className="w-4 h-4 text-primary" />
                 <h3 className="text-xs font-black text-mute uppercase tracking-[0.2em]">Profile Content</h3>
@@ -350,7 +350,7 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
               <button
                 type="submit"
                 disabled={isLoading || !hasChanges}
-                className="px-8 active:scale-95 disabled:shadow-none"
+                className="px-8 disabled:shadow-none"
               >
                 {isLoading ? (
                   <>Saving Changes...</>
@@ -380,15 +380,15 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
             <h3 className="text-xs font-black text-mute uppercase tracking-[0.2em]">Live Mockup</h3>
           </div>
 
-          <div className="relative group border border-line overflow-hidden bg-canvas dark:bg-surface-dark">
+          <div className="relative group border border-line overflow-hidden bg-canvas">
             {/* Browser Header Mockup */}
-            <div className="bg-surface-soft dark:bg-surface-card px-4 py-3 border-b border-line flex items-center gap-2">
+            <div className="bg-surface-soft px-4 py-3 border-b border-line flex items-center gap-2">
               <div className="flex gap-1.5">
                 <div className="w-2.5 h-2.5 bg-red-400" />
                 <div className="w-2.5 h-2.5 bg-amber-400" />
                 <div className="w-2.5 h-2.5 bg-green-400" />
               </div>
-              <div className="flex-1 max-w-[200px] mx-auto h-5 bg-white/50 dark:bg-white/5 border border-line flex items-center px-2">
+              <div className="flex-1 max-w-[200px] mx-auto h-5 bg-white/50 border border-line flex items-center px-2">
                 <div className="w-2 h-2 bg-mute/30 mr-2" />
                 <div className="w-full h-1 bg-mute/20" />
               </div>
@@ -417,13 +417,13 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
                   </p>
                 </div>
 
-                <p className="text-base text-body dark:text-body/80 max-w-md leading-relaxed font-medium">
+                <p className="text-base text-body max-w-md leading-relaxed font-medium">
                   {formData.tagline || 'Your compelling tagline will appear here to introduce you to your visitors...'}
                 </p>
 
                 {/* Hero Image Mockup */}
                 {imagePreview && (
-                  <div className="mt-8 relative w-full aspect-video overflow-hidden border border-white/20">
+                  <div className="mt-8 relative w-full aspect-video overflow-hidden border border-line">
                     <Image
                       src={imagePreview}
                       alt="Mockup hero"

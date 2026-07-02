@@ -13,7 +13,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { TextInput } from '@/components/ui/TextInput';
 import { Select } from '@/components/ui/Select';
-import { Button } from '@/components/ui/Button';
 import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -283,35 +282,35 @@ export function AchievementManager() {
     <div className="space-y-8 pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-primary/10 rounded-2xl">
+          <div className="p-3 bg-primary/10">
             <Trophy className="w-8 h-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl md:text-4xl font-black text-ink dark:text-ink tracking-tight">Achievements</h1>
-            <p className="text-body dark:text-body font-medium mt-1">Manage certifications and professional milestones</p>
+            <h1 className="text-3xl md:text-4xl font-black text-ink tracking-tight">Achievements</h1>
+            <p className="text-body font-medium mt-1">Manage certifications and professional milestones</p>
           </div>
         </div>
         <div className="flex gap-2 w-full md:w-auto">
           {selectedIds.size > 0 && (
-            <Button variant="danger" onClick={() => setDeleteConfirm({ type: 'bulk' })} className="flex-1 md:flex-none">
+            <button type="button" onClick={() => setDeleteConfirm({ type: 'bulk' })} className="flex-1 md:flex-none">
               <Trash2 className="w-4 h-4 mr-2" /> Delete ({selectedIds.size})
-            </Button>
+            </button>
           )}
-          <Button onClick={handleAddNew} className="flex-1 md:flex-none shadow-lg shadow-primary/20">
+          <button type="button" onClick={handleAddNew} className="flex-1 md:flex-none">
             <Plus className="w-4 h-4 mr-2" /> Add Achievement
-          </Button>
+          </button>
         </div>
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="bg-primary/5 dark:bg-white/5 backdrop-blur-md border border-primary/10 dark:border-white/10 p-5 rounded-2xl shadow-sm flex flex-col md:flex-row gap-4 items-center">
+      <div className="bg-primary/5 border border-primary/10 p-5 flex flex-col md:flex-row gap-4 items-center">
         <div className="relative flex-1 w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-mute" />
           <TextInput 
             placeholder="Search certificates..." 
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="pl-10 h-11 bg-surface-card dark:bg-surface-dark focus:ring-primary/50"
+            className="pl-10 h-11 bg-surface-card"
           />
         </div>
         <div className="w-full md:w-56 flex items-center gap-2">
@@ -320,17 +319,17 @@ export function AchievementManager() {
             options={categories}
             value={categoryFilter}
             onChange={e => setCategoryFilter(e.target.value)}
-            className="h-11 bg-surface-card dark:bg-surface-dark focus:ring-primary/50"
+            className="h-11 bg-surface-card"
           />
         </div>
-        <Button 
-          variant="ghost" 
+        <button 
+          type="button"
           onClick={handleSelectAll}
           className={`h-11 px-4 ${selectedIds.size > 0 ? 'text-primary' : 'text-mute'}`}
         >
           {selectedIds.size === filteredAchievements.length && filteredAchievements.length > 0 ? <CheckSquare className="w-5 h-5 mr-2" /> : <Square className="w-5 h-5 mr-2" />}
           {selectedIds.size === filteredAchievements.length ? 'Deselect All' : 'Select All'}
-        </Button>
+        </button>
       </div>
 
       {successMessage && <FormSuccess message={successMessage} />}
@@ -338,8 +337,8 @@ export function AchievementManager() {
 
       <div className="space-y-4">
         {filteredAchievements.length === 0 ? (
-          <div className="bg-surface-card dark:bg-surface-card border-2 border-dashed border-hairline rounded-2xl p-16 text-center">
-            <p className="text-mute dark:text-mute font-medium">No achievements found matching your criteria.</p>
+          <div className="bg-surface-card border-2 border-dashed border-line p-16 text-center">
+            <p className="text-mute font-medium">No achievements found matching your criteria.</p>
           </div>
         ) : (
           filteredAchievements.map((item) => (
@@ -349,17 +348,17 @@ export function AchievementManager() {
               onDragStart={() => handleDragStart(item.id)}
               onDragOver={(e) => handleDragOver(e, item.id)}
               onDrop={(e) => handleDrop(e, item.id)}
-              className={`group flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 bg-surface-card dark:bg-white/5 border border-hairline dark:border-white/10 rounded-2xl p-4 md:p-5 transition-all duration-300 cursor-move hover:shadow-xl hover:border-primary/30
-                ${selectedIds.has(item.id) ? 'ring-2 ring-primary/40 bg-primary/5' : ''} 
+              className={`group flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 bg-surface-card border border-line p-4 md:p-5 cursor-move
+                ${selectedIds.has(item.id) ? 'bg-primary/5' : ''} 
                 ${dragOverItem === item.id ? 'translate-y-2' : ''} 
                 ${draggedItem === item.id ? 'opacity-50 grayscale' : ''}`}
             >
               {/* Drag & Select */}
-              <div className="hidden md:flex flex-col items-center justify-center gap-4 px-2 border-r border-hairline/30 shrink-0">
+              <div className="hidden md:flex flex-col items-center justify-center gap-4 px-2 border-r border-line/30 shrink-0">
                 <GripVertical className="text-mute w-5 h-5" />
                 <button 
                   onClick={(e) => { e.stopPropagation(); handleSelectOne(item.id); }}
-                  className={`transition-colors ${selectedIds.has(item.id) ? 'text-primary' : 'text-stone hover:text-mute'}`}
+                  className={`${selectedIds.has(item.id) ? 'text-primary' : 'text-stone'}`}
                 >
                   {selectedIds.has(item.id) ? <CheckSquare className="w-6 h-6" /> : <Square className="w-6 h-6" />}
                 </button>
@@ -367,7 +366,7 @@ export function AchievementManager() {
               
               <div className="flex items-center gap-4 w-full md:w-auto">
                 {/* Year Badge */}
-                <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-primary/10 border border-primary/20 flex flex-col items-center justify-center shrink-0">
+                <div className="w-14 h-14 md:w-16 md:h-16 bg-primary/10 border border-primary/20 flex flex-col items-center justify-center shrink-0">
                   <span className="text-primary font-black text-sm">{item.year}</span>
                   <span className="text-[8px] font-black text-primary/50 uppercase tracking-widest">Year</span>
                 </div>
@@ -376,7 +375,7 @@ export function AchievementManager() {
                 <div className="flex md:hidden items-center gap-3 ml-auto">
                   <button 
                     onClick={(e) => { e.stopPropagation(); handleSelectOne(item.id); }}
-                    className={`transition-colors ${selectedIds.has(item.id) ? 'text-primary' : 'text-stone hover:text-mute'}`}
+                    className={`${selectedIds.has(item.id) ? 'text-primary' : 'text-stone'}`}
                   >
                     {selectedIds.has(item.id) ? <CheckSquare className="w-6 h-6" /> : <Square className="w-6 h-6" />}
                   </button>
@@ -388,7 +387,7 @@ export function AchievementManager() {
               <div className="flex-1 min-w-0 w-full">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div className="min-w-0">
-                    <h3 className="text-base md:text-lg font-black text-ink dark:text-ink group-hover:text-primary transition-colors truncate">
+                    <h3 className="text-base md:text-lg font-black text-ink truncate">
                       {item.title}
                     </h3>
                     <p className="text-[10px] md:text-xs text-mute font-medium mt-1 flex items-center gap-1.5 uppercase tracking-wider overflow-hidden">
@@ -401,7 +400,7 @@ export function AchievementManager() {
                   <div className="flex items-center justify-between lg:justify-end gap-4 md:gap-6 min-w-0 lg:min-w-[280px]">
                     {/* Category Badge - Fixed Overflow */}
                     <div className="shrink-0">
-                      <span className="px-3 py-1 bg-accent-blue-soft text-accent-blue text-[9px] md:text-[10px] font-black uppercase tracking-widest rounded-full border border-accent-blue/10 block truncate max-w-[120px] md:max-w-none">
+                      <span className="px-3 py-1 bg-accent-blue-soft text-accent-blue text-[9px] md:text-[10px] font-black uppercase tracking-widest border border-accent-blue/10 block truncate max-w-[120px] md:max-w-none">
                         {item.category}
                       </span>
                     </div>
@@ -411,7 +410,7 @@ export function AchievementManager() {
                       {item.pdfUrl && (
                         <button 
                           onClick={(e) => { e.stopPropagation(); setPreviewUrl(item.pdfUrl || null); }}
-                          className="p-2 rounded-lg bg-surface-soft dark:bg-surface-dark border border-hairline hover:text-primary transition-all shadow-sm"
+                          className="p-2 bg-surface-soft border border-line"
                           title="Preview Certificate"
                         >
                           <Eye className="w-4 h-4" />
@@ -419,14 +418,14 @@ export function AchievementManager() {
                       )}
                       <button 
                         onClick={(e) => { e.stopPropagation(); handleEdit(item); }}
-                        className="p-2 rounded-lg bg-surface-soft dark:bg-surface-dark border border-hairline hover:text-primary transition-all shadow-sm"
+                        className="p-2 bg-surface-soft border border-line"
                         title="Edit Achievement"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={(e) => { e.stopPropagation(); setDeleteConfirm({ type: 'single', item }); }}
-                        className="p-2 rounded-lg bg-surface-soft dark:bg-surface-dark border border-hairline hover:text-accent-red transition-all shadow-sm"
+                        className="p-2 bg-surface-soft border border-line"
                         title="Delete Achievement"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -458,7 +457,7 @@ export function AchievementManager() {
               error={formErrors.title}
               disabled={isLoading}
               required
-              className="h-11 focus:ring-primary/50"
+              className="h-11"
             />
             <TextInput 
               label="Issuing Organization" 
@@ -469,7 +468,7 @@ export function AchievementManager() {
               error={formErrors.issuer}
               disabled={isLoading}
               required
-              className="h-11 focus:ring-primary/50"
+              className="h-11"
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -482,7 +481,7 @@ export function AchievementManager() {
               error={formErrors.category}
               disabled={isLoading}
               required
-              className="h-11 focus:ring-primary/50"
+              className="h-11"
             />
             <TextInput 
               label="Year of Completion" 
@@ -493,7 +492,7 @@ export function AchievementManager() {
               error={formErrors.year}
               disabled={isLoading}
               required
-              className="h-11 focus:ring-primary/50"
+              className="h-11"
             />
           </div>
           
@@ -502,24 +501,23 @@ export function AchievementManager() {
               <FileText className="w-3.5 h-3.5" /> Certificate Document (PDF)
             </label>
             {editingAchievement?.pdfUrl ? (
-              <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl flex items-center justify-between">
+              <div className="p-4 bg-primary/5 border border-primary/20 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                   <div className="p-2 bg-white/50 dark:bg-black/20 rounded-lg">
+                   <div className="p-2 bg-white/50">
                       <FileText className="w-5 h-5 text-primary" />
                    </div>
                    <span className="text-sm font-bold truncate max-w-[240px]">{editingAchievement.pdfUrl.split('/').pop()}</span>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-accent-red hover:bg-accent-red/10"
+                <button 
+                  type="button"
+                  className="text-accent-red"
                   onClick={() => setEditingAchievement(prev => ({ ...prev!, pdfUrl: '' }))}
                 >
                   <Trash2 className="w-4 h-4 mr-2" /> Remove
-                </Button>
+        </button>
               </div>
             ) : (
-              <div className="bg-surface-soft dark:bg-surface-dark border-2 border-dashed border-hairline rounded-2xl p-2">
+              <div className="bg-surface-soft border-2 border-dashed border-line p-2">
                 <PDFUpload 
                   onUpload={res => setEditingAchievement(prev => ({ ...prev!, pdfUrl: res.url }))}
                   onError={err => setErrorMessage(err.message)}
@@ -535,14 +533,14 @@ export function AchievementManager() {
             value={editingAchievement?.externalLink || ''} 
             onChange={e => setEditingAchievement(prev => ({ ...prev!, externalLink: e.target.value }))}
             error={formErrors.externalLink}
-            className="h-11 focus:ring-primary/50"
+            className="h-11"
           />
 
-          <div className="flex justify-end gap-3 pt-6 border-t border-hairline">
-            <Button variant="ghost" onClick={() => setIsFormOpen(false)}>Cancel</Button>
-            <Button type="submit" isLoading={isLoading} className="px-8 shadow-lg shadow-primary/20">
+          <div className="flex justify-end gap-3 pt-6 border-t border-line">
+            <button type="button" onClick={() => setIsFormOpen(false)}>Cancel</button>
+            <button type="submit" disabled={isLoading} className="px-8">
               Save Achievement
-            </Button>
+            </button>
           </div>
         </form>
       </Modal>
@@ -570,17 +568,17 @@ export function AchievementManager() {
               : <>Are you sure you want to delete <strong>{selectedIds.size}</strong> selected achievements?</>
             }
           </p>
-          <div className="p-4 bg-accent-red-soft/20 rounded-xl border border-accent-red/20 flex gap-3">
+          <div className="p-4 bg-accent-red-soft/20 border border-accent-red/20 flex gap-3">
              <Info className="w-5 h-5 text-accent-red shrink-0" />
              <p className="text-xs text-accent-red leading-relaxed font-bold uppercase tracking-wider">
                Permanently deleting these records will remove them from your public portfolio.
              </p>
           </div>
-          <div className="flex justify-end gap-3 pt-4 border-t border-hairline">
-            <Button variant="ghost" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
-            <Button variant="danger" onClick={handleDelete} isLoading={isLoading}>
+          <div className="flex justify-end gap-3 pt-4 border-t border-line">
+            <button type="button" onClick={() => setDeleteConfirm(null)}>Cancel</button>
+            <button type="button" onClick={handleDelete} disabled={isLoading}>
               {deleteConfirm?.type === 'single' ? 'Delete Record' : 'Delete All Selected'}
-            </Button>
+            </button>
           </div>
         </div>
       </Modal>

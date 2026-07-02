@@ -13,7 +13,7 @@
 
 import { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
-import { Button } from '@/components/ui/Button';
+
 import { TextInput } from '@/components/ui/TextInput';
 import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
@@ -233,26 +233,26 @@ export function UserManager() {
     <div className="space-y-8 pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-primary/10 rounded-2xl">
+          <div className="p-3 bg-primary/10">
             <Users className="w-8 h-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl md:text-4xl font-black text-ink dark:text-ink tracking-tight">User Management</h1>
-            <p className="text-body dark:text-body font-medium mt-1">Manage admin user accounts</p>
+            <h1 className="text-3xl md:text-4xl font-black text-ink tracking-tight">User Management</h1>
+            <p className="text-body font-medium mt-1">Manage admin user accounts</p>
           </div>
         </div>
-        <Button onClick={() => setShowAddModal(true)} className="shadow-lg shadow-primary/20">
+        <button onClick={() => setShowAddModal(true)}>
           <Plus className="w-4 h-4 mr-2" /> Add Admin User
-        </Button>
+        </button>
       </div>
 
       {successMessage && <FormSuccess message={successMessage} />}
       {error && <FormError message={error} />}
 
-      <div className="bg-surface-card dark:bg-surface-card rounded-2xl shadow-md overflow-hidden border border-hairline">
+      <div className="bg-surface-card overflow-hidden border border-line">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-hairline">
-            <thead className="bg-surface-soft dark:bg-surface-soft">
+          <table className="min-w-full divide-y divide-line">
+            <thead className="bg-surface-soft">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-black text-mute uppercase tracking-wider">Email</th>
               <th className="px-6 py-3 text-left text-xs font-black text-mute uppercase tracking-wider">Status</th>
@@ -261,12 +261,12 @@ export function UserManager() {
               <th className="px-6 py-3 text-right text-xs font-black text-mute uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-hairline">
+          <tbody className="divide-y divide-line">
             {users.map((user) => (
-              <tr key={user.id} className="hover:bg-surface-soft dark:hover:bg-surface-soft transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-ink dark:text-ink">{user.email}</td>
+              <tr key={user.id} className="hover:bg-surface-soft">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-ink">{user.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${user.isActive ? 'bg-accent-green-soft text-accent-green' : 'bg-accent-red-soft text-accent-red'}`}>
+                  <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-bold ${user.isActive ? 'bg-accent-green-soft text-accent-green' : 'bg-accent-red-soft text-accent-red'}`}>
                     {user.isActive ? <CheckCircle className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
                     {user.isActive ? 'Active' : 'Inactive'}
                   </span>
@@ -329,10 +329,10 @@ export function UserManager() {
             <span className="text-sm font-medium">Active</span>
           </label>
           <div className="flex justify-end space-x-2 pt-4">
-            <Button variant="ghost" onClick={() => setShowAddModal(false)} disabled={isSubmitting}>Cancel</Button>
-            <Button onClick={handleAddUser} disabled={isSubmitting}>
+            <button onClick={() => setShowAddModal(false)} disabled={isSubmitting}>Cancel</button>
+            <button onClick={handleAddUser} disabled={isSubmitting}>
               {isSubmitting ? 'Creating...' : 'Create User'}
-            </Button>
+            </button>
           </div>
         </div>
       </Modal>
@@ -366,10 +366,10 @@ export function UserManager() {
             <span className="text-sm font-medium">Active</span>
           </label>
           <div className="flex justify-end space-x-2 pt-4">
-            <Button variant="ghost" onClick={() => setShowEditModal(false)} disabled={isSubmitting}>Cancel</Button>
-            <Button onClick={handleEditUser} disabled={isSubmitting}>
+            <button onClick={() => setShowEditModal(false)} disabled={isSubmitting}>Cancel</button>
+            <button onClick={handleEditUser} disabled={isSubmitting}>
               {isSubmitting ? 'Saving...' : 'Save Changes'}
-            </Button>
+            </button>
           </div>
         </div>
       </Modal>
@@ -380,20 +380,20 @@ export function UserManager() {
           <p className="text-body">
             Are you sure you want to delete user <strong>{deletingUser?.email}</strong>?
           </p>
-          <div className="bg-accent-red-soft/20 border border-accent-red/20 text-accent-red px-4 py-3 rounded-xl">
+          <div className="bg-accent-red-soft/20 border border-accent-red/20 text-accent-red px-4 py-3">
             <p className="text-sm font-bold">This action cannot be undone. All active sessions will be revoked.</p>
           </div>
           <div className="flex justify-end space-x-2 pt-4">
-            <Button variant="ghost" onClick={() => setShowDeleteModal(false)} disabled={isSubmitting}>Cancel</Button>
-            <Button variant="danger" onClick={handleDeleteUser} disabled={isSubmitting}>
+            <button onClick={() => setShowDeleteModal(false)} disabled={isSubmitting}>Cancel</button>
+            <button onClick={handleDeleteUser} disabled={isSubmitting}>
               {isSubmitting ? 'Deleting...' : 'Delete User'}
-            </Button>
+            </button>
           </div>
         </div>
       </Modal>
 
       {/* Info Tip */}
-      <div className="p-5 rounded-2xl bg-accent-blue-soft/20 border border-accent-blue/10 flex gap-4">
+      <div className="p-5 bg-accent-blue-soft/20 border border-accent-blue/10 flex gap-4">
         <Info className="w-6 h-6 text-accent-blue flex-shrink-0" />
         <p className="text-xs text-body leading-relaxed">
           <span className="font-black text-accent-blue uppercase tracking-wider block mb-1">Security Note</span>

@@ -25,7 +25,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { TextInput } from '@/components/ui/TextInput';
-import { Button } from '@/components/ui/Button';
 import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -339,15 +338,15 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
       {/* Header & Breadcrumb */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
          <div className="flex items-center gap-4">
-          <div className="p-3 bg-primary/10 rounded-2xl">
+          <div className="p-3 bg-primary/10">
             <Mail className="w-8 h-8 text-primary" />
           </div>
           <div>
             <h1 className="text-4xl font-black text-[var(--foreground)] mt-2 tracking-tight">Contact Center</h1>
-            <p className="text-[var(--muted)] font-medium">Manage social connectivity and incoming inquiries</p>
+            <p className="text-mute font-medium">Manage social connectivity and incoming inquiries</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 rounded-lg">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10">
           <Clock className="w-3.5 h-3.5 text-primary" />
           <span className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
             Last Sync: {formatLastUpdated(lastUpdated)}
@@ -360,9 +359,9 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
         
         {/* Left Column: Configuration Form */}
         <div className="lg:col-span-1 space-y-6 w-full">
-          <div className="bg-primary/5 dark:bg-white/5 backdrop-blur-md border border-primary/10 rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-lg">
+          <div className="bg-primary/5 border border-primary/10 p-6">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-primary/10 rounded-lg">
+              <div className="p-2 bg-primary/10">
                 <Settings className="w-5 h-5 text-primary" />
               </div>
               <h2 className="text-xl font-bold">Social Links</h2>
@@ -386,7 +385,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
                   )}
                 </div>
                 <div className="relative group">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute group-focus-within:text-primary transition-colors z-10">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute z-10">
                     <GithubIcon className="w-4 h-4" />
                   </div>
                   <TextInput
@@ -395,7 +394,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
                     onChange={(e) => handleInputChange('githubUrl', e.target.value)}
                     error={errors.githubUrl}
                     disabled={isLoading}
-                    className="pl-10 h-11 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all rounded-xl"
+                    className="pl-10 h-11"
                   />
                 </div>
               </div>
@@ -417,7 +416,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
                   )}
                 </div>
                 <div className="relative group">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute group-focus-within:text-primary transition-colors z-10">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute z-10">
                     <LinkedinIcon className="w-4 h-4" />
                   </div>
                   <TextInput
@@ -426,7 +425,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
                     onChange={(e) => handleInputChange('linkedinUrl', e.target.value)}
                     error={errors.linkedinUrl}
                     disabled={isLoading}
-                    className="pl-10 h-11 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all rounded-xl"
+                    className="pl-10 h-11"
                   />
                 </div>
               </div>
@@ -448,7 +447,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
                   )}
                 </div>
                 <div className="relative group">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute group-focus-within:text-primary transition-colors z-10">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute z-10">
                     <InstagramIcon className="w-4 h-4" />
                   </div>
                   <TextInput
@@ -457,7 +456,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
                     onChange={(e) => handleInputChange('instagramUrl', e.target.value)}
                     error={errors.instagramUrl}
                     disabled={isLoading}
-                    className="pl-10 h-11 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all rounded-xl"
+                    className="pl-10 h-11"
                   />
                 </div>
               </div>
@@ -479,7 +478,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
                   )}
                 </div>
                 <div className="relative group">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute group-focus-within:text-primary transition-colors z-10">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute z-10">
                     <Send className="w-4 h-4" />
                   </div>
                   <TextInput
@@ -488,7 +487,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
                     onChange={(e) => handleInputChange('telegramUrl', e.target.value)}
                     error={errors.telegramUrl}
                     disabled={isLoading}
-                    className="pl-10 h-11 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all rounded-xl"
+                    className="pl-10 h-11"
                   />
                 </div>
               </div>
@@ -499,7 +498,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
                   <Mail className="w-3 h-3" /> Email Address
                 </label>
                 <div className="relative group">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute group-focus-within:text-primary transition-colors z-10">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-mute z-10">
                     <Mail className="w-4 h-4" />
                   </div>
                   <TextInput
@@ -509,24 +508,24 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     error={errors.email}
                     disabled={isLoading}
-                    className="pl-10 h-11 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all rounded-xl"
+                    className="pl-10 h-11"
                   />
                 </div>
               </div>
 
               <div className="pt-4 flex flex-col gap-3">
-                <Button
+                <button
                   type="submit"
                   disabled={isLoading || !hasChanges}
-                  className="w-full h-11 rounded-xl shadow-lg shadow-primary/20 font-bold"
+                  className="w-full h-11 font-bold"
                 >
                   {isLoading ? <LoadingSpinner size="sm" /> : 'Save Configuration'}
-                </Button>
+                </button>
                 
                 <button
                   type="button"
                   onClick={handleShowVersionHistory}
-                  className="text-xs font-bold text-mute hover:text-primary transition-colors flex items-center justify-center gap-2 py-2"
+                  className="text-xs font-bold text-mute hover:text-primary flex items-center justify-center gap-2 py-2"
                 >
                   <History className="w-3.5 h-3.5" />
                   {showVersionHistory ? 'Hide' : 'View'} Version History
@@ -537,7 +536,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
 
           {/* Version History (Conditional) */}
           {showVersionHistory && (
-            <div className="bg-surface-card border border-hairline rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="bg-surface-card border border-line p-5 space-y-4">
               <h3 className="text-sm font-black uppercase tracking-widest text-ink">Revision History</h3>
               <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                 {isLoadingHistory ? (
@@ -546,14 +545,14 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
                    <p className="text-xs text-mute text-center py-4">No previous versions found.</p>
                 ) : (
                   versionHistory.map((version) => (
-                    <div key={version.id} className="p-3 bg-surface-soft border border-hairline rounded-xl flex items-center justify-between group">
+                    <div key={version.id} className="p-3 bg-surface-soft border border-line flex items-center justify-between">
                       <div>
                         <p className="text-xs font-bold text-ink">{new Date(version.created_at).toLocaleDateString()}</p>
                         <p className="text-[10px] text-mute uppercase font-black">{new Date(version.created_at).toLocaleTimeString()}</p>
                       </div>
                       <button
                         onClick={() => handleRestoreVersion(version)}
-                        className="p-1.5 rounded-lg bg-primary/10 text-primary opacity-0 group-hover:opacity-100 transition-all hover:bg-primary/20"
+                        className="p-1.5 bg-primary/10 text-primary"
                         title="Restore this version"
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
@@ -566,7 +565,7 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
           )}
 
           {/* Tip Box */}
-          <div className="bg-accent-blue/5 border border-accent-blue/10 rounded-2xl p-4 flex gap-3">
+          <div className="bg-accent-blue/5 border border-accent-blue/10 p-4 flex gap-3">
             <AlertCircle className="w-5 h-5 text-accent-blue shrink-0" />
             <p className="text-xs text-accent-blue/80 leading-relaxed">
               <strong>Pro Tip:</strong> Verified social links increase trust. Always use the "Test Link" feature before saving changes to ensure your connections are active.
@@ -578,12 +577,12 @@ export function ContactInfoEditor({ initialData }: ContactInfoEditorProps) {
       {/* Form Feedback */}
       <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-3 max-w-md w-full pointer-events-none">
         {successMessage && (
-          <div className="pointer-events-auto animate-in slide-in-from-right-full duration-500">
+          <div className="pointer-events-auto">
             <FormSuccess message={successMessage} />
           </div>
         )}
         {errorMessage && (
-          <div className="pointer-events-auto animate-in slide-in-from-right-full duration-500">
+          <div className="pointer-events-auto">
             <FormError message={errorMessage} />
           </div>
         )}

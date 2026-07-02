@@ -17,7 +17,6 @@ import { FormSuccess } from '@/components/ui/FormSuccess';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useToast } from '@/hooks/useToast';
 import { Modal } from '@/components/ui/Modal';
-import { Button } from '@/components/ui/Button';
 import type { JourneyItem } from '@/types';
 import { journeyItemSchema } from '@/lib/validation';
 import { z } from 'zod';
@@ -245,7 +244,7 @@ export function JourneyEditor() {
                 </div>
 
                 {/* Milestone Card */}
-                <div className="flex-1 bg-primary/5 dark:bg-white/5 border border-primary/10 border-line p-5 md:p-6 hover:border-primary/30">
+                <div className="flex-1 bg-primary/5 border border-primary/10 border-line p-5 md:p-6">
                   <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                     <div className="flex-1 space-y-3">
                       <div className="flex items-center gap-3">
@@ -258,10 +257,10 @@ export function JourneyEditor() {
                       </div>
                       
                       <div>
-                        <h3 className="text-xl font-black text-ink dark:text-ink group-hover:text-primary transition-colors">
+                        <h3 className="text-xl font-black text-ink">
                           {item.title}
                         </h3>
-                        <p className="text-sm text-body dark:text-body/80 mt-2 leading-relaxed">
+                        <p className="text-sm text-body mt-2 leading-relaxed">
                           {item.description}
                         </p>
                       </div>
@@ -270,14 +269,14 @@ export function JourneyEditor() {
                     <div className="flex gap-2 self-end md:self-start">
                       <button 
                         onClick={() => handleEdit(item)}
-                        className="p-2 rounded-lg bg-surface-card dark:bg-surface-card border border-hairline hover:border-primary hover:text-primary transition-all shadow-sm"
+                        className="p-2 bg-surface-card border border-line"
                         title="Edit milestone"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => setDeleteConfirm(item)}
-                        className="p-2 rounded-lg bg-surface-card dark:bg-surface-card border border-hairline hover:border-accent-red hover:text-accent-red transition-all shadow-sm"
+                        className="p-2 bg-surface-card border border-line"
                         title="Delete milestone"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -306,7 +305,7 @@ export function JourneyEditor() {
             onChange={e => setEditingItem(prev => prev ? { ...prev, year: e.target.value } : null)}
             error={formErrors.year}
             disabled={isLoading}
-            className="h-11 focus:ring-primary/50 focus:border-primary"
+            className="h-11 focus:border-primary"
           />
           <TextInput 
             label="Title" 
@@ -316,7 +315,7 @@ export function JourneyEditor() {
             onChange={e => setEditingItem(prev => prev ? { ...prev, title: e.target.value } : null)}
             error={formErrors.title}
             disabled={isLoading}
-            className="h-11 focus:ring-primary/50 focus:border-primary"
+            className="h-11 focus:border-primary"
           />
           <TextArea 
             label="Description" 
@@ -327,15 +326,15 @@ export function JourneyEditor() {
             error={formErrors.description}
             rows={5}
             disabled={isLoading}
-            className="focus:ring-primary/50 focus:border-primary min-h-[150px]"
+            className="focus:border-primary min-h-[150px]"
           />
-          <div className="flex justify-end gap-3 pt-4 border-t border-hairline">
-            <Button variant="ghost" onClick={() => setIsFormOpen(false)} disabled={isLoading}>
+          <div className="flex justify-end gap-3 pt-4 border-t border-line">
+            <button type="button" onClick={() => setIsFormOpen(false)} disabled={isLoading}>
               Cancel
-            </Button>
-            <Button type="submit" isLoading={isLoading} className="px-8 shadow-lg shadow-primary/20">
+            </button>
+            <button type="submit" disabled={isLoading} className="px-8">
               <Rocket className="w-4 h-4 mr-2" /> Save Milestone
-            </Button>
+            </button>
           </div>
         </form>
       </Modal>
@@ -346,12 +345,12 @@ export function JourneyEditor() {
           <p className="text-body">Are you sure you want to delete milestone <strong>{deleteConfirm?.title}</strong>?</p>
           <p className="text-xs text-accent-red font-bold uppercase tracking-wider">This action cannot be undone.</p>
           <div className="flex justify-end gap-3 pt-4">
-            <Button variant="ghost" onClick={() => setDeleteConfirm(null)}>
+            <button type="button" onClick={() => setDeleteConfirm(null)}>
               Cancel
-            </Button>
-            <Button variant="danger" onClick={handleDelete} isLoading={isLoading}>
+            </button>
+            <button type="button" onClick={handleDelete} disabled={isLoading}>
               Delete Permanently
-            </Button>
+            </button>
           </div>
         </div>
       </Modal>

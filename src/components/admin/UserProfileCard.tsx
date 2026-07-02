@@ -119,16 +119,16 @@ export function UserProfileCard({ user }: UserProfileCardProps) {
   return (
     <div className="bg-surface-card border border-line overflow-hidden">
       {/* Header / Banner */}
-      <div className="h-32 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent dark:from-primary/30 dark:via-primary/20 dark:to-transparent" />
+      <div className="h-32 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" />
       
       {/* Profile Info Overlay */}
       <div className="px-8 pb-8 -mt-16">
         <div className="flex flex-col md:flex-row md:items-end gap-6">
           {/* Avatar Container */}
-          <div className="relative group">
+          <div className="relative">
             <div 
               onClick={handleAvatarClick}
-              className={`w-32 h-32 border-4 border-surface-card bg-surface-soft overflow-hidden flex items-center justify-center cursor-pointer relative ${isUploading ? 'opacity-50' : ''}`}
+              className={`w-32 h-32 border-4 border-surface-card bg-surface-soft flex items-center justify-center cursor-pointer relative ${isUploading ? 'opacity-50' : ''}`}
             >
               {previewUrl && typeof previewUrl === 'string' && previewUrl.trim() !== '' ? (
                 <img 
@@ -149,7 +149,7 @@ export function UserProfileCard({ user }: UserProfileCardProps) {
               )}
               
               {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                 <Camera className="text-white w-8 h-8" />
               </div>
 
@@ -175,10 +175,10 @@ export function UserProfileCard({ user }: UserProfileCardProps) {
               {user.email.split('@')[0]}
             </h2>
             <div className="flex items-center gap-3 mt-2">
-              <span className="text-sm font-medium text-mute dark:text-mute flex items-center gap-1.5">
+              <span className="text-sm font-medium text-mute flex items-center gap-1.5">
                 <Mail className="w-4 h-4" /> {user.email}
               </span>
-              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 ${user.isActive ? 'bg-accent-green-soft text-accent-green' : 'bg-accent-red-soft text-accent-red'}`}>
+              <span className={`px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 ${user.isActive ? 'bg-accent-green-soft text-accent-green' : 'bg-accent-red-soft text-accent-red'}`}>
                 {user.isActive ? <CheckCircle2 className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
                 {user.isActive ? 'Active' : 'Inactive'}
               </span>
@@ -190,28 +190,28 @@ export function UserProfileCard({ user }: UserProfileCardProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
           {/* Account Details */}
           <div className="space-y-6">
-            <h3 className="text-xs font-black text-mute dark:text-mute uppercase tracking-[0.2em] border-b border-hairline pb-2">
+            <h3 className="text-xs font-black text-mute uppercase tracking-[0.2em] border-b border-line pb-2">
               Account Details
             </h3>
             
             <div className="space-y-4">
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-primary/5 border border-primary/10 group hover:border-primary/30 transition-all">
-                <div className="p-2.5 rounded-lg bg-surface-card dark:bg-surface-card border border-hairline shadow-sm">
+              <div className="flex items-center gap-4 p-4 bg-primary/5 border border-primary/10">
+                <div className="p-2.5 bg-surface-card border border-line">
                   <Shield className="w-5 h-5 text-primary" />
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-mute uppercase tracking-widest">Role</p>
-                  <p className="text-sm font-bold text-ink dark:text-ink">System Administrator</p>
+                  <p className="text-sm font-bold text-ink">System Administrator</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-primary/5 border border-primary/10 group hover:border-primary/30 transition-all">
-                <div className="p-2.5 rounded-lg bg-surface-card dark:bg-surface-card border border-hairline shadow-sm">
+              <div className="flex items-center gap-4 p-4 bg-primary/5 border border-primary/10">
+                <div className="p-2.5 bg-surface-card border border-line">
                   <Hash className="w-5 h-5 text-primary" />
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-mute uppercase tracking-widest">User ID</p>
-                  <p className="text-[10px] font-mono font-bold text-ink dark:text-ink opacity-60 truncate max-w-[200px]">
+                  <p className="text-[10px] font-mono font-bold text-ink opacity-60 truncate max-w-[200px]">
                     {user.id}
                   </p>
                 </div>
@@ -221,28 +221,28 @@ export function UserProfileCard({ user }: UserProfileCardProps) {
 
           {/* Activity Timeline */}
           <div className="space-y-6">
-            <h3 className="text-xs font-black text-mute dark:text-mute uppercase tracking-[0.2em] border-b border-hairline pb-2">
+            <h3 className="text-xs font-black text-mute uppercase tracking-[0.2em] border-b border-line pb-2">
               Activity History
             </h3>
             
             <div className="space-y-4">
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-accent-blue-soft/20 border border-accent-blue/10 group hover:border-accent-blue/30 transition-all">
-                <div className="p-2.5 rounded-lg bg-surface-card dark:bg-surface-card border border-hairline shadow-sm">
+              <div className="flex items-center gap-4 p-4 bg-accent-blue-soft/20 border border-accent-blue/10">
+                <div className="p-2.5 bg-surface-card border border-line">
                   <Clock className="w-5 h-5 text-accent-blue" />
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-mute uppercase tracking-widest">Last Login</p>
-                  <p className="text-sm font-bold text-ink dark:text-ink">{formatDate(user.lastLogin)}</p>
+                  <p className="text-sm font-bold text-ink">{formatDate(user.lastLogin)}</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-accent-purple-soft/20 border border-accent-purple/10 group hover:border-accent-purple/30 transition-all">
-                <div className="p-2.5 rounded-lg bg-surface-card dark:bg-surface-card border border-hairline shadow-sm">
+              <div className="flex items-center gap-4 p-4 bg-accent-purple-soft/20 border border-accent-purple/10">
+                <div className="p-2.5 bg-surface-card border border-line">
                   <Calendar className="w-5 h-5 text-accent-purple" />
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-mute uppercase tracking-widest">Member Since</p>
-                  <p className="text-sm font-bold text-ink dark:text-ink">{formatDate(user.createdAt)}</p>
+                  <p className="text-sm font-bold text-ink">{formatDate(user.createdAt)}</p>
                 </div>
               </div>
             </div>

@@ -27,49 +27,43 @@ export function StatisticsWidget({
   
   const colorMap = {
     blue: {
-      bg: 'bg-accent-blue-soft/50 dark:bg-accent-blue-soft/20',
+      bg: 'bg-accent-blue-soft/50',
       border: 'border-accent-blue/30',
-      shadow: 'dark:shadow-accent-blue/10',
       stripe: 'bg-accent-blue',
       text: 'text-accent-blue',
       icon: 'text-accent-blue',
     },
     purple: {
-      bg: 'bg-accent-purple-soft/50 dark:bg-accent-purple-soft/20',
+      bg: 'bg-accent-purple-soft/50',
       border: 'border-accent-purple/30',
-      shadow: 'dark:shadow-accent-purple/10',
       stripe: 'bg-accent-purple',
       text: 'text-accent-purple',
       icon: 'text-accent-purple',
     },
     green: {
-      bg: 'bg-accent-green-soft/50 dark:bg-accent-green-soft/20',
+      bg: 'bg-accent-green-soft/50',
       border: 'border-accent-green/30',
-      shadow: 'dark:shadow-accent-green/10',
       stripe: 'bg-accent-green',
       text: 'text-accent-green',
       icon: 'text-accent-green',
     },
     red: {
-      bg: 'bg-accent-red-soft/50 dark:bg-accent-red-soft/20',
+      bg: 'bg-accent-red-soft/50',
       border: 'border-accent-red/30',
-      shadow: 'dark:shadow-accent-red/10',
       stripe: 'bg-accent-red',
       text: 'text-accent-red',
       icon: 'text-accent-red',
     },
     amber: {
-      bg: 'bg-primary/10 dark:bg-primary/5',
+      bg: 'bg-primary/10',
       border: 'border-primary/30',
-      shadow: 'dark:shadow-primary/10',
       stripe: 'bg-primary',
       text: 'text-primary',
       icon: 'text-primary',
     },
     primary: {
-      bg: 'bg-primary/10 dark:bg-primary/5',
+      bg: 'bg-primary/10',
       border: 'border-primary/30',
-      shadow: 'dark:shadow-primary/10',
       stripe: 'bg-primary',
       text: 'text-primary',
       icon: 'text-primary',
@@ -85,7 +79,7 @@ export function StatisticsWidget({
       
       <div className="flex items-center justify-between relative z-10">
         <div className="flex-1">
-          <p className="text-xs font-extrabold text-mute dark:text-mute uppercase tracking-[0.15em] mb-4">{label}</p>
+          <p className="text-xs font-extrabold text-mute uppercase tracking-[0.15em] mb-4">{label}</p>
           {isLoading ? (
             <div className="h-10 w-24 bg-surface-soft/50" />
           ) : (
@@ -103,7 +97,7 @@ export function StatisticsWidget({
       </div>
       
       {/* Subtle Background Decorative Element */}
-      <div className={`absolute -right-4 -bottom-4 opacity-[0.03] dark:opacity-[0.05]`}>
+      <div className={`absolute -right-4 -bottom-4 opacity-[0.03]`}>
         <Icon className="w-24 h-24" />
       </div>
     </div>

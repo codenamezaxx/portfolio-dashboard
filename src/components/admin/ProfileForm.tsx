@@ -10,7 +10,7 @@
 import { useState } from 'react';
 import { useFormValidation } from '@/lib/useFormValidation';
 import { profileSchema, type ProfileInput } from '@/lib/validation';
-import { FormField, TextAreaField, Button, FormGroup, ImageUpload } from '@/components/ui';
+import { FormField, TextAreaField, FormGroup, ImageUpload } from '@/components/ui';
 import { FormError, FormSuccess } from '@/components/ui';
 
 interface ProfileFormProps {
@@ -132,22 +132,21 @@ export function ProfileForm({
 
       {/* Submit Button */}
       <div className="flex gap-3 pt-4">
-        <Button
+        <button
           type="submit"
           disabled={isLoading || form.isSubmitting || !form.isValid}
           className="flex-1"
         >
           {form.isSubmitting ? 'Saving...' : 'Save Profile'}
-        </Button>
-        <Button
+        </button>
+        <button
           type="button"
-          variant="secondary"
           onClick={form.resetForm}
           disabled={isLoading || form.isSubmitting}
           className="flex-1"
         >
           Reset
-        </Button>
+        </button>
       </div>
     </form>
   );

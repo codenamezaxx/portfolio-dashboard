@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { TextInput } from '@/components/ui/TextInput';
-import { Button } from '@/components/ui/Button';
+
 import { FormError } from '@/components/ui/FormError';
 import { FormSuccess } from '@/components/ui/FormSuccess';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -222,26 +222,26 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
     <div className="space-y-8 pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-primary/10 rounded-2xl">
+          <div className="p-3 bg-primary/10">
             <Layers className="w-8 h-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl md:text-4xl font-black text-ink dark:text-ink tracking-tight">Tech Stack</h1>
-            <p className="text-body dark:text-body font-medium mt-1">Manage technologies and tools in your arsenal</p>
+            <h1 className="text-3xl md:text-4xl font-black text-ink tracking-tight">Tech Stack</h1>
+            <p className="text-body font-medium mt-1">Manage technologies and tools in your arsenal</p>
           </div>
         </div>
-        <Button onClick={handleAddNew} disabled={isLoading} className="shadow-lg shadow-primary/20">
+        <button onClick={handleAddNew} disabled={isLoading}>
           <Plus className="w-4 h-4 mr-2" /> Add Technology
-        </Button>
+        </button>
       </div>
 
       {successMessage && <FormSuccess message={successMessage} />}
       {errorMessage && <FormError message={errorMessage} />}
 
       {techItems.length === 0 ? (
-        <div className="bg-surface-card dark:bg-surface-card border-2 border-dashed border-hairline rounded-2xl p-12 text-center">
-          <p className="text-mute dark:text-mute font-medium mb-4">No technologies added yet.</p>
-          <Button variant="ghost" onClick={handleAddNew}>Add your first tech</Button>
+        <div className="bg-surface-card border-2 border-dashed border-line p-12 text-center">
+          <p className="text-mute font-medium mb-4">No technologies added yet.</p>
+          <button onClick={handleAddNew}>Add your first tech</button>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
@@ -252,33 +252,33 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
               onDragStart={() => handleDragStart(item.id || '')}
               onDragOver={(e) => handleDragOver(e, item.id || '')}
               onDrop={(e) => handleDrop(e, item.id || '')}
-              className={`group relative bg-[var(--surface-card)] border border-hairline dark:border-white/10 rounded-2xl p-6 flex flex-col items-center justify-center gap-4 transition-all duration-300 cursor-move hover:shadow-xl hover:border-primary/30 hover:-translate-y-1
-                ${dragOverItem === item.id ? 'ring-2 ring-primary border-transparent' : ''} 
+              className={`bg-surface-card border border-line p-6 flex flex-col items-center justify-center gap-4 cursor-move hover:border-primary/30
+                ${dragOverItem === item.id ? 'border-transparent' : ''} 
                 ${draggedItem === item.id ? 'opacity-50 scale-95' : ''}`}
             >
               {/* Drag Handle Overlay */}
-              <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute top-2 left-2">
                 <GripHorizontal className="w-3.5 h-3.5 text-mute" />
               </div>
 
               {/* Action Buttons Overlay */}
-              <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all translate-y-1 group-hover:translate-y-0">
+              <div className="absolute top-2 right-2 flex gap-1">
                 <button 
                   onClick={(e) => { e.stopPropagation(); handleEdit(item); }}
-                  className="p-1.5 rounded-lg bg-surface-soft dark:bg-surface-dark border border-hairline hover:text-primary transition-colors"
+                  className="p-1.5 bg-surface-soft border border-line hover:text-primary"
                 >
                   <Edit2 className="w-3.5 h-3.5" />
                 </button>
                 <button 
                   onClick={(e) => { e.stopPropagation(); handleDeleteClick(item); }}
-                  className="p-1.5 rounded-lg bg-surface-soft dark:bg-surface-dark border border-hairline hover:text-accent-red transition-colors"
+                  className="p-1.5 bg-surface-soft border border-line hover:text-accent-red"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
 
               {/* Icon Container */}
-              <div className="w-16 h-16 flex items-center justify-center bg-[var(--surface-soft)] rounded-xl border border-hairline transition-transform duration-500 group-hover:scale-110">
+              <div className="w-16 h-16 flex items-center justify-center bg-surface-soft border border-line">
                 {item.icon ? (
                   <Image
                     src={item.icon}
@@ -295,7 +295,7 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
                 )}
               </div>
 
-              <h3 className="font-bold text-center text-ink dark:text-ink text-sm group-hover:text-primary transition-colors">
+              <h3 className="font-bold text-center text-ink text-sm">
                 {item.name}
               </h3>
             </div>
@@ -304,7 +304,7 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
       )}
 
       {/* Info Tip */}
-      <div className="p-5 rounded-2xl bg-accent-blue-soft/20 border border-accent-blue/10 flex gap-4">
+      <div className="p-5 bg-accent-blue-soft/20 border border-accent-blue/10 flex gap-4">
         <Info className="w-6 h-6 text-accent-blue flex-shrink-0" />
         <p className="text-xs text-body leading-relaxed">
           <span className="font-black text-accent-blue uppercase tracking-wider block mb-1">Grid Management</span>
@@ -328,7 +328,7 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
             error={formErrors.name}
             disabled={isLoading}
             required
-            className="h-11 focus:ring-primary/50 focus:border-primary"
+            className="h-11 focus:border-primary"
           />
 
           <TextInput
@@ -340,12 +340,12 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
             error={formErrors.icon}
             disabled={isLoading}
             required
-            className="h-11 focus:ring-primary/50 focus:border-primary"
+            className="h-11 focus:border-primary"
           />
 
           {editingItem?.icon && (
-            <div className="p-4 bg-surface-soft dark:bg-surface-dark border border-hairline rounded-xl flex items-center gap-4">
-              <div className="w-12 h-12 flex items-center justify-center bg-surface-card dark:bg-surface-card rounded-lg border border-hairline">
+            <div className="p-4 bg-surface-soft border border-line flex items-center gap-4">
+              <div className="w-12 h-12 flex items-center justify-center bg-surface-card border border-line">
                 <Image src={editingItem.icon} alt="Preview" width={32} height={32} className="object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
               </div>
               <div>
@@ -355,11 +355,11 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
             </div>
           )}
 
-          <div className="flex gap-3 justify-end pt-4 border-t border-hairline">
-            <Button variant="ghost" onClick={() => setIsFormOpen(false)} disabled={isLoading}>Cancel</Button>
-            <Button type="submit" disabled={isLoading} className="px-8 shadow-lg shadow-primary/20">
+          <div className="flex gap-3 justify-end pt-4 border-t border-line">
+            <button onClick={() => setIsFormOpen(false)} disabled={isLoading}>Cancel</button>
+            <button type="submit" disabled={isLoading} className="px-8">
               {isLoading ? 'Saving...' : editingItem?.id ? 'Update Technology' : 'Add Technology'}
-            </Button>
+            </button>
           </div>
         </form>
       </Modal>
@@ -370,8 +370,8 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
           <p className="text-body">Are you sure you want to delete <strong>{deleteConfirm?.name}</strong>?</p>
           <p className="text-xs text-accent-red font-bold uppercase tracking-wider">This technology will be removed from your portfolio.</p>
           <div className="flex gap-3 justify-end pt-4">
-            <Button variant="ghost" onClick={() => setDeleteConfirm(null)} disabled={isDeleting}>Cancel</Button>
-            <Button variant="danger" onClick={handleConfirmDelete} isLoading={isDeleting}>Delete Permanently</Button>
+            <button onClick={() => setDeleteConfirm(null)} disabled={isDeleting}>Cancel</button>
+            <button onClick={handleConfirmDelete} disabled={isDeleting}>Delete Permanently</button>
           </div>
         </div>
       </Modal>

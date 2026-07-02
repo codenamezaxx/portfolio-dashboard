@@ -182,15 +182,15 @@ export function BackupManager() {
     <div className="space-y-8 pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-primary/10 rounded-2xl">
+          <div className="p-3 bg-primary/10">
             <Database className="w-8 h-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl md:text-4xl font-black text-ink  tracking-tight">Backup Management</h1>
-            <p className="text-body  font-medium mt-1">Create and restore database backups</p>
+            <h1 className="text-3xl md:text-4xl font-black text-ink tracking-tight">Backup Management</h1>
+            <p className="text-body font-medium mt-1">Create and restore database backups</p>
           </div>
         </div>
-        <button onClick={() => setShowCreateModal(true)} disabled={creating} className="shadow-lg shadow-primary/20">
+        <button onClick={() => setShowCreateModal(true)} disabled={creating}>
           <Plus className="w-4 h-4 mr-2" /> {creating ? 'Creating...' : 'Create Backup'}
         </button>
       </div>
@@ -199,15 +199,15 @@ export function BackupManager() {
       {error && <FormError message={error} />}
 
       {backups.length === 0 ? (
-        <div className="text-center py-12 bg-surface-card  border-2 border-dashed border-line rounded-2xl">
-          <p className="text-mute  mb-4">No backups found</p>
+        <div className="text-center py-12 bg-surface-card border-2 border-dashed border-line">
+          <p className="text-mute mb-4">No backups found</p>
           <button onClick={() => setShowCreateModal(true)}>Create First Backup</button>
         </div>
       ) : (
-        <div className="bg-surface-card  rounded-2xl shadow-md overflow-hidden border border-line">
+        <div className="bg-surface-card overflow-hidden border border-line">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-line">
-              <thead className="bg-surface-soft ">
+              <thead className="bg-surface-soft">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-black text-mute uppercase tracking-wider">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-black text-mute uppercase tracking-wider">Created At</th>
@@ -217,7 +217,7 @@ export function BackupManager() {
             </thead>
             <tbody className="divide-y divide-line">
               {backups.map((backup) => (
-                <tr key={backup.id} className="hover:bg-surface-soft dark:hover:bg-surface-soft transition-colors">
+                <tr key={backup.id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-ink ">{backup.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-body">{new Date(backup.createdAt).toLocaleString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-body">{backup.createdBy}</td>
@@ -272,7 +272,7 @@ export function BackupManager() {
       {/* Restore Backup Modal */}
       <Modal isOpen={showRestoreModal} onClose={() => setShowRestoreModal(false)} title="Restore Backup">
         <div className="space-y-4">
-          <div className="bg-accent-red-soft/20 border border-accent-red/20 text-accent-red px-4 py-3 rounded-xl flex gap-3">
+          <div className="bg-accent-red-soft/20 border border-accent-red/20 text-accent-red px-4 py-3 flex gap-3">
             <AlertTriangle className="w-5 h-5 shrink-0" />
             <div>
               <p className="font-bold">Warning!</p>
@@ -297,7 +297,7 @@ export function BackupManager() {
           <p className="text-body">
             Are you sure you want to delete backup <strong>{selectedBackup?.name}</strong>?
           </p>
-          <div className="bg-accent-red-soft/20 border border-accent-red/20 text-accent-red px-4 py-3 rounded-xl flex gap-3">
+          <div className="bg-accent-red-soft/20 border border-accent-red/20 text-accent-red px-4 py-3 flex gap-3">
             <AlertTriangle className="w-5 h-5 shrink-0" />
             <div>
               <p className="font-bold">Warning!</p>
@@ -318,7 +318,7 @@ export function BackupManager() {
         <div className="space-y-4">
           {verifyResult?.valid ? (
             <>
-              <div className="bg-accent-green-soft/20 border border-accent-green/20 text-accent-green px-4 py-3 rounded-xl flex gap-3">
+              <div className="bg-accent-green-soft/20 border border-accent-green/20 text-accent-green px-4 py-3 flex gap-3">
                 <CheckCircle className="w-5 h-5 shrink-0" />
                 <p className="font-bold">✓ Backup is valid</p>
               </div>
@@ -337,7 +337,7 @@ export function BackupManager() {
               )}
             </>
           ) : (
-            <div className="bg-accent-red-soft/20 border border-accent-red/20 text-accent-red px-4 py-3 rounded-xl">
+            <div className="bg-accent-red-soft/20 border border-accent-red/20 text-accent-red px-4 py-3">
               <p className="font-bold">✗ Backup is invalid</p>
               <p className="text-sm mt-1">{verifyResult?.error}</p>
             </div>
@@ -349,7 +349,7 @@ export function BackupManager() {
       </Modal>
 
       {/* Info Tip */}
-      <div className="p-5 rounded-2xl bg-accent-blue-soft/20 border border-accent-blue/10 flex gap-4">
+      <div className="p-5 bg-accent-blue-soft/20 border border-accent-blue/10 flex gap-4">
         <Info className="w-6 h-6 text-accent-blue flex-shrink-0" />
         <p className="text-xs text-body leading-relaxed">
           <span className="font-black text-accent-blue uppercase tracking-wider block mb-1">Backup Policy</span>
