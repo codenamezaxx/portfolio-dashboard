@@ -185,7 +185,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
                 aria-pressed={filters.category === category}
               >
                 {category}
-                <span className={`ml-2 text-[10px] uppercase px-1.5 py-0.5 rounded-md ${
+                <span className={`ml-2 text-[10px] uppercase px-1.5 py-0.5 ${
                   filters.category === category ? 'bg-white/20' : 'bg-mute/10 text-mute'
                 }`}>
                   {achievements.filter(a => a.category === category).length}

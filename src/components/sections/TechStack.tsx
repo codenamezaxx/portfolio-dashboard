@@ -115,7 +115,7 @@ const TechStack: React.FC<TechStackProps> = ({ initialData = [] }) => {
 
                       {/* Icon */}
                       {item.icon ? (
-                        <div className="w-8 h-8 border border-line rounded-full flex items-center justify-center shrink-0">
+                        <div className="w-8 h-8 border border-line flex items-center justify-center shrink-0">
                           <Image
                             src={item.icon}
                             alt={item.name}
