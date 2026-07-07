@@ -114,7 +114,7 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4" style={{borderColor: 'var(--accent-blue)'}}>
+        <div className="pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4" style={{borderColor: 'var(--accent)'}}>
           <p className="micro-label">&copy; {currentYear} codenamezaxx</p>
           <p className="micro-label">All Rights Reserved</p>
         </div>

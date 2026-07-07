@@ -122,11 +122,11 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center pt-16 pb-12 overflow-hidden">
       {/* Vertical line — drafting alignment guide */}
-      <div className="vline" style={{right: '5vw', backgroundColor: 'var(--accent-blue)'}} />
+      <div className="vline" style={{right: '5vw', backgroundColor: 'var(--accent)'}} />
 
       {/* Geo-ring — compass decoration right side */}
-      <div className="geo-ring" style={{width: '46vw', height: '46vw', left: '-2vw', top: '50%', transform: 'translateY(-50%)', opacity: 0.5, borderColor: 'var(--accent-blue)'}}>
-        <div className="geo-ring dashed" style={{inset: '14%', position: 'absolute', border: '1px dashed var(--line)', borderRadius: '50%', opacity: 0.6, borderColor: 'var(--accent-blue)'}} />
+      <div className="geo-ring" style={{width: '46vw', height: '46vw', left: '-2vw', top: '50%', transform: 'translateY(-50%)', opacity: 0.5, borderColor: 'var(--accent)'}}>
+        <div className="geo-ring dashed" style={{inset: '14%', position: 'absolute', border: '1px dashed var(--line)', borderRadius: '50%', opacity: 0.6, borderColor: 'var(--accent)'}} />
       </div>
 
       <div className="container mx-auto px-6 relative z-10" style={{maxWidth: '1280px'}}>
@@ -158,7 +158,7 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
                 <div className="text-lg" style={{fontFamily: "var(--font-display)", color: "var(--ink)"}}>
                   Jawa Timur, Indonesia
                 </div>
-                <div className="micro-label mt-1" style={{color: "var(--accent-red)"}}>
+                <div className="micro-label mt-1" style={{color: "var(--accent)"}}>
                   Lokasi
                 </div>
               </div>
@@ -166,7 +166,7 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
                 <div className="text-lg" style={{fontFamily: "var(--font-display)", color: "var(--ink)"}}>
                   {new Date().getFullYear() - 2025}+ Tahun
                 </div>
-                <div className="micro-label mt-1" style={{color: "var(--accent-red)"}}>
+                <div className="micro-label mt-1" style={{color: "var(--accent)"}}>
                   Pengalaman
                 </div>
               </div>
@@ -222,10 +222,10 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
             <motion.p
               variants={fadeInUp}
               className="text-lg md:text-2xl leading-loose max-w-md min-h-[1.6em]"
-              style={{fontFamily: "monospace", color: "var(--accent-red)", lineHeight: 1.6, letterSpacing: '1px'}}
+              style={{fontFamily: "monospace", color: "var(--accent)", lineHeight: 1.6, letterSpacing: '1px'}}
             >
               {displayedRole}
-              {!isPaused && <span style={{color: 'var(--accent-red)', animation: 'blink 0.8s step-end infinite'}}>_</span>}
+              {!isPaused && <span style={{color: 'var(--accent)', animation: 'blink 0.8s step-end infinite'}}>_</span>}
             </motion.p>
 
             {/* Tagline */}
