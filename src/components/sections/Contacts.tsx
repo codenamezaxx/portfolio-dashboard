@@ -6,6 +6,7 @@ import { Mail, Send, ArrowUpRight } from 'lucide-react';
 import { LinkedinIcon, InstagramIcon } from '@/components/ui/Icons';
 import { fadeInUp, staggerContainer } from '@/lib/motion';
 import SectionHeader from '../shared/SectionHeader';
+import { useTranslations } from 'next-intl';
 import type { ContactInfo } from '@/lib/portfolio-data';
 
 interface ContactsProps {
@@ -17,6 +18,7 @@ interface ContactsProps {
  * Cartesian editorial colophon — taupe hairline rows, Inter body, accent icons.
  */
 const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
+  const tSection = useTranslations('section');
   const contact = contactInfo || {};
 
   const getHandleFromUrl = (url: string | undefined, defaultValue: string) => {
@@ -78,7 +80,7 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          <SectionHeader title="Hubungi Saya" subtitle="Kontak" sectionNumber="05"/>
+          <SectionHeader title={tSection('contacts')} subtitle={tSection('contactsSubtitle')} sectionNumber="05"/>
 
           {/* Opening */}
           <motion.p
@@ -86,7 +88,7 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
             className="text-center max-w-lg mx-auto mb-16 text-sm md:text-base leading-relaxed"
             style={{fontFamily: "'Inter', sans-serif", color: 'var(--body)', lineHeight: 1.6}}
           >
-            Tertarik untuk berkolaborasi? Hubungi saya melalui platform berikut.
+            {tSection('contactsDescription')}
           </motion.p>
 
           {/* Contact list — taupe hairline rows */}
@@ -122,7 +124,7 @@ const Contacts: React.FC<ContactsProps> = ({ contactInfo }) => {
             className="text-center text-sm leading-relaxed"
             style={{fontFamily: "'Inter', sans-serif", color: 'var(--body)'}}
           >
-            Terima kasih telah berkunjung.
+            {tSection('contactsThankYou')}
           </motion.p>
         </motion.div>
       </div>

@@ -28,6 +28,10 @@ export interface Profile {
   resume_url?: string;
   created_at?: string;
   updated_at?: string;
+  name_en?: string;
+  role_en?: string;
+  tagline_en?: string;
+  status_label_en?: string;
 }
 
 export interface TechStackItem {
@@ -35,6 +39,7 @@ export interface TechStackItem {
   name: string;
   icon: string;
   displayOrder: number;
+  category: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -47,6 +52,8 @@ export interface JourneyItem {
   display_order: number;
   created_at?: string;
   updated_at?: string;
+  title_en?: string;
+  description_en?: string;
 }
 
 export interface Project {
@@ -62,6 +69,8 @@ export interface Project {
   display_order: number;
   created_at?: string;
   updated_at?: string;
+  title_en?: string;
+  description_en?: string;
 }
 
 export interface Achievement {
@@ -75,6 +84,8 @@ export interface Achievement {
   display_order: number;
   created_at?: string;
   updated_at?: string;
+  title_en?: string;
+  issuer_en?: string;
 }
 
 export interface ContactInfo {
@@ -88,13 +99,36 @@ export interface ContactInfo {
   updated_at?: string;
 }
 
+// Locale mapping utility
+function applyLocaleItem<T extends Record<string, unknown>>(item: T, locale?: string): T {
+  if (locale !== 'en') return item;
+  const result = { ...item } as Record<string, unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const r: any = result;
+  if (r.name_en != null) r.name = r.name_en;
+  if (r.role_en != null) r.role = r.role_en;
+  if (r.tagline_en != null) r.tagline = r.tagline_en;
+  if (r.status_label_en != null) r.status_label = r.status_label_en;
+  if (r.title_en != null) r.title = r.title_en;
+  if (r.description_en != null) r.description = r.description_en;
+  if (r.issuer_en != null) r.issuer = r.issuer_en;
+  delete r.name_en;
+  delete r.role_en;
+  delete r.tagline_en;
+  delete r.status_label_en;
+  delete r.title_en;
+  delete r.description_en;
+  delete r.issuer_en;
+  return result as T;
+}
+
 // Fetch functions with error handling and caching
 
 /**
  * Fetch profile data
  */
-export async function getProfile(): Promise<Profile | null> {
-  const cacheKey = cacheKeys.profile();
+export async function getProfile(locale?: string): Promise<Profile | null> {
+  const cacheKey = locale === 'en' ? cacheKeys.profile() + '_en' : cacheKeys.profile();
   const cached = queryCache.get<Profile | null>(cacheKey);
   
   if (cached !== null) {
@@ -113,7 +147,7 @@ export async function getProfile(): Promise<Profile | null> {
       return null;
     }
 
-    const result = (data && data.length > 0 ? data[0] : null) as Profile | null;
+    const result = (data && data.length > 0 ? applyLocaleItem(data[0], locale) : null) as Profile | null;
     queryCache.set(cacheKey, result);
     return result;
   } catch (error) {
@@ -156,8 +190,8 @@ export async function getTechStack(): Promise<TechStackItem[]> {
 /**
  * Fetch all journey items
  */
-export async function getJourneyItems(): Promise<JourneyItem[]> {
-  const cacheKey = cacheKeys.journeyItems();
+export async function getJourneyItems(locale?: string): Promise<JourneyItem[]> {
+  const cacheKey = locale === 'en' ? cacheKeys.journeyItems() + '_en' : cacheKeys.journeyItems();
   const cached = queryCache.get<JourneyItem[]>(cacheKey);
   
   if (cached !== null) {
@@ -175,7 +209,10 @@ export async function getJourneyItems(): Promise<JourneyItem[]> {
       return [];
     }
 
-    const result = (data as JourneyItem[]) || [];
+    let result = (data as JourneyItem[]) || [];
+    if (locale === 'en' && result.length > 0) {
+      result = result.map(item => applyLocaleItem(item as unknown as Record<string, unknown>, locale) as unknown as JourneyItem);
+    }
     queryCache.set(cacheKey, result);
     return result;
   } catch (error) {
@@ -187,8 +224,8 @@ export async function getJourneyItems(): Promise<JourneyItem[]> {
 /**
  * Fetch all projects
  */
-export async function getProjects(): Promise<Project[]> {
-  const cacheKey = cacheKeys.projects();
+export async function getProjects(locale?: string): Promise<Project[]> {
+  const cacheKey = locale === 'en' ? cacheKeys.projects() + '_en' : cacheKeys.projects();
   const cached = queryCache.get<Project[]>(cacheKey);
   
   if (cached !== null) {
@@ -206,7 +243,10 @@ export async function getProjects(): Promise<Project[]> {
       return [];
     }
 
-    const result = (data as Project[]) || [];
+    let result = (data as Project[]) || [];
+    if (locale === 'en' && result.length > 0) {
+      result = result.map(item => applyLocaleItem(item as unknown as Record<string, unknown>, locale) as unknown as Project);
+    }
     queryCache.set(cacheKey, result);
     return result;
   } catch (error) {
@@ -218,8 +258,8 @@ export async function getProjects(): Promise<Project[]> {
 /**
  * Fetch a single project by ID
  */
-export async function getProjectById(id: string): Promise<Project | null> {
-  const cacheKey = cacheKeys.projectById(id);
+export async function getProjectById(id: string, locale?: string): Promise<Project | null> {
+  const cacheKey = locale === 'en' ? cacheKeys.projectById(id) + '_en' : cacheKeys.projectById(id);
   const cached = queryCache.get<Project | null>(cacheKey);
   
   if (cached !== null) {
@@ -238,7 +278,7 @@ export async function getProjectById(id: string): Promise<Project | null> {
       return null;
     }
 
-    const result = data as Project;
+    const result = (data ? applyLocaleItem(data as unknown as Record<string, unknown>, locale) : null) as Project | null;
     queryCache.set(cacheKey, result);
     return result;
   } catch (error) {
@@ -250,8 +290,8 @@ export async function getProjectById(id: string): Promise<Project | null> {
 /**
  * Fetch projects by category
  */
-export async function getProjectsByCategory(category: string): Promise<Project[]> {
-  const cacheKey = cacheKeys.projectsByCategory(category);
+export async function getProjectsByCategory(category: string, locale?: string): Promise<Project[]> {
+  const cacheKey = locale === 'en' ? cacheKeys.projectsByCategory(category) + '_en' : cacheKeys.projectsByCategory(category);
   const cached = queryCache.get<Project[]>(cacheKey);
   
   if (cached !== null) {
@@ -270,7 +310,10 @@ export async function getProjectsByCategory(category: string): Promise<Project[]
       return [];
     }
 
-    const result = (data as Project[]) || [];
+    let result = (data as Project[]) || [];
+    if (locale === 'en' && result.length > 0) {
+      result = result.map(item => applyLocaleItem(item as unknown as Record<string, unknown>, locale) as unknown as Project);
+    }
     queryCache.set(cacheKey, result);
     return result;
   } catch (error) {
@@ -282,8 +325,8 @@ export async function getProjectsByCategory(category: string): Promise<Project[]
 /**
  * Fetch all achievements
  */
-export async function getAchievements(): Promise<Achievement[]> {
-  const cacheKey = cacheKeys.achievements();
+export async function getAchievements(locale?: string): Promise<Achievement[]> {
+  const cacheKey = locale === 'en' ? cacheKeys.achievements() + '_en' : cacheKeys.achievements();
   const cached = queryCache.get<Achievement[]>(cacheKey);
   
   if (cached !== null) {
@@ -301,7 +344,10 @@ export async function getAchievements(): Promise<Achievement[]> {
       return [];
     }
 
-    const result = (data as Achievement[]) || [];
+    let result = (data as Achievement[]) || [];
+    if (locale === 'en' && result.length > 0) {
+      result = result.map(item => applyLocaleItem(item as unknown as Record<string, unknown>, locale) as unknown as Achievement);
+    }
     queryCache.set(cacheKey, result);
     return result;
   } catch (error) {
@@ -313,8 +359,8 @@ export async function getAchievements(): Promise<Achievement[]> {
 /**
  * Fetch achievements by category
  */
-export async function getAchievementsByCategory(category: string): Promise<Achievement[]> {
-  const cacheKey = cacheKeys.achievementsByCategory(category);
+export async function getAchievementsByCategory(category: string, locale?: string): Promise<Achievement[]> {
+  const cacheKey = locale === 'en' ? cacheKeys.achievementsByCategory(category) + '_en' : cacheKeys.achievementsByCategory(category);
   const cached = queryCache.get<Achievement[]>(cacheKey);
   
   if (cached !== null) {
@@ -333,7 +379,10 @@ export async function getAchievementsByCategory(category: string): Promise<Achie
       return [];
     }
 
-    const result = (data as Achievement[]) || [];
+    let result = (data as Achievement[]) || [];
+    if (locale === 'en' && result.length > 0) {
+      result = result.map(item => applyLocaleItem(item as unknown as Record<string, unknown>, locale) as unknown as Achievement);
+    }
     queryCache.set(cacheKey, result);
     return result;
   } catch (error) {
@@ -378,7 +427,7 @@ export async function getContactInfo(): Promise<ContactInfo | null> {
  * Get all portfolio data at once
  * Uses caching for individual queries via the underlying fetch functions
  */
-export async function getAllPortfolioData(): Promise<{
+export async function getAllPortfolioData(locale?: string): Promise<{
   profile: Profile | null;
   techStack: TechStackItem[];
   journey: JourneyItem[];
@@ -386,7 +435,7 @@ export async function getAllPortfolioData(): Promise<{
   achievements: Achievement[];
   contactInfo: ContactInfo | null;
 }> {
-  const cacheKey = cacheKeys.allPortfolioData();
+  const cacheKey = locale === 'en' ? cacheKeys.allPortfolioData() + '_en' : cacheKeys.allPortfolioData();
   const cached = queryCache.get<Awaited<ReturnType<typeof getAllPortfolioData>>>(cacheKey);
   
   if (cached !== null) {
@@ -395,11 +444,11 @@ export async function getAllPortfolioData(): Promise<{
 
   try {
     const [profile, techStack, journey, projects, achievements, contactInfo] = await Promise.all([
-      getProfile(),
+      getProfile(locale),
       getTechStack(),
-      getJourneyItems(),
-      getProjects(),
-      getAchievements(),
+      getJourneyItems(locale),
+      getProjects(locale),
+      getAchievements(locale),
       getContactInfo()
     ]);
 

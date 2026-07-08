@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Code2, ExternalLink } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { staggerContainer, fadeInUp } from '@/lib/motion';
 import SectionHeader from '../shared/SectionHeader';
 import type { Project } from '@/types';
@@ -16,6 +17,8 @@ interface ProjectsProps {
 
 const Projects: React.FC<ProjectsProps> = ({ items = [] }) => {
   const router = useRouter();
+  const tSection = useTranslations('section');
+  const tProjects = useTranslations('projects');
 
   // Sort by displayOrder and take top 4 for landing page
   const featuredProjects = [...items]
@@ -34,7 +37,7 @@ const Projects: React.FC<ProjectsProps> = ({ items = [] }) => {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          <SectionHeader title="Projek Pilihan" subtitle="Portfolio" sectionNumber="03" />
+          <SectionHeader title={tSection('projects')} subtitle={tSection('projectsSubtitle')} sectionNumber="03" />
 
           {featuredProjects.map((project, i) => (
             <motion.div
@@ -123,7 +126,7 @@ const Projects: React.FC<ProjectsProps> = ({ items = [] }) => {
               className="inline-flex items-center gap-2 px-6 py-3 border border-line text-ink bg-surface-card hover:bg-surface-card/80 transition-colors text-sm cursor-pointer"
               style={{fontFamily: "'Inter', sans-serif", fontWeight: 500}}
             >
-              <Code2 className="w-4 h-4" /> Lihat Semua Proyek
+              <Code2 className="w-4 h-4" /> {tProjects('viewAll')}
             </button>
           </motion.div>
         </motion.div>

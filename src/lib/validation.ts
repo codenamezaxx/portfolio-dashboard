@@ -24,6 +24,10 @@ export const profileSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   role: z.string().min(1, 'Role is required').max(255),
   tagline: z.string().min(1, 'Tagline is required'),
+  name_en: z.string().max(255).optional(),
+  role_en: z.string().max(255).optional(),
+  tagline_en: z.string().optional(),
+  status_label_en: z.string().max(20).optional(),
   heroImageUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
 });
 
@@ -38,6 +42,8 @@ export const journeyItemSchema = z.object({
   title: z.string().min(1, 'Title is required').max(255),
   description: z.string().min(1, 'Description is required'),
   displayOrder: z.number().int().min(0).optional(),
+  title_en: z.string().max(255).optional(),
+  description_en: z.string().optional(),
 });
 
 export type JourneyItemInput = z.infer<typeof journeyItemSchema>;
@@ -49,6 +55,7 @@ export type JourneyItemInput = z.infer<typeof journeyItemSchema>;
 export const techItemSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100),
   icon: z.string().url('Icon must be a valid URL'),
+  category: z.string().min(1, 'Category is required').max(100),
   displayOrder: z.number().int().min(0).optional(),
 });
 
@@ -68,6 +75,8 @@ export const projectSchema = z.object({
   liveLink: z.string().url('Invalid URL').optional().or(z.literal('')),
   demoLink: z.string().url('Invalid URL').optional().or(z.literal('')),
   displayOrder: z.number().int().min(0).optional(),
+  title_en: z.string().max(255).optional(),
+  description_en: z.string().optional(),
 });
 
 export type ProjectInput = z.infer<typeof projectSchema>;
@@ -79,6 +88,8 @@ export type ProjectInput = z.infer<typeof projectSchema>;
 export const achievementSchema = z.object({
   title: z.string().min(1, 'Title is required').max(255),
   category: z.string().min(1, 'Category is required').max(100),
+  title_en: z.string().max(255).optional(),
+  issuer_en: z.string().max(255).optional(),
   issuer: z.string().min(1, 'Issuer is required').max(255),
   year: z
     .number()

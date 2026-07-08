@@ -1,0 +1,123 @@
+{
+  "nav": {
+    "home": "Beranda",
+    "journey": "Perjalanan",
+    "tech": "Tech Stack",
+    "projects": "Proyek",
+    "certificates": "Sertifikat",
+    "contacts": "Kontak",
+    "admin": "Admin",
+    "login": "Masuk",
+    "logout": "Keluar"
+  },
+  "floatingButton": {
+    "contact": "Hubungi"
+  },
+  "hero": {
+    "statusAvailable": "Tersedia untuk kolaborasi",
+    "location": "Lokasi",
+    "experience": "Pengalaman",
+    "country": "Jawa Timur, Indonesia",
+    "year": "Tahun",
+    "years": "Tahun",
+    "hi": "Hi, I'm",
+    "viewProjects": "Lihat Proyek",
+    "viewResume": "Lihat CV",
+    "loading": "Memuat...",
+    "resumeUnavailable": "Resume tidak tersedia. Silakan hubungi admin.",
+    "resumeFailed": "Gagal menampilkan resume. Silakan coba lagi.",
+    "contactMe": "Hubungi Saya"
+  },
+  "section": {
+    "journey": "Perjalanan",
+    "journeySubtitle": "Timeline",
+    "tech": "Tech Stack",
+    "techSubtitle": "Teknologi & Tools",
+    "projects": "Projek Pilihan",
+    "projectsSubtitle": "Portfolio",
+    "achievements": "Pelatihan & Penghargaan",
+    "achievementsSubtitle": "Sertifikat & highlights",
+    "contacts": "Hubungi Saya",
+    "contactsSubtitle": "Kontak",
+    "contactsDescription": "Tertarik untuk berkolaborasi? Hubungi saya melalui platform berikut.",
+    "contactsThankYou": "Terima kasih telah berkunjung.",
+    "noTechItems": "Belum ada data tech stack"
+  },
+  "projects": {
+    "viewAll": "Lihat Semua Proyek",
+    "github": "GitHub",
+    "liveDemo": "Live Demo",
+    "demo": "Demo",
+    "itchio": "itch.io"
+  },
+  "achievements": {
+    "viewAll": "Lihat Semua Sertifikat",
+    "previewUnavailable": "Pratinjau sertifikat tidak tersedia.",
+    "close": "Tutup",
+    "viewOriginal": "Lihat Asli",
+    "downloadPdf": "Unduh PDF",
+    "year": "Tahun"
+  },
+  "footer": {
+    "quickLinks": "Pintasan",
+    "connect": "Terhubung",
+    "builtWith": "Dibangun Dengan",
+    "copyright": "Hak Cipta Dilindungi",
+    "allRights": "All Rights Reserved"
+  },
+  "certificates": {
+    "title": "Sertifikat",
+    "search": "Cari sertifikat...",
+    "allCategories": "Semua Kategori",
+    "noResults": "Tidak ada sertifikat ditemukan.",
+    "noResultsHint": "Coba ubah filter atau kata kunci pencarian Anda.",
+    "prev": "Sebelumnya",
+    "next": "Selanjutnya",
+    "page": "Halaman",
+    "of": "dari",
+    "issuer": "Penerbit",
+    "category": "Kategori",
+    "viewCertificate": "Lihat Sertifikat",
+    "close": "Tutup",
+    "activeFilter": "Filter:",
+    "searchLabel": "Pencarian:",
+    "clearFilters": "Hapus Filter",
+    "results": "Menampilkan {from}–{to} dari {total} sertifikat",
+    "noResultsFiltered": "Tidak ada sertifikat yang sesuai dengan filter Anda."
+  },
+  "common": {
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan",
+    "noData": "Tidak ada data",
+    "viewProject": "Lihat Proyek",
+    "viewCertificate": "Lihat Sertifikat",
+    "backToHome": "Kembali ke Beranda"
+  },
+  "locale": {
+    "switchTo": "English"
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "hero": "Hero",
+      "journey": "Perjalanan",
+      "techStack": "Tech Stack",
+      "projects": "Proyek",
+      "achievements": "Pencapaian",
+      "contacts": "Kontak",
+      "profile": "Profil",
+      "backups": "Backup",
+      "activityLog": "Log Aktivitas",
+      "users": "Pengguna"
+    },
+    "common": {
+      "save": "Simpan",
+      "cancel": "Batal",
+      "delete": "Hapus",
+      "edit": "Sunting",
+      "add": "Tambah",
+      "search": "Cari",
+      "noItems": "Belum ada data"
+    }
+  }
+}

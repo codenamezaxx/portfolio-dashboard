@@ -14,6 +14,10 @@ export interface Profile {
   role: string;
   tagline: string;
   status_label?: string;
+  name_en?: string;
+  role_en?: string;
+  tagline_en?: string;
+  status_label_en?: string;
   heroImageUrl?: string;
   socials?: {
     github?: string;
@@ -36,6 +40,8 @@ export interface JourneyItem {
   year: string;
   title: string;
   description: string;
+  title_en?: string;
+  description_en?: string;
   displayOrder?: number;
   createdAt?: Date;
   updatedAt?: Date;
@@ -46,6 +52,7 @@ export interface TechItem {
   name: string;
   icon: string;
   displayOrder?: number;
+  category: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -54,6 +61,8 @@ export interface Project {
   id: string | number;
   title: string;
   description: string;
+  title_en?: string;
+  description_en?: string;
   category: string;
   image?: string;
   imageUrl?: string;
@@ -75,6 +84,8 @@ export interface Achievement {
   title: string;
   category: string;
   issuer: string;
+  title_en?: string;
+  issuer_en?: string;
   year: string | number;
   pdfPath?: string;
   pdfUrl?: string;

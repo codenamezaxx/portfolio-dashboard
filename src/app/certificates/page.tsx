@@ -5,8 +5,10 @@
 
 import { Metadata } from 'next';
 import { Suspense } from 'react';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { ArrowLeft, Loader2 } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import { getAchievements } from '@/lib/portfolio-data';
 import CertificatesGallery from '@/components/sections/CertificatesGallery';
 import SectionHeader from '@/components/shared/SectionHeader';
@@ -55,8 +57,12 @@ export async function generateMetadata({ searchParams }: CertificatesPageProps):
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function CertificatesPage() {
+  const tCert = await getTranslations('certificates');
+  const tCommon = await getTranslations('common');
   
-  const achievements = await getAchievements();
+  const cookieStore = await cookies();
+  const locale = cookieStore.get('locale')?.value === 'en' ? 'en' : 'id';
+  const achievements = await getAchievements(locale);
 
   return (
       <main className="relative min-h-screen bg-background pt-20 pb-32 overflow-hidden">
@@ -67,21 +73,21 @@ export default async function CertificatesPage() {
               className="inline-flex items-center gap-1 text-mute hover:text-primary text-sm border border-line px-3 py-1.5"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              Kembali ke Beranda
+              {tCommon('backToHome')}
             </Link>
             <ThemeToggleButton />
           </div>
 
           <SectionHeader
-            title="Sertifikat & Pencapaian"
+            title={tCert('title')}
             subtitle="ACHIEVEMENTS GALLERY"
-            description="Kumpulan sertifikasi, kursus, dan pencapaian yang telah saya selesaikan."
+            description={tCert('noResultsHint')}
           />
 
           <Suspense fallback={
             <div className="flex flex-col items-center justify-center py-20">
               <Loader2 className="w-10 h-10 text-accent animate-spin mb-4" />
-              <p className="text-mute">Memuat sertifikat...</p>
+              <p className="text-mute">{tCommon('loading')}</p>
             </div>
           }>
             <CertificatesGallery achievements={achievements} />

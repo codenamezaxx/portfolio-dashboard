@@ -4,6 +4,7 @@
  */
 
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { getProjects } from '@/lib/portfolio-data';
 import { ArrowLeft } from 'lucide-react';
@@ -30,7 +31,9 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function ProjectsPage() {
-    const rawProjects = await getProjects();
+    const cookieStore = await cookies();
+    const locale = cookieStore.get('locale')?.value === 'en' ? 'en' : 'id';
+    const rawProjects = await getProjects(locale);
     const projects = rawProjects.map(p => ({
       ...p,
       id: p.id || `temp-${Math.random().toString(36).slice(2, 11)}`

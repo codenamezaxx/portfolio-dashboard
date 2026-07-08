@@ -5,6 +5,7 @@ import { Achievement } from '@/lib/portfolio-data';
 import { TextInput } from '@/components/ui/TextInput';
 import { Modal } from '@/components/ui/Modal';
 import { PDFPreview } from '@/components/ui/PDFPreview';
+import { useTranslations } from 'next-intl';
 import { Search, X, ChevronLeft, ChevronRight, Download, ExternalLink, FileText, Medal } from 'lucide-react';
 
 interface CertificatesGalleryProps {
@@ -34,6 +35,10 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
   });
   const [selectedCertificate, setSelectedCertificate] = useState<Achievement | null>(null);
   const [showPDFModal, setShowPDFModal] = useState(false);
+
+  const tCert = useTranslations('certificates');
+  const tAchieve = useTranslations('achievements');
+  const tCommon = useTranslations('common');
 
   // Get unique categories
   const categories = useMemo(() => {
@@ -161,7 +166,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-mute group-focus-within:text-primary transition-colors" />
           <TextInput
             type="text"
-            placeholder="Cari berdasarkan judul, penerbit, atau kategori..."
+            placeholder={tCert('search')}
             value={filters.searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
             className="pl-12 h-12 bg-surface-soft border border-line text-sm"
@@ -171,7 +176,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
 
         {/* Category Filters */}
         <div className="space-y-4">
-          <p className="text-xs font-black uppercase tracking-widest text-mute/60 ml-1">Filter Kategori</p>
+          <p className="text-xs font-black uppercase tracking-widest text-mute/60 ml-1">{tCert('category')}</p>
           <div className="flex flex-wrap gap-3">
             {categories.map(category => (
               <button
@@ -198,7 +203,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
         {/* Active Filters Display */}
         {(filters.category || filters.searchQuery) && (
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm text-[var(--mute)]">Filter aktif:</span>
+            <span className="text-sm text-[var(--mute)]">{tCert('activeFilter')}</span>
             {filters.category && (
               <span className="flex items-center gap-2 bg-primary/10 text-accent border border-[var(--primary)]/20 px-2 py-0.5 text-xs">
                 {filters.category}
@@ -213,7 +218,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
             )}
             {filters.searchQuery && (
               <span className="flex items-center gap-2 bg-primary/10 text-accent border border-[var(--primary)]/20 px-2 py-0.5 text-xs">
-                Pencarian: {filters.searchQuery}
+                {tCert('searchLabel')} {filters.searchQuery}
                 <button
                   onClick={() => handleSearch('')}
                   className="hover:opacity-70 transition-opacity"
@@ -227,7 +232,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
               onClick={handleClearFilters}
               className="text-sm text-[var(--primary)] hover:text-[var(--primary-pressed)] transition-colors"
             >
-              Hapus semua
+              {tCert('clearFilters')}
             </button>
           </div>
         )}
@@ -235,9 +240,11 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
 
       {/* Results Count */}
       <div className="mb-4 text-sm text-mute font-sans">
-        Menampilkan {paginatedAchievements.length > 0 ? (pagination.currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}–{' '}
-        {Math.min(pagination.currentPage * ITEMS_PER_PAGE, filteredAchievements.length)} dari{' '}
-        {filteredAchievements.length} sertifikat
+        {tCert('results', {
+          from: paginatedAchievements.length > 0 ? (pagination.currentPage - 1) * ITEMS_PER_PAGE + 1 : 0,
+          to: Math.min(pagination.currentPage * ITEMS_PER_PAGE, filteredAchievements.length),
+          total: filteredAchievements.length
+        })}
       </div>
 
       {/* Certificates Grid */}
@@ -322,12 +329,12 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
         <div className="text-center py-16">
           <p className="text-[var(--mute)] text-lg mb-4">
             {filters.category || filters.searchQuery
-              ? 'Tidak ada sertifikat yang sesuai dengan filter Anda.'
-              : 'Belum ada sertifikat tersedia.'}
+              ? tCert('noResultsFiltered')
+              : tCert('noResults')}
           </p>
           {(filters.category || filters.searchQuery) && (
             <button onClick={handleClearFilters} className="px-4 py-2 border border-line bg-surface-soft text-ink text-sm hover:bg-white/20">
-              Hapus Filter
+              {tCert('clearFilters')}
             </button>
           )}
         </div>
@@ -380,7 +387,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
         <Modal
           isOpen={showPDFModal}
           onClose={() => setShowPDFModal(false)}
-          title={`${selectedCertificate.title} — Pratinjau PDF`}
+          title={`${selectedCertificate.title} — ${tCert('title')}`}
           size="lg"
         >
           <div className="space-y-4">
@@ -396,7 +403,7 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
                 className="px-4 py-2 border border-line bg-surface-soft text-ink text-sm hover:bg-white/20"
               >
                 <Download className="w-4 h-4 mr-2" />
-                Unduh PDF
+                {tAchieve('downloadPdf')}
               </button>
               {selectedCertificate.external_link && (
                 <a
@@ -404,14 +411,14 @@ export default function CertificatesGallery({ achievements }: CertificatesGaller
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <button className="px-4 py-2 border border-line bg-surface-soft text-ink text-sm hover:bg-white/20">Lihat Sertifikat</button>
+                  <button className="px-4 py-2 border border-line bg-surface-soft text-ink text-sm hover:bg-white/20">{tCert('viewCertificate')}</button>
                 </a>
               )}
               <button
                 onClick={() => setShowPDFModal(false)}
                 className="px-4 py-2 border border-line text-ink text-sm hover:bg-white/20"
               >
-                Tutup
+                {tCert('close')}
               </button>
             </div>
           </div>

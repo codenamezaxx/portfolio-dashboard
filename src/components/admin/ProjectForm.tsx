@@ -28,6 +28,8 @@ const defaultValues: ProjectInput = {
   liveLink: '',
   demoLink: '',
   displayOrder: 0,
+  title_en: '',
+  description_en: '',
 };
 
 const categoryOptions = [
@@ -123,6 +125,33 @@ export function ProjectForm({
           error={form.errors.description}
           touched={form.touched.description}
           required
+          variant="admin"
+          disabled={isLoading || form.isSubmitting}
+        />
+
+        <FormField
+          label="Project Title (EN)"
+          name="title_en"
+          type="text"
+          placeholder="Enter project title in English"
+          value={form.values.title_en || ''}
+          onChange={form.handleChange}
+          onBlur={form.handleBlur}
+          error={form.errors.title_en}
+          touched={form.touched.title_en}
+          variant="admin"
+          disabled={isLoading || form.isSubmitting}
+        />
+
+        <TextAreaField
+          label="Description (EN)"
+          name="description_en"
+          placeholder="Describe your project in English"
+          value={form.values.description_en || ''}
+          onChange={form.handleChange}
+          onBlur={form.handleBlur}
+          error={form.errors.description_en}
+          touched={form.touched.description_en}
           variant="admin"
           disabled={isLoading || form.isSubmitting}
         />

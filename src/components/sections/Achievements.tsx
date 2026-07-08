@@ -8,6 +8,7 @@ import { staggerContainer, fadeInUp } from '@/lib/motion';
 import PDFPreviewCard from '../ui/PDFPreviewCard';
 import { PDFPreview } from '../ui/PDFPreview';
 import SectionHeader from '../shared/SectionHeader';
+import { useTranslations } from 'next-intl';
 import type { Achievement } from '@/types';
 
 interface AchievementsProps {
@@ -17,6 +18,8 @@ interface AchievementsProps {
 
 const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) => {
   const router = useRouter();
+  const tSection = useTranslations('section');
+  const tAchieve = useTranslations('achievements');
   const [selectedAchievement, setSelectedAchievement] = React.useState<Achievement | null>(null);
 
   // Sort by displayOrder and take top 6 for landing page
@@ -38,8 +41,8 @@ const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) =>
           viewport={{ once: true, margin: "-100px" }}
         >
           <SectionHeader 
-            title="Pelatihan & Penghargaan" 
-            subtitle="Sertifikat & highlights"
+            title={tSection('achievements')} 
+            subtitle={tSection('achievementsSubtitle')}
             sectionNumber="04"
           />
 
@@ -74,7 +77,7 @@ const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) =>
               className="inline-flex items-center gap-2 px-6 py-3 border border-line text-ink bg-surface-card hover:bg-surface-card/80 transition-colors cursor-pointer text-sm"
               style={{fontFamily: "'Inter', sans-serif", fontWeight: 500}}
             >
-              <FileCheck className='w-4 h-4' /> Lihat Semua Sertifikat
+              <FileCheck className='w-4 h-4' /> {tAchieve('viewAll')}
             </button>
           </motion.div>
         </motion.div>
@@ -93,6 +96,7 @@ const Achievements: React.FC<AchievementsProps> = ({ items = [], onViewAll }) =>
 
 // Internal Modal Component for clean hierarchy
 const AchievementModal: React.FC<{ achievement: Achievement, onClose: () => void }> = ({ achievement, onClose }) => {
+  const tAchieve = useTranslations('achievements');
   const pdfPath = achievement.pdfPath || achievement.pdfUrl || (achievement as any).pdf_url;
   
   return (
@@ -135,7 +139,7 @@ const AchievementModal: React.FC<{ achievement: Achievement, onClose: () => void
           ) : (
             <div className="flex flex-col items-center justify-center h-full py-20 text-zinc-500">
               <span className="text-4xl mb-4">📄</span>
-              <p>Pratinjau sertifikat tidak tersedia.</p>
+              <p>{tAchieve('previewUnavailable')}</p>
             </div>
           )}
         </div>
@@ -143,21 +147,21 @@ const AchievementModal: React.FC<{ achievement: Achievement, onClose: () => void
         {/* Modal Footer */}
         <div className="p-4 bg-background border-t border-line flex flex-wrap justify-between items-center gap-4">
            <div className="text-xs text-zinc-500">
-             Tahun: {achievement.year}
+             {tAchieve('year')}: {achievement.year}
            </div>
            <div className="flex gap-3">
               <button
                 onClick={onClose}
                 className="px-4 py-2 border border-line text-xs text-ink hover:bg-white/10 transition-colors cursor-pointer"
               >
-                Tutup
+                {tAchieve('close')}
               </button>
               {achievement.link && (
                 <button
                   onClick={() => window.open(achievement.link, '_blank')}
                   className="px-4 py-2 border border-line text-xs text-ink hover:bg-white/10 transition-colors cursor-pointer"
                 >
-                  Lihat Asli
+                  {tAchieve('viewOriginal')}
                 </button>
               )}
               {pdfPath && (
@@ -170,7 +174,7 @@ const AchievementModal: React.FC<{ achievement: Achievement, onClose: () => void
                   }}
                   className="px-4 py-2 border border-line text-xs text-ink hover:bg-white/10 transition-colors cursor-pointer"
                 >
-                  Unduh PDF
+                  {tAchieve('downloadPdf')}
                 </button>
               )}
            </div>

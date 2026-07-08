@@ -41,6 +41,10 @@ const HeroSchema = z.object({
   tagline: z.string().min(1, 'Tagline is required').max(500, 'Tagline must be less than 500 characters'),
   status_label: z.string().max(50, 'Status label must be less than 50 characters').optional().nullable(),
   heroImageUrl: z.string().optional().nullable(),
+  name_en: z.string().max(255).optional().nullable(),
+  role_en: z.string().max(255).optional().nullable(),
+  tagline_en: z.string().max(500).optional().nullable(),
+  status_label_en: z.string().max(50).optional().nullable(),
 });
 
 type HeroFormData = z.infer<typeof HeroSchema>;
@@ -58,6 +62,10 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
     tagline: initialData?.tagline || '',
     status_label: initialData?.status_label || '',
     heroImageUrl: initialData?.heroImageUrl || null,
+    name_en: initialData?.name_en || '',
+    role_en: initialData?.role_en || '',
+    tagline_en: initialData?.tagline_en || '',
+    status_label_en: initialData?.status_label_en || '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -97,6 +105,10 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
           tagline: profile.tagline || '',
           status_label: profile.status_label || '',
           heroImageUrl: profile.heroImageUrl || null,
+          name_en: profile.name_en || '',
+          role_en: profile.role_en || '',
+          tagline_en: profile.tagline_en || '',
+          status_label_en: profile.status_label_en || '',
         });
         setImagePreview(profile.heroImageUrl || null);
         setLastUpdated(new Date(profile.updatedAt));
@@ -307,6 +319,50 @@ export function HeroEditor({ initialData }: HeroEditorProps) {
                 required
                 rows={4}
                 className="focus:border-primary min-h-[120px]"
+              />
+
+              {/* English Fields */}
+              <div className="col-span-full flex items-center gap-3 mt-6 mb-2">
+                <div className="h-px flex-1 bg-line/40"></div>
+                <span className="text-xs font-black text-mute uppercase tracking-widest">English / Bahasa Inggris</span>
+                <div className="h-px flex-1 bg-line/40"></div>
+              </div>
+
+              <TextInput
+                label="Name (EN)"
+                placeholder="e.g. Zakky Ahmad El-Kholily"
+                value={formData.name_en || ''}
+                onChange={(e) => handleInputChange('name_en', e.target.value)}
+                disabled={isLoading}
+                className="h-11 focus:border-primary"
+              />
+
+              <TextInput
+                label="Role (EN)"
+                placeholder="e.g. Junior Fullstack Developer"
+                value={formData.role_en || ''}
+                onChange={(e) => handleInputChange('role_en', e.target.value)}
+                disabled={isLoading}
+                className="h-11 focus:border-primary"
+              />
+
+              <TextArea
+                label="Tagline (EN)"
+                placeholder="Briefly describe your expertise and professional mission..."
+                value={formData.tagline_en || ''}
+                onChange={(e) => handleInputChange('tagline_en', e.target.value)}
+                disabled={isLoading}
+                rows={4}
+                className="focus:border-primary min-h-[120px]"
+              />
+
+              <TextInput
+                label="Status Label (EN)"
+                placeholder="e.g. Available for projects"
+                value={formData.status_label_en || ''}
+                onChange={(e) => handleInputChange('status_label_en', e.target.value)}
+                disabled={isLoading}
+                className="h-11 focus:border-primary"
               />
 
               {/* Image Upload */}

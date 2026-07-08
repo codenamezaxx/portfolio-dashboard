@@ -1,0 +1,123 @@
+{
+  "nav": {
+    "home": "Home",
+    "journey": "Journey",
+    "tech": "Tech Stack",
+    "projects": "Projects",
+    "certificates": "Certificates",
+    "contacts": "Contacts",
+    "admin": "Admin",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "floatingButton": {
+    "contact": "Contact"
+  },
+  "hero": {
+    "statusAvailable": "Available for collaboration",
+    "location": "Location",
+    "experience": "Experience",
+    "country": "East Java, Indonesia",
+    "year": "Year",
+    "years": "Years",
+    "hi": "Hi, I'm",
+    "viewProjects": "View Projects",
+    "viewResume": "View Resume",
+    "loading": "Loading...",
+    "resumeUnavailable": "Resume is not available. Please contact the admin.",
+    "resumeFailed": "Failed to load resume. Please try again.",
+    "contactMe": "Contact Me"
+  },
+  "section": {
+    "journey": "Journey",
+    "journeySubtitle": "Timeline",
+    "tech": "Tech Stack",
+    "techSubtitle": "Technologies & Tools",
+    "projects": "Featured Projects",
+    "projectsSubtitle": "Portfolio",
+    "achievements": "Training & Awards",
+    "achievementsSubtitle": "Certificates & highlights",
+    "contacts": "Contact Me",
+    "contactsSubtitle": "Get in Touch",
+    "contactsDescription": "Interested in collaborating? Reach out to me through the platforms below.",
+    "contactsThankYou": "Thank you for visiting.",
+    "noTechItems": "No tech stack items available"
+  },
+  "projects": {
+    "viewAll": "View All Projects",
+    "github": "GitHub",
+    "liveDemo": "Live Demo",
+    "demo": "Demo",
+    "itchio": "itch.io"
+  },
+  "achievements": {
+    "viewAll": "View All Certificates",
+    "previewUnavailable": "Certificate preview not available.",
+    "close": "Close",
+    "viewOriginal": "View Original",
+    "downloadPdf": "Download PDF",
+    "year": "Year"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "connect": "Connect",
+    "builtWith": "Built With",
+    "copyright": "All Rights Reserved",
+    "allRights": "All Rights Reserved"
+  },
+  "certificates": {
+    "title": "Certificates",
+    "search": "Search certificates...",
+    "allCategories": "All Categories",
+    "noResults": "No certificates found.",
+    "noResultsHint": "Try changing your filters or search keywords.",
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "issuer": "Issuer",
+    "category": "Category",
+    "viewCertificate": "View Certificate",
+    "close": "Close",
+    "activeFilter": "Filter:",
+    "searchLabel": "Search:",
+    "clearFilters": "Clear Filters",
+    "results": "Showing {from}–{to} of {total} certificates",
+    "noResultsFiltered": "No certificates match your filters."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "noData": "No data available",
+    "viewProject": "View Project",
+    "viewCertificate": "View Certificate",
+    "backToHome": "Back to Home"
+  },
+  "locale": {
+    "switchTo": "Bahasa Indonesia"
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "hero": "Hero",
+      "journey": "Journey",
+      "techStack": "Tech Stack",
+      "projects": "Projects",
+      "achievements": "Achievements",
+      "contacts": "Contacts",
+      "profile": "Profile",
+      "backups": "Backups",
+      "activityLog": "Activity Log",
+      "users": "Users"
+    },
+    "common": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "add": "Add",
+      "search": "Search",
+      "noItems": "No items yet"
+    }
+  }
+}

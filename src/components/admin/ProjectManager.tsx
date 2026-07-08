@@ -172,6 +172,8 @@ export function ProjectManager() {
     const formData = {
       title: project.title,
       description: project.description,
+      title_en: project.title_en,
+      description_en: project.description_en,
       category: project.category,
       imageUrl: project.image || project.imageUrl,
       technologies: project.tech || project.technologies || [],

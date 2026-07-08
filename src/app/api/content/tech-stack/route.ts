@@ -38,6 +38,7 @@ export async function GET(request: NextRequest) {
       name: item.name,
       icon: item.icon_url,
       displayOrder: item.display_order,
+      category: item.category,
       createdAt: item.created_at,
       updatedAt: item.updated_at,
     }));
@@ -80,6 +81,7 @@ export async function POST(request: NextRequest) {
       .insert({
         name: validatedData.name,
         icon_url: validatedData.icon,
+        category: validatedData.category,
         display_order: nextDisplayOrder,
       })
       .select()
@@ -100,6 +102,7 @@ export async function POST(request: NextRequest) {
           name: data.name,
           icon: data.icon_url,
           displayOrder: data.display_order,
+          category: data.category,
           createdAt: data.created_at,
           updatedAt: data.updated_at,
         },
@@ -185,6 +188,7 @@ export async function PUT(request: NextRequest) {
       .update({
         name: validatedData.name,
         icon_url: validatedData.icon,
+        category: validatedData.category,
         display_order: validatedData.displayOrder,
       })
       .eq('id', id)
@@ -205,6 +209,7 @@ export async function PUT(request: NextRequest) {
         name: data.name,
         icon: data.icon_url,
         displayOrder: data.display_order,
+        category: data.category,
         createdAt: data.created_at,
         updatedAt: data.updated_at,
       },

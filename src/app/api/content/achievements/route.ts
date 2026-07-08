@@ -26,8 +26,10 @@ export async function GET() {
     const transformedData = (data || []).map(achievement => ({
       id: achievement.id,
       title: achievement.title,
-      category: achievement.category,
+      title_en: achievement.title_en,
       issuer: achievement.issuer,
+      issuer_en: achievement.issuer_en,
+      category: achievement.category,
       year: achievement.year,
       pdfUrl: achievement.pdf_url,
       externalLink: achievement.external_link,
@@ -63,8 +65,10 @@ export async function POST(request: NextRequest) {
       .from('achievements')
       .insert({
         title: validatedData.title,
+        title_en: validatedData.title_en,
         category: validatedData.category,
         issuer: validatedData.issuer,
+        issuer_en: validatedData.issuer_en,
         year: validatedData.year,
         pdf_url: validatedData.pdfUrl,
         external_link: validatedData.externalLink,
@@ -113,8 +117,10 @@ export async function PUT(request: NextRequest) {
       .from('achievements')
       .update({
         title: validatedData.title,
+        title_en: validatedData.title_en,
         category: validatedData.category,
         issuer: validatedData.issuer,
+        issuer_en: validatedData.issuer_en,
         year: validatedData.year,
         pdf_url: validatedData.pdfUrl,
         external_link: validatedData.externalLink,

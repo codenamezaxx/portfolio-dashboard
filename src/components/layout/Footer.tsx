@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { Mail, Send } from 'lucide-react';
 import { LinkedinIcon, InstagramIcon, GithubIcon } from '@/components/ui/Icons';
 import type { Profile } from '@/types';
@@ -15,13 +16,15 @@ interface FooterProps {
 const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
   const contact = contactInfo || {};
   const currentYear = new Date().getFullYear();
+  const tNav = useTranslations('nav');
+  const tFooter = useTranslations('footer');
 
   const quickLinks = [
-    { label: 'Beranda', href: '/#hero' },
-    { label: 'Perjalanan', href: '/#journey' },
-    { label: 'Proyek', href: '/#projects' },
-    { label: 'Sertifikat', href: '/#certificates' },
-    { label: 'Kontak', href: '/#contacts' },
+    { label: tNav('home'), href: '/#hero' },
+    { label: tNav('journey'), href: '/#journey' },
+    { label: tNav('projects'), href: '/#projects' },
+    { label: tNav('certificates'), href: '/#certificates' },
+    { label: tNav('contacts'), href: '/#contacts' },
   ];
 
   const socialLinks = [
@@ -64,7 +67,7 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
 
           {/* Column 2: Links */}
           <div className="space-y-4">
-            <h3 className="label text-xs" style={{color: 'var(--accent-red)'}}>Pintasan</h3>
+            <h3 className="label text-xs" style={{color: 'var(--accent-red)'}}>{tFooter('quickLinks')}</h3>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.label}>
@@ -78,7 +81,7 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
 
           {/* Column 3: Social */}
           <div className="space-y-4">
-            <h3 className="label text-xs" style={{color: 'var(--accent-red)'}}>Terhubung</h3>
+            <h3 className="label text-xs" style={{color: 'var(--accent-red)'}}>{tFooter('connect')}</h3>
             <ul className="space-y-2">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
@@ -102,7 +105,7 @@ const Footer: React.FC<FooterProps> = ({ profile, contactInfo }) => {
 
           {/* Column 4: Tech stack */}
           <div className="space-y-4">
-            <h3 className="label text-xs" style={{color: 'var(--accent-red)'}}>Dibangun Dengan</h3>
+            <h3 className="label text-xs" style={{color: 'var(--accent-red)'}}>{tFooter('builtWith')}</h3>
             <div className="uppercase flex flex-wrap gap-3" style={{fontFamily: "monospace", color: 'var(--body)'}}>
               <span className="bg-surface-card border border-line px-2 py-1">Next.js</span>
               <span className="bg-surface-card border border-line px-2 py-1">Tailwind CSS</span>

@@ -27,6 +27,8 @@ export async function GET() {
       id: project.id,
       title: project.title,
       description: project.description,
+      title_en: project.title_en,
+      description_en: project.description_en,
       category: project.category,
       imageUrl: project.image_url,
       technologies: project.technologies,
@@ -66,6 +68,8 @@ export async function POST(request: NextRequest) {
       .insert({
         title: validatedData.title,
         description: validatedData.description,
+        title_en: validatedData.title_en,
+        description_en: validatedData.description_en,
         category: validatedData.category,
         image_url: validatedData.imageUrl,
         technologies: validatedData.technologies,
@@ -118,6 +122,8 @@ export async function PUT(request: NextRequest) {
       .update({
         title: validatedData.title,
         description: validatedData.description,
+        title_en: validatedData.title_en,
+        description_en: validatedData.description_en,
         category: validatedData.category,
         image_url: validatedData.imageUrl,
         technologies: validatedData.technologies,

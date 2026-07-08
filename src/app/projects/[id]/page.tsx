@@ -5,6 +5,7 @@
 
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getProjectById, getProjects } from '@/lib/portfolio-data';
@@ -69,10 +70,12 @@ export const revalidate = 3600;
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   
   const { id } = await params;
-  const project = await getProjectById(id);
+  const cookieStore = await cookies();
+  const locale = cookieStore.get('locale')?.value === 'en' ? 'en' : 'id';
+  const project = await getProjectById(id, locale);
   if (!project) notFound();
 
-  const allProjects = await getProjects();
+  const allProjects = await getProjects(locale);
   const currentIndex = allProjects.findIndex(p => p.id === project.id);
   const previousProject = currentIndex > 0 ? allProjects[currentIndex - 1] : null;
   const nextProject = currentIndex < allProjects.length - 1 ? allProjects[currentIndex + 1] : null;

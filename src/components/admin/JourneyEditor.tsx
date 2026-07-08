@@ -89,7 +89,7 @@ export function JourneyEditor() {
   };
 
   const handleAddNew = () => {
-    setEditingItem({ year: '', title: '', description: '' });
+    setEditingItem({ year: '', title: '', description: '', title_en: '', description_en: '' });
     setFormErrors({});
     setIsFormOpen(true);
   };
@@ -100,6 +100,8 @@ export function JourneyEditor() {
       year: item.year,
       title: item.title,
       description: item.description,
+      title_en: item.title_en,
+      description_en: item.description_en,
       displayOrder: item.displayOrder,
     });
     setFormErrors({});
@@ -322,6 +324,30 @@ export function JourneyEditor() {
             value={editingItem?.description || ''} 
             onChange={e => setEditingItem(prev => prev ? { ...prev, description: e.target.value } : null)}
             error={formErrors.description}
+            rows={5}
+            disabled={isLoading}
+            className="focus:border-primary min-h-[150px]"
+          />
+          <div className="col-span-full flex items-center gap-3 mt-6 mb-2">
+            <div className="h-px flex-1 bg-line/40"></div>
+            <span className="text-xs font-black text-mute uppercase tracking-widest">English / Bahasa Inggris</span>
+            <div className="h-px flex-1 bg-line/40"></div>
+          </div>
+          <TextInput 
+            label="Title (EN)" 
+            name="title-en"
+            placeholder="e.g. Software Engineer at Google" 
+            value={(editingItem as any)?.title_en || ''} 
+            onChange={e => setEditingItem(prev => prev ? { ...prev, title_en: e.target.value } : null)}
+            disabled={isLoading}
+            className="h-11 focus:border-primary"
+          />
+          <TextArea 
+            label="Description (EN)" 
+            name="description-en"
+            placeholder="Describe your achievements or responsibilities" 
+            value={(editingItem as any)?.description_en || ''} 
+            onChange={e => setEditingItem(prev => prev ? { ...prev, description_en: e.target.value } : null)}
             rows={5}
             disabled={isLoading}
             className="focus:border-primary min-h-[150px]"

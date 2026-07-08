@@ -4,9 +4,12 @@ import './globals.css';
 import { ThemeProvider } from '@/contexts/ThemeProvider';
 import { RealtimeProvider } from '@/components/providers/RealtimeProvider';
 import { ToastProvider } from '@/components/providers/ToastProvider';
+import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { NextIntlClientProvider } from 'next-intl';
+import { cookies } from 'next/headers';
 import "@aejkatappaja/phantom-ui/ssr.css";
 
 const playfairDisplay = Playfair_Display({
@@ -54,11 +57,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const locale = cookieStore.get('locale')?.value || 'id';
+  const messages = (await import(`../../messages/${locale}.json`)).default;
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -87,7 +94,9 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {/* Inline script to apply theme before first paint — prevents flash */}
-        <script
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -105,13 +114,15 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--ink)] leading-normal">
-        <ThemeProvider defaultTheme="light" storageKey="portfolio-theme">
-          <RealtimeProvider enableNotifications={true}>
-            <ToastProvider position="bottom-right" maxToasts={5}>
-              {children}
-            </ToastProvider>
-          </RealtimeProvider>
-        </ThemeProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <ThemeProvider defaultTheme="light" storageKey="portfolio-theme">
+            <RealtimeProvider enableNotifications={true}>
+              <ToastProvider position="bottom-right" maxToasts={5}>
+                {children}
+              </ToastProvider>
+            </RealtimeProvider>
+          </ThemeProvider>
+        </NextIntlClientProvider>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ''} />
         <Analytics />
         <SpeedInsights />

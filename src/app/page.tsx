@@ -1,5 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import FloatingChatButton from '@/components/shared/FloatingChatButton';
@@ -44,8 +45,12 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
+  // Read locale from cookie for DB content swapping
+  const cookieStore = await cookies();
+  const locale = cookieStore.get('locale')?.value === 'en' ? 'en' : 'id';
+
   // Fetch all portfolio data server-side
-  const portfolioData = await getAllPortfolioData();
+  const portfolioData = await getAllPortfolioData(locale);
 
   // Transform portfolio data to match component types
   const transformedProjects: Project[] = (portfolioData.projects || []).map((p: PortfolioProject) => ({

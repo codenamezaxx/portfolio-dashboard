@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { fadeInUp, staggerContainer } from '@/lib/motion';
+import { useTranslations } from 'next-intl';
 
 import SectionHeader from '../shared/SectionHeader';
 import type { JourneyItem } from '@/lib/portfolio-data';
@@ -12,6 +13,7 @@ interface JourneyProps {
 }
 
 const Journey: React.FC<JourneyProps> = ({ items = [] }) => {
+  const t = useTranslations('section');
   const journeyItems = items || [];
 
   return (
@@ -27,8 +29,8 @@ const Journey: React.FC<JourneyProps> = ({ items = [] }) => {
           viewport={{ once: true, margin: '-100px' }}
         >
           <SectionHeader
-            title="Perjalanan"
-            subtitle="Timeline"
+            title={t('journey')}
+            subtitle={t('journeySubtitle')}
             sectionNumber="01"
           />
 

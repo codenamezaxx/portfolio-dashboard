@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
 import SectionHeader from '@/components/shared/SectionHeader';
 import type { TechStackItem } from '@/lib/portfolio-data';
@@ -13,42 +14,15 @@ interface TechStackProps {
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-/** Maps tech names to their display category */
-const categoryMap: Record<string, string> = {
-  HTML5: 'Frontend',
-  CSS3: 'Frontend',
-  JavaScript: 'Frontend',
-  TypeScript: 'Frontend',
-  React: 'Frontend',
-  'Next.js': 'Frontend',
-  Tailwind: 'Frontend',
-  'Tailwind CSS': 'Frontend',
-  'Node.js': 'Backend & Tools',
-  Python: 'Backend & Tools',
-  Git: 'Backend & Tools',
-  GitHub: 'Backend & Tools',
-  Docker: 'Backend & Tools',
-  Supabase: 'Backend & Tools',
-  PostgreSQL: 'Backend & Tools',
-  'Godot Engine': 'Game Engines',
-  Unity: 'Game Engines',
-  'Unity Engine': 'Game Engines',
-  'C#': 'Game Engines',
-  'C++': 'Game Engines',
-  'Unreal Engine': 'Game Engines',
-};
-
-const defaultCategory = 'Lainnya';
-
 /** Category display order */
-const categoryOrder = ['Frontend', 'Backend & Tools', 'Game Engines', defaultCategory];
+const categoryOrder = ['Frontend', 'Backend & Tools', 'Game Engines', 'Tools', 'Lainnya'];
 
-/** Group an array of tech stack items by category */
+/** Group an array of tech stack items by their DB category field */
 function groupByCategory(items: TechStackItem[]): Record<string, TechStackItem[]> {
   const groups: Record<string, TechStackItem[]> = {};
 
   for (const item of items) {
-    const category = categoryMap[item.name] ?? defaultCategory;
+    const category = item.category || 'Lainnya';
     if (!groups[category]) groups[category] = [];
     groups[category].push(item);
   }
@@ -57,6 +31,7 @@ function groupByCategory(items: TechStackItem[]): Record<string, TechStackItem[]
 }
 
 const TechStack: React.FC<TechStackProps> = ({ initialData = [] }) => {
+  const t = useTranslations('section');
   const { data, error } = useSWR('/api/content/tech-stack', fetcher, {
     fallbackData: initialData && initialData.length > 0 ? { data: initialData } : undefined,
     revalidateOnFocus: false,
@@ -78,11 +53,11 @@ const TechStack: React.FC<TechStackProps> = ({ initialData = [] }) => {
       <div className="geo-ring" style={{width: '40vw', height: '40vw', right: '-15%', top: '5%', opacity: 0.1}} />
 
       <div className="container mx-auto px-6 relative z-10" style={{maxWidth: '960px'}}>
-        <SectionHeader title="Tech Stack" subtitle="Teknologi" sectionNumber="02" />
+        <SectionHeader title={t('tech')} subtitle={t('techSubtitle')} sectionNumber="02" />
 
         {techStack.length === 0 ? (
           <div className="text-center py-12">
-            <p style={{fontFamily: "'Inter', sans-serif", color: 'var(--body)'}}>No tech stack items available</p>
+            <p style={{fontFamily: "'Inter', sans-serif", color: 'var(--body)'}}>{t('noTechItems')}</p>
           </div>
         ) : (
           <div className="space-y-12">
@@ -90,7 +65,9 @@ const TechStack: React.FC<TechStackProps> = ({ initialData = [] }) => {
               <div key={category}>
                 {/* Category micro-label head */}
                 <div className="flex items-center gap-4 mb-4">
-                  <span className="micro-label">{category}</span>
+                  <span className="micro-label" style={{color: 'var(--accent-red)'}}>
+                    {category}
+                  </span>
                   <div className="flex-1 h-px bg-line" />
                 </div>
 

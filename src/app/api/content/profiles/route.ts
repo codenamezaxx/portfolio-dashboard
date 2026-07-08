@@ -22,6 +22,10 @@ const ProfileUpdateSchema = z.object({
   role: z.string().min(1, 'Role is required').max(255, 'Role must be less than 255 characters'),
   tagline: z.string().min(1, 'Tagline is required').max(500, 'Tagline must be less than 500 characters'),
   status_label: z.string().max(50, 'Status label must be less than 50 characters').optional().nullable(),
+  name_en: z.string().max(255).optional().nullable(),
+  role_en: z.string().max(255).optional().nullable(),
+  tagline_en: z.string().max(500).optional().nullable(),
+  status_label_en: z.string().max(50).optional().nullable(),
   heroImageUrl: z.string().url('Invalid image URL').optional().nullable(),
 });
 
@@ -48,6 +52,10 @@ export async function GET(request: NextRequest) {
       role: profile.role,
       tagline: profile.tagline,
       status_label: profile.status_label,
+      name_en: profile.name_en,
+      role_en: profile.role_en,
+      tagline_en: profile.tagline_en,
+      status_label_en: profile.status_label_en,
       heroImageUrl: profile.hero_image_url,
       createdAt: profile.created_at,
       updatedAt: profile.updated_at,
@@ -96,6 +104,10 @@ export async function PUT(request: NextRequest) {
       role: rawRole, 
       tagline: rawTagline, 
       status_label: rawStatusLabel,
+      name_en: rawNameEn,
+      role_en: rawRoleEn,
+      tagline_en: rawTaglineEn,
+      status_label_en: rawStatusLabelEn,
       heroImageUrl: rawHeroImageUrl 
     } = validationResult.data;
 
@@ -104,6 +116,10 @@ export async function PUT(request: NextRequest) {
     const role = sanitizeHtml(rawRole);
     const tagline = sanitizeHtml(rawTagline);
     const status_label = rawStatusLabel ? sanitizeHtml(rawStatusLabel) : rawStatusLabel;
+    const name_en = rawNameEn ? sanitizeHtml(rawNameEn) : rawNameEn;
+    const role_en = rawRoleEn ? sanitizeHtml(rawRoleEn) : rawRoleEn;
+    const tagline_en = rawTaglineEn ? sanitizeHtml(rawTaglineEn) : rawTaglineEn;
+    const status_label_en = rawStatusLabelEn ? sanitizeHtml(rawStatusLabelEn) : rawStatusLabelEn;
     const heroImageUrl = rawHeroImageUrl ? sanitizeUrl(rawHeroImageUrl) : rawHeroImageUrl;
 
     // Get the existing profile record to find its ID
@@ -125,6 +141,10 @@ export async function PUT(request: NextRequest) {
       role,
       tagline,
       status_label,
+      name_en,
+      role_en,
+      tagline_en,
+      status_label_en,
       hero_image_url: heroImageUrl,
       updated_at: new Date().toISOString(),
     };
@@ -154,6 +174,10 @@ export async function PUT(request: NextRequest) {
       role: data.role,
       tagline: data.tagline,
       status_label: data.status_label,
+      name_en: data.name_en,
+      role_en: data.role_en,
+      tagline_en: data.tagline_en,
+      status_label_en: data.status_label_en,
       heroImageUrl: data.hero_image_url,
       createdAt: data.created_at,
       updatedAt: data.updated_at,

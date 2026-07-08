@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { FileSearchCorner, ArrowRight } from 'lucide-react';
 import { LinkedinIcon, InstagramIcon, GithubIcon } from '@/components/ui/Icons';
 import { fadeInUp, staggerContainer } from '@/lib/motion';
@@ -22,6 +23,8 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
   const [liveResumeUrl, setLiveResumeUrl] = useState<string | null>(null);
   const [displayedRole, setDisplayedRole] = useState('');
   const [isPaused, setIsPaused] = useState(false);
+
+  const t = useTranslations('hero');
 
   const profileData = profile || {
     name: '',
@@ -103,7 +106,7 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
 
   const handleViewResume = async () => {
     if (!resumeUrl) {
-      alert('Resume tidak tersedia. Silakan hubungi admin.');
+      alert(t('resumeUnavailable'));
       return;
     }
 
@@ -113,7 +116,7 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
       window.open(viewUrl, '_blank');
     } catch (error) {
       console.error('Failed to view resume:', error);
-      alert('Gagal menampilkan resume. Silakan coba lagi.');
+      alert(t('resumeFailed'));
     } finally {
       setIsActionLoading(false);
     }
@@ -156,18 +159,18 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
             <div className="flex gap-8 md:gap-16 mt-8">
               <div>
                 <div className="text-lg" style={{fontFamily: "var(--font-display)", color: "var(--ink)"}}>
-                  Jawa Timur, Indonesia
+                  {t('country')}
                 </div>
                 <div className="micro-label mt-1" style={{color: "var(--accent)"}}>
-                  Lokasi
+                  {t('location')}
                 </div>
               </div>
               <div>
                 <div className="text-lg" style={{fontFamily: "var(--font-display)", color: "var(--ink)"}}>
-                  {new Date().getFullYear() - 2025}+ Tahun
+                  {new Date().getFullYear() - 2025}+ {t('year', { count: new Date().getFullYear() - 2025 })}
                 </div>
                 <div className="micro-label mt-1" style={{color: "var(--accent)"}}>
-                  Pengalaman
+                  {t('experience')}
                 </div>
               </div>
             </div>
@@ -250,7 +253,7 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
                 className="inline-flex items-center gap-2 px-6 py-3 border border-line bg-foreground text-background hover:bg-foreground/70 transition-colors text-sm"
                 style={{fontFamily: "'Inter', sans-serif", fontWeight: 500}}
               >
-                Lihat Proyek <ArrowRight className="w-4 h-4" />
+                {t('viewProjects')} <ArrowRight className="w-4 h-4" />
               </a>
               <button
                 onClick={handleViewResume}
@@ -258,7 +261,7 @@ const Hero: React.FC<HeroProps> = ({ profile, contactInfo }) => {
                 className="inline-flex items-center gap-2 px-6 py-3 border border-line text-ink hover:bg-white/20 transition-colors text-sm disabled:opacity-30 cursor-pointer"
                 style={{fontFamily: "'Inter', sans-serif", fontWeight: 500}}
               >
-                {isActionLoading ? 'Memuat...' : 'Lihat CV'} <FileSearchCorner className="w-4 h-4" />
+                {isActionLoading ? t('loading') : t('viewResume')} <FileSearchCorner className="w-4 h-4" />
               </button>
             </motion.div>
           </motion.div>

@@ -103,7 +103,7 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
   };
 
   const handleAddNew = () => {
-    setEditingItem({ name: '', icon: '' });
+    setEditingItem({ name: '', icon: '', category: '' });
     setFormErrors({});
     setIsFormOpen(true);
   };
@@ -112,6 +112,7 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
     setEditingItem({
       name: item.name,
       icon: item.icon,
+      category: item.category,
       displayOrder: item.displayOrder,
       id: item.id,
     });
@@ -121,7 +122,7 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingItem || !validateForm({ name: editingItem.name, icon: editingItem.icon })) return;
+    if (!editingItem || !validateForm({ name: editingItem.name, icon: editingItem.icon, category: editingItem.category })) return;
 
     setIsLoading(true);
     try {
@@ -296,6 +297,10 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
               <h3 className="font-bold text-center text-ink text-sm">
                 {item.name}
               </h3>
+              <span className="text-[10px] px-2 py-0.5 bg-primary/10 text-primary font-medium uppercase tracking-wider"
+                style={{fontSize: '9px', letterSpacing: '0.1em'}}>
+                {item.category}
+              </span>
             </div>
           ))}
         </div>
@@ -340,6 +345,26 @@ export function TechStackEditor({ initialData }: TechStackEditorProps) {
             required
             className="h-11 focus:border-primary"
           />
+
+          <div className="space-y-2">
+            <label className="text-xs font-black text-mute uppercase tracking-widest">Category</label>
+            <select
+              name="tech-category"
+              value={editingItem?.category || ''}
+              onChange={(e) => setEditingItem(prev => prev ? { ...prev, category: e.target.value } : null)}
+              className="w-full h-11 px-3 border border-line bg-surface-card text-ink focus:border-primary focus:outline-none text-sm"
+              disabled={isLoading}
+              required
+            >
+              <option value="" disabled>Select a category</option>
+              <option value="Frontend">Frontend</option>
+              <option value="Backend & Tools">Backend &amp; Tools</option>
+              <option value="Game Engines">Game Engines</option>
+              <option value="Tools">Tools</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+            {formErrors.category && <p className="text-xs text-accent-red">{formErrors.category}</p>}
+          </div>
 
           {editingItem?.icon && (
             <div className="p-4 bg-surface-soft border border-line flex items-center gap-4">

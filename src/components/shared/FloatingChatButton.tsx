@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Send, MessageCircleMore } from 'lucide-react';
 import { LinkedinIcon, InstagramIcon } from '@/components/ui/Icons';
@@ -17,6 +18,7 @@ interface ContactOption {
 export default function FloatingChatButton() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations('floatingButton');
 
   // Hide on admin routes and login page
   if (pathname?.startsWith('/admin') || pathname === '/login') {
@@ -111,7 +113,7 @@ export default function FloatingChatButton() {
         className="flex items-center gap-2 px-6 py-3 border border-line bg-foreground/75 text-background hover:bg-foreground/90 cursor-pointer"
       >
         <MessageCircleMore className="w-4 h-4" />
-        <span className="text-sm" style={{fontFamily: "'Inter', sans-serif"}}>Contact</span>
+        <span className="text-sm" style={{fontFamily: "'Inter', sans-serif"}}>{t('contact')}</span>
       </motion.button>
     </div>
   );

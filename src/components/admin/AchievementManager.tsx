@@ -191,7 +191,7 @@ export function AchievementManager() {
   };
 
   const handleAddNew = () => {
-    setEditingAchievement({ title: '', category: '', issuer: '', year: new Date().getFullYear(), pdfUrl: '' });
+    setEditingAchievement({ title: '', category: '', issuer: '', year: new Date().getFullYear(), pdfUrl: '', title_en: '', issuer_en: '' });
     setFormErrors({});
     setIsFormOpen(true);
   };
@@ -204,6 +204,8 @@ export function AchievementManager() {
       issuer: item.issuer,
       year: Number(item.year),
       pdfUrl: item.pdfUrl || '',
+      title_en: item.title_en,
+      issuer_en: item.issuer_en,
       externalLink: item.externalLink || '',
     });
     setFormErrors({});
@@ -466,6 +468,31 @@ export function AchievementManager() {
               error={formErrors.issuer}
               disabled={isLoading}
               required
+              className="h-11"
+            />
+          </div>
+          <div className="col-span-full flex items-center gap-3 mt-2 mb-2">
+            <div className="h-px flex-1 bg-line/40"></div>
+            <span className="text-xs font-black text-mute uppercase tracking-widest">English / Bahasa Inggris</span>
+            <div className="h-px flex-1 bg-line/40"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <TextInput 
+              label="Achievement Title (EN)" 
+              name="achievement-title-en"
+              placeholder="e.g. Meta Fullstack Developer" 
+              value={(editingAchievement as any)?.title_en || ''} 
+              onChange={e => setEditingAchievement(prev => prev ? { ...prev, title_en: e.target.value } : null)}
+              disabled={isLoading}
+              className="h-11"
+            />
+            <TextInput 
+              label="Issuing Organization (EN)" 
+              name="achievement-issuer-en"
+              placeholder="e.g. Coursera, Google, Microsoft" 
+              value={(editingAchievement as any)?.issuer_en || ''} 
+              onChange={e => setEditingAchievement(prev => prev ? { ...prev, issuer_en: e.target.value } : null)}
+              disabled={isLoading}
               className="h-11"
             />
           </div>
