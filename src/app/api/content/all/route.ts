@@ -96,6 +96,7 @@ export async function GET(request: NextRequest) {
       tagline: profileData[0].tagline,
       heroImageUrl: profileData[0].hero_image_url,
       resumeUrl: profileData[0].resume_url,
+      resumeUrlEn: profileData[0].resume_url_en,
       createdAt: profileData[0].created_at,
       updatedAt: profileData[0].updated_at,
     } : null;

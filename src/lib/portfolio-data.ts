@@ -26,6 +26,7 @@ export interface Profile {
   status_label?: string;
   hero_image_url?: string;
   resume_url?: string;
+  resume_url_en?: string;
   created_at?: string;
   updated_at?: string;
   name_en?: string;
@@ -109,6 +110,7 @@ function applyLocaleItem<T extends Record<string, unknown>>(item: T, locale?: st
   if (r.role_en != null) r.role = r.role_en;
   if (r.tagline_en != null) r.tagline = r.tagline_en;
   if (r.status_label_en != null) r.status_label = r.status_label_en;
+  if (r.resume_url_en != null) r.resume_url = r.resume_url_en;
   if (r.title_en != null) r.title = r.title_en;
   if (r.description_en != null) r.description = r.description_en;
   if (r.issuer_en != null) r.issuer = r.issuer_en;
@@ -116,6 +118,7 @@ function applyLocaleItem<T extends Record<string, unknown>>(item: T, locale?: st
   delete r.role_en;
   delete r.tagline_en;
   delete r.status_label_en;
+  delete r.resume_url_en;
   delete r.title_en;
   delete r.description_en;
   delete r.issuer_en;

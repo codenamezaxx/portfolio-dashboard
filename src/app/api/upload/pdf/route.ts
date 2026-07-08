@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const folder = formData.get('folder') as string | null;
+    const locale = formData.get('locale') as string | null;
 
     // Validate file exists
     if (!file) {
@@ -39,6 +40,7 @@ export async function POST(request: NextRequest) {
     const result = await uploadPDF(file, {
       bucket: 'portfolio-pdfs',
       folder: folder || undefined,
+      locale: locale || undefined,
       maxRetries: 3,
       retryDelay: 1000,
     });

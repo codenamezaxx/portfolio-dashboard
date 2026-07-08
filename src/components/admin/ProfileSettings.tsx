@@ -38,6 +38,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
   const toast = useToast();
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showResumeUpload, setShowResumeUpload] = useState(false);
+  const [resumeLanguage, setResumeLanguage] = useState<'id' | 'en'>('id');
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: '',
     newPassword: '',
@@ -151,6 +152,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
       const formData = new FormData();
       formData.append('file', resumeFile);
       formData.append('folder', 'resumes');
+      formData.append('locale', resumeLanguage);
 
       const uploadRes = await fetch('/api/upload/pdf', {
         method: 'POST',
@@ -160,23 +162,31 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
       if (!uploadRes.ok) throw new Error('Upload gagal');
       const { url: resumeUrl } = await uploadRes.json();
 
+      const updateBody = resumeLanguage === 'en'
+        ? { resume_url_en: resumeUrl }
+        : { resume_url: resumeUrl };
+
       const updateRes = await fetch('/api/content/profile-resume', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ resume_url: resumeUrl }),
+        body: JSON.stringify(updateBody),
       });
 
       if (!updateRes.ok) throw new Error('Gagal update database');
 
+      // Dispatch event with language info so CVPreviewSection knows which to refresh
       if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('cv-uploaded'));
+        window.dispatchEvent(new CustomEvent('cv-uploaded', { detail: { locale: resumeLanguage } }));
+        // Also dispatch language-specific event for targeted refresh
+        window.dispatchEvent(new CustomEvent(`cv-uploaded-${resumeLanguage}`));
       }
 
-      toast.success('Resume berhasil diperbarui');
+      const langLabel = resumeLanguage === 'en' ? 'English' : 'Indonesia';
+      toast.success(`Resume (${langLabel}) berhasil diperbarui`);
       await Swal.fire({
         icon: 'success',
         title: 'Berhasil!',
-        text: 'Resume berhasil diperbarui',
+        text: `Resume (${langLabel}) berhasil diperbarui`,
         confirmButtonColor: '#B8860B',
       });
       setShowResumeUpload(false);
@@ -198,11 +208,18 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
 
   const settingsItems = [
     {
-      label: 'Upload Resume/CV',
+      label: 'Upload CV (Indonesia)',
       icon: FileText,
-      onClick: () => setShowResumeUpload(true),
+      onClick: () => { setResumeLanguage('id'); setShowResumeUpload(true); },
       color: 'text-accent-blue',
       bg: 'bg-accent-blue/10',
+    },
+    {
+      label: 'Upload CV (English)',
+      icon: FileText,
+      onClick: () => { setResumeLanguage('en'); setShowResumeUpload(true); },
+      color: 'text-emerald-400',
+      bg: 'bg-emerald-400/10',
     },
     {
       label: 'Change Password',
@@ -279,9 +296,35 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
         </p>
       </div>
 
-      {/* Modals with modern styling */}
-      <Modal isOpen={showResumeUpload} onClose={() => setShowResumeUpload(false)} title="Update Resume/CV">
+      {/* Resumes Upload Modal */}
+      <Modal isOpen={showResumeUpload} onClose={() => setShowResumeUpload(false)} title={`Update CV/Resume (${resumeLanguage === 'en' ? 'English' : 'Indonesia'})`}>
         <form onSubmit={handleResumeUpload} className="space-y-6">
+          {/* Language toggle */}
+          <div className="flex gap-2 p-1 bg-surface-soft border border-line">
+            <button
+              type="button"
+              onClick={() => setResumeLanguage('id')}
+              className={`flex-1 py-2 text-xs font-bold uppercase tracking-wider transition-colors ${
+                resumeLanguage === 'id'
+                  ? 'bg-primary text-white'
+                  : 'text-mute hover:text-ink'
+              }`}
+            >
+              Indonesia
+            </button>
+            <button
+              type="button"
+              onClick={() => setResumeLanguage('en')}
+              className={`flex-1 py-2 text-xs font-bold uppercase tracking-wider transition-colors ${
+                resumeLanguage === 'en'
+                  ? 'bg-primary text-white'
+                  : 'text-mute hover:text-ink'
+              }`}
+            >
+              English
+            </button>
+          </div>
+
           <div className="p-8 border-2 border-dashed border-line hover:border-primary group text-center cursor-pointer relative">
             <input
               type="file"

@@ -2,6 +2,7 @@
  * API Route: PUT /api/content/profile-resume
  * 
  * Updates the resume URL in the profile.
+ * Supports bilingual CVs: resume_url (ID) and resume_url_en (EN).
  * Requires authentication.
  */
 
@@ -21,17 +22,16 @@ export async function PUT(request: NextRequest) {
     }
 
     // Parse request body
-    const { resume_url } = await request.json();
+    const { resume_url, resume_url_en } = await request.json();
 
-    if (!resume_url) {
+    if (!resume_url && !resume_url_en) {
       return NextResponse.json(
-        { error: 'Resume URL is required' },
+        { error: 'At least one resume URL is required' },
         { status: 400 }
       );
     }
 
-    // Update profile with resume URL
-    // First, find the first profile record
+    // Update profile with resume URL(s)
     const { data: existingProfiles, error: fetchError } = await supabase
       .from('profiles')
       .select('id')
@@ -45,9 +45,13 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    const updateData: Record<string, string> = {};
+    if (resume_url !== undefined) updateData.resume_url = resume_url;
+    if (resume_url_en !== undefined) updateData.resume_url_en = resume_url_en;
+
     const { data, error } = await supabase
       .from('profiles')
-      .update({ resume_url: resume_url })
+      .update(updateData)
       .eq('id', existingProfiles[0].id)
       .select()
       .single();

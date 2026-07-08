@@ -208,6 +208,7 @@ export async function generateThumbnail(
 export interface UploadOptions {
   bucket: string;
   folder?: string;
+  locale?: string;
   onProgress?: (progress: number) => void;
   compress?: boolean;
   quality?: number;
@@ -403,9 +404,11 @@ export async function uploadPDF(
 
   const isResume = options.folder === 'resumes';
 
-  // Generate filename: fixed for resumes to overwrite, unique for other PDFs
+  // Generate filename: fixed for resumes to overwrite per locale, unique for other PDFs
   const filename = isResume
-    ? 'cv.pdf'
+    ? options.locale
+      ? `cv-${options.locale}.pdf`
+      : 'cv.pdf'
     : `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.pdf`;
 
   // Build path

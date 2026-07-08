@@ -57,6 +57,8 @@ export async function GET(request: NextRequest) {
       tagline_en: profile.tagline_en,
       status_label_en: profile.status_label_en,
       heroImageUrl: profile.hero_image_url,
+      resumeUrl: profile.resume_url,
+      resumeUrlEn: profile.resume_url_en,
       createdAt: profile.created_at,
       updatedAt: profile.updated_at,
     }));
@@ -179,6 +181,8 @@ export async function PUT(request: NextRequest) {
       tagline_en: data.tagline_en,
       status_label_en: data.status_label_en,
       heroImageUrl: data.hero_image_url,
+      resumeUrl: data.resume_url,
+      resumeUrlEn: data.resume_url_en,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
     };
